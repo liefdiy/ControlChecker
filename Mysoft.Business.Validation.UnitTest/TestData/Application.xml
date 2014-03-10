@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="gb2312"?>
+<page funcid="00000101">
+  <controls>
+    <control id="appGridMenu">
+      <title>应用系统列表</title>
+      <menu title="操作">
+        <menuitem actionid="03" title="删除" action="openDelWin()" />
+        <menuitem title="-" />
+        <menuitem actionid="02" title="上移" action="moveNode('up')" />
+        <menuitem actionid="02" title="下移" action="moveNode('down')" />
+      </menu>
+      <shortcuts>
+        <!--
+					<shortcut actionid="01" title="新增系统" action="openAddWin()" tip="新增系统" icon="/images/New_16_blue.gif" />
+				-->
+      </shortcuts>
+    </control>
+    <control id="appGrid">
+      <datasource entity="e_myApplication" keyname="ApplicationGUID">
+        <sql>
+          SELECT Level,ApplicationGUID,ApplicationName,Application,HierarchyCode,ParentHierarchyCode,ParentApplicationName,
+          Comments,e_myApplication.SiteGUID,s.SiteName
+          FROM e_myApplication LEFT OUTER JOIN mysite s ON e_myApplication.SiteGUID=s.SiteGUID
+          WHERE (1=1) AND e_myApplication.Application IN ([授权系统])
+          ORDER BY e_myApplication.HierarchyCode</sql>
+      </datasource>
+      <grid ondblclick="openModiWin();">
+        <row>
+          <attributes>
+            <attribute name="oid" field="ApplicationGUID" datatype="varchar" />
+            <attribute name="hierarchycode" field="HierarchyCode" datatype="varchar" />
+            <attribute name="parenthierarchycode" field="ParentHierarchyCode" datatype="varchar" />
+            <attribute name="level" field="Level" />
+            <attribute name="siteGUID" field="SiteGUID" />
+          </attributes>
+          <cell field="ApplicationName" title="系统名称" width="120" />
+          <cell field="Application" title="系统代码" width="80" />
+          <cell field="ParentApplicationName" title="父级系统" width="120" />
+          <cell field="SiteName" title="站点名称" width="160" orderby="s.SiteName" />
+          <cell field="Comments" title="说明" type="memo" />
+        </row>
+      </grid>
+    </control>
+  </controls>
+</page>

@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<page>
+  <controls>
+    <control id="appFormMenu">
+      <menus>
+        <menu title="文件">
+          <menuitem title="关闭" action="window.close()" />
+        </menu>
+        <menu title="帮助">
+          <menuitem title="帮助" action="window.document.fireEvent('onhelp');">
+          </menuitem>
+        </menu>
+      </menus>
+      <shortcuts>
+        <shortcut id="scClose" title="关闭" action="window.close()" icon="/images/Close_16_blue.gif" />
+      </shortcuts>
+    </control>
+    <control id="appGridMenu2">
+      <title>用户列表</title>
+      <html>
+      </html>
+      <shortcuts>
+        <shortcut id="m_01" actionid="03" title="编辑" action="edit()" tip="编辑" icon="/images/Save_16_blue.gif" />
+        <shortcut id="m_01" actionid="03" title="保存" action="save()" tip="保存" icon="/images/Save_16_blue.gif" />
+        <shortcut id="m_02" actionid="03" title="删除" action="remove()" tip="删除" icon="/images/Delete_16_blue.gif" />
+      </shortcuts>
+    </control>
+    <control id="AppGridE1">
+      <datasource entity="myuser" keyname="UserGUID">
+        <sql>
+            SELECT UserGUID, UserCode, UserName, Email, OfficePhone, IsSaler, CreatedOn,ModifiedOn
+            FROM myuser
+          </sql>
+      </datasource>
+      <grid SerialType="1">
+        <row>
+          <attributes>
+            <attribute field="UserGUID" issave="false">
+            </attribute>
+          </attributes>
+          <cell name="UserCode" field="UserCode" title="用户代码" celltype="text" iseditfield="UserCode" issave="false" createapi="false" updateapi="false">
+            <attribute align="center" />
+          </cell>
+          <cell field="ModifiedOn" title="ModifiedOn" celltype="select" width="80" issave="false" createapi="false" updateapi="false">
+            <attribute format="####" align="center" OnReturnValueChange="newRowOnEdit(this);" sql="SELECT year(getdate())-10 as value, year(getdate())-10 as text UNION SELECT year(getdate())-9 as value, year(getdate())-9 as text UNION SELECT year(getdate())-8 as value, year(getdate())-8 as text UNION SELECT year(getdate())-7 as value, year(getdate())-7 as text UNION SELECT year(getdate())-6 as value, year(getdate())-6 as text UNION SELECT year(getdate())-5 as value, year(getdate())-5 as text UNION SELECT year(getdate())-4 as value, year(getdate())-4 as text UNION SELECT year(getdate())-3 as value, year(getdate())-3 as text UNION SELECT year(getdate())-2 as value, year(getdate())-2 as text UNION SELECT year(getdate())-1 as value, year(getdate())-1 as text UNION SELECT year(getdate())-0 as value, year(getdate())-0 as text UNION SELECT year(getdate())+1 as value, year(getdate())+1 as text UNION SELECT year(getdate())+2 as value, year(getdate())+2 as text UNION SELECT year(getdate())+3 as value, year(getdate())+3 as text UNION SELECT year(getdate())+4 as value, year(getdate())+4 as text UNION SELECT year(getdate())+5 as value, year(getdate())+5 as text UNION SELECT year(getdate())+6 as value, year(getdate())+6 as text UNION SELECT year(getdate())+7 as value, year(getdate())+7 as text UNION SELECT year(getdate())+8 as value, year(getdate())+8 as text UNION SELECT year(getdate())+9 as value, year(getdate())+9 as text UNION SELECT year(getdate())+10 as value, year(getdate())+10 as text" />
+          </cell>
+          <cell name="UserName" field="UserName" title="用户名" celltype="text" iseditfield="true" issave="true" req="true" createapi="false" updateapi="false">
+            <attribute align="center" maxlength="50" forbiddenChars="`,;!@#$%^*()'?/\.&amp;" />
+			<cpcpc>asfasgas</cpcpc>
+          </cell>
+          <cell field="IsSaler" title="销售员" celltype="select" issave="true" req="true" iseditfield="IsSaler" createapi="false" updateapi="false">
+            <attribute align="left" />
+            <option value="0">是</option>
+            <option value="1">否</option>
+          </cell>
+          <cell name="ModifiedOn" field="ModifiedOn" title="域服务器" celltype="select" createapi="true" updateapi="true" issave="false">
+            <attribute align="left" OnReturnValueChange="newRowOnEdit(this);" sql="select LDAPServerGUID as value, LDAPServerAddress as text from myLDAPServer" />
+          </cell>
+          <cell name="CreatedOn" field="CreatedOn" celltype="datetime" iseditfield="CreatedOn" issave="true" title="创建时间" createapi="false" updateapi="false">
+            <attribute style="width=200px" align="center" format="yyyy-MM-dd" onreturnvaluechange="" />
+          </cell>
+        </row>
+      </grid>
+    </control>
+  </controls>
+</page>

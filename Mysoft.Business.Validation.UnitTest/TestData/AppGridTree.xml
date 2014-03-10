@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<page>
+  <controls>
+    <control id="appGridMenu">
+      <title>工作项列表</title>
+      <html>&lt;span id='spanLevel' &gt;&lt;/span&gt;	</html>
+      <shortcuts>
+        <shortcut title="selectByLevel" action="appGridTree.selectByLevel('zb.HN.SZ.GCB10F');" icon="/images/Setting_16_blue.gif" />
+        <shortcut title="getCheckedValue" action="alert(appGridTree.getCheckedValue('BUCode,BUGUID'));" icon="/images/Setting_16_blue.gif" />
+        <shortcut title="getRow" action="TgetRows();" icon="/images/Setting_16_blue.gif" />
+        <shortcut title="MoveUp" action="appGridTree.moveUp();" icon="/_imgs/btn_off_up.gif" />
+        <shortcut title="MoveDown" action="appGridTree.moveDown();" icon="/_imgs/btn_off_down.gif" />
+        <shortcut title="showLevel">
+          <menuitem title="showLevel1" action="appGridTree.showLevel(1);" icon="/images/Setting_16_blue.gif" />
+          <menuitem title="showLevel2" action="appGridTree.showLevel(2);" icon="/images/Setting_16_blue.gif" />
+          <menuitem title="showLevel3" action="appGridTree.showLevel(3);" icon="/images/Setting_16_blue.gif" />
+          <menuitem title="showLevel4" action="appGridTree.showLevel(4);" icon="/images/Setting_16_blue.gif" />
+          <menuitem title="showLevel5" action="appGridTree.showLevel(5);" icon="/images/Setting_16_blue.gif" />
+        </shortcut>
+        <shortcut title="打印导出">
+          <menuitem title="打印" action="appGridTree.Print();" icon="/_imgs/16_print.gif" />
+          <menuitem title="导出" action="appGridTree.ExportToExcel();" icon="/_imgs/16_excel.gif" />
+        </shortcut>
+        <shortcut title="导出Excel" action="appGridTree.ExportToExcel();" icon="/_imgs/16_excel.gif" />
+      </shortcuts>
+    </control>
+	<control id="appFind">
+      <view resultxmlurl="/Demo/Demo_Main_Grid.xml">
+        <item xmlid="myall" xmlurl="Demo/AppFind.xml">我的所有客户</item>
+        <item xmlid="myyixiang" xmlurl="Demo/Demo_Main_Grid_myyixiang.xml">我的意向客户</item>
+      </view>
+      <query isshowcheckbox="true">
+        <standard>
+          <items>
+            <item field="FunctionCode" type="text" operator="like" title="姓名" />
+            <item field="FunctionName" type="text" operator="like" title="工号" />
+          </items>
+        </standard>
+        <advanced>
+          <items>
+            <item field="FunctionCode" type="text" operator="like" title="姓名" />
+            <item field="FunctionName" type="text" operator="like" title="工号" />
+            <item field="FunctionName" type="select" operator="eq" title="用户名称" sql="select username as text,usercode as value from myUser" />
+          </items>
+        </advanced>
+      </query>
+    </control>
+    <control id="appGridTree">
+      <datasource>
+        <sql>
+          <![CDATA[  
+SELECT     BUGUID, BUName, HierarchyCode, [Level], BUCode, CreatedOn, CreatedBy
+FROM       myBusinessUnit AS bu 
+WHERE     (bu.BUType IN (0,1))
+ORDER BY bu.OrderHierarchyCode
+]]>
+        </sql>
+        <dependencysql>
+          <sql>
+            select buguid from dbo.myBusinessUnit where BUType IN (0,1)
+          </sql>
+        </dependencysql>
+        <!--取数 SQL 语句-->
+      </datasource>
+      <gridtree mutiSelect="true" ontreeload="testTreeLoad()">
+        <defaultexpandlevel syncload="true">2</defaultexpandlevel>
+        <fixedtitles>
+          <tr>
+            <td width="200">公司名</td>
+          </tr>
+        </fixedtitles>
+        <!--默认初始展开级别(级别从1始算，0表示默认不展开)-->
+        <titles>
+          <tr height="19" align="center" bgcolor="#E9E7D7">
+            <td width="200">标识号</td>
+            <td width="100">创建日期</td>
+            <td width="100">层级</td>
+            <td>创建人</td>
+            <td width="17"></td >
+          </tr>
+        </titles>
+        <colors>
+          <divborder>#ffffff</divborder>
+          <tableborder>#cccccc</tableborder>
+          <level>#CAD3E4</level>
+          <!-- 第一个 level 节点为选中行背景颜色 -->
+          <level>#ffffff</level>
+          <!-- 第二个 level 节点为最末行背景色 -->
+          <level>#F7EDEA</level>
+          <!-- 以下为 1 ～ 5 级背景色 -->
+          <level>#ECF1FF</level>
+          <level>#F8EEF1</level>
+          <level>#EAF7E9</level>
+          <level>#EEFFFF</level>
+          <level>#FFFFFF</level>
+          <level>#FFFFFF</level>
+          <level>#FFFFFF</level>
+          <level>#FFFFFF</level>
+          <level>#FFFFFF</level>
+          <level>#FFFFFF</level>
+        </colors>
+        <row height="19" defaultCheckedField="BUGUID" levelcell="0" levelfield="HierarchyCode" onclick="" ondblclick="openModiWin()" onmouseover="testMouseOver(this)" onmouseout="testMouseOut(this)">
+          <!-- levelcell 表示树状结构显示在第几列 -->
+          <!-- levelfield 表示层级代码对应的字段 -->
+          <!-- 单双击事件中，必须用 event.srcRow 获取触发事件所在行(TR) -->
+          <attributes>
+            <!-- 定义 TR 上的属性，属性值来自 field 指定的字段 -->
+            <attribute name="oid" field="BUGUID" />
+          </attributes>
+          <cell field="BUName" title="BUName" width="200" fixed="true">
+            <attribute align="left" style="color:red" />
+          </cell>
+          <cell field="BUCode" title="BUCode" width="200">
+            <attribute align="center" />
+          </cell>
+          <cell field="CreatedOn" title="CreatedOn" format="yyyy-MM-dd" width="100">
+            <attribute align="center" />
+          </cell>
+          <cell field="Level" title="Level" width="100" format="#,##0.00">
+            <attribute style="text-align:right;" />
+          </cell>
+          <cell field="CreatedBy" title="CreatedBy">
+            <attribute style="cursor:hand" />
+            <!-- 此节点上的属性会复制到对应的 TD 上 -->
+          </cell>
+        </row>
+      </gridtree>
+    </control>
+  </controls>
+</page>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="gb2312"?>
+<page>
+  <controls>
+    <control id="appGridMenu">
+      <title>用户列表</title>
+      <menu id="01" display="false" title="操作" downicon="/images/New_16_blue.gif">
+        <menuitem id="del" actionid="03" title="删除" action="alert()" />
+        <menuitem title="-" />
+        <menuitem title="移动">
+          <menuitem actionid="03" title="上移" action="moveUp()" />
+          <menuitem actionid="04" title="下移" action="moveDown()" />
+        </menuitem>
+      </menu>
+      <html>
+        html 区域
+      </html>
+      <shortcuts>
+        <shortcut id="sec" title="查看动作权限" action="openUserRightsWin()" tip="查看动作权限" icon="/_imgs/ico_16_1036_d.gif" />
+        <shortcut id="data" title="查看数据权限" action="openDataRightsWin()" tip="查看数据权限" icon="/_imgs/ico_16_1036_d.gif" />
+        <shortcut id="m_02" title="新增" tip="新增用户" icon="/images/New_16_blue.gif">
+          <menuitem id="m_02_01" title="普通用户" action="openUserRightsWin(1)" icon="/_imgs/ico_16_1036_d.gif" />
+          <menuitem title="移动">
+            <menuitem actionid="03" title="上移" action="moveUp()" />
+            <menuitem actionid="04" title="下移" action="moveDown()" />
+          </menuitem>
+          <menuitem id="m_02_02" title="高级用户" action="openUserRightsWin(2)" icon="/_imgs/ico_16_1036_d.gif" />
+        </shortcut>
+      </shortcuts>
+    </control>
+    <control id="appGrid">
+      <datasource keyname="BUGUID" pagemode="1">
+        <sql>
+			SELECT    BUGUID, BUName, CreatedOn,     IsEndCompany, IsCompany, [Level], BUType,
+			OrderCode, OrderHierarchyCode,  NamePath,1666.666 as Price,888888.8888 as Total,Level+1 as Level2
+			FROM         myBusinessUnit
+		</sql>
+        <dependencysql>
+          <sql>
+            select buguid from dbo.myBusinessUnit
+          </sql>
+        </dependencysql>
+      </datasource>
+      <grid onselectionchanged="alert('onselectionchanged');" onclick="alert('onclick');">
+        <row>
+          <attributes>
+            <attribute name="oid" field="BUGUID" datatype="varchar" />
+          </attributes>
+          <cell field="BUName" title="组织名称" width="100" />
+          <cell field="NamePath" title="完整路径" />
+          <cell field="Level" title="层级" width="80" />
+		</row>
+        <summary title="认购统计：" sumtotalfilter="BuName&lt;&gt;'深圳公司'">
+          <!-- 合计 -->
+			<cell field="Level2" title="单价（本页合计）：" titlewidth="150" align="left" format="#,##0.00" />
+			<cell sumtotalfield="Level+1" title="单价（所有数据合计）：" titlewidth="150" align="left" format="#,##0.00" customformat='s_MjZero'/>
+		</summary>
+      </grid>
+    </control>
+  </controls>
+</page>
+<!--entity="myBusinessUnit" -->

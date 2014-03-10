@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf8"?>
+<page funcid="00000121">
+  <controls>
+    <control id="appFormMenu">
+      <menus>
+        <menu title="文件">
+          <menuitem title="关闭" action="window.close()" />
+        </menu>
+        <menu title="帮助">
+          <menuitem title="帮助" action="window.document.fireEvent('onhelp');">
+          </menuitem>
+        </menu>
+      </menus>
+      <shortcuts>
+        <shortcut id="sSave" actionid="01,02" title="保存" action="appForm.Save()" icon="/images/Save_16_blue.gif" />
+        <shortcut id="sSaveClose" actionid="01,02" title="保存&amp;关闭" action="appForm.SaveAndClose()" icon="/images/SaveClose_16_blue.gif" />
+        <shortcut id="sClose" title="关闭" action="window.close()" icon="/images/Close_16_blue.gif" />
+      </shortcuts>
+    </control>
+    <control id="appForm">
+      <datasource entity="myCacheSyncConfig" keyname="CacheSyncConfigGUID">
+        <sql>
+					SELECT CacheSyncConfigGUID,ServerName,SyncServiceUrl,IPLimit,SyncStatus,IsLoadBalance
+					FROM myCacheSyncConfig
+					Where 1=1
+				</sql>
+      </datasource>
+      <form>
+        <tab title="基本资料">
+          <section title="基本资料" showtitle="false" showbar="false" cols="2" titlewidth="100" secid="Sec1">
+            <item type="hidden" name="oid" field="CacheSyncConfigGUID" title="缓存同步配置GUID">
+            </item>
+            <item type="text" field="ServerName" title="服务器名称" req="1" colspan="2" createapi="1" updateapi="1">
+              <attribute maxlength="50" />
+            </item>
+            <item type="text" field="SyncServiceUrl" title="同步服务器地址" req="1" colspan="2" createapi="1" updateapi="1">
+              <attribute maxlength="200" />
+            </item>
+            <item type="memo" field="IPLimit" title="IP限制" req="1" colspan="2" createapi="2" updateapi="1">
+              <attribute maxlength="500" allowChars="0123456789.," />
+            </item>
+            <item type="radio" field="SyncStatus" title="同步状态" req="1" defaultvalue="1" createapi="0" updateapi="0">
+              <option value="1">成功</option>
+              <option value="0">失败</option>
+            </item>
+            <item type="radio" field="IsLoadBalance" title="是否同步缓存" req="1" defaultvalue="1">
+              <option value="1">是</option>
+              <option value="0">否</option>
+            </item>
+            <item type="blank" />
+            <item type="blank" colspan="2" html="&lt;div style='color:red' id='myTips'&gt;说明：　1)服务器名称：必须和计算机名一致。该值可以从“我的电脑-&gt;属性-&gt;计算机名-&gt;更改-&gt;计算机名”获取。&lt;br&gt;&lt;br&gt;　　　　2)同步服务器地址：请填写访问ERP站点的地址。&lt;br&gt;&lt;br&gt;　　　　3)IP限制：请使用英文逗号分隔多个IP。不设置表示该服务不允许访问。&lt;br&gt;&lt;br&gt;　　　　4)保存完成后，启用同步缓存为“是”，则会清空该服务器的所有缓存。&lt;/div&gt;">
+            </item>
+          </section>
+        </tab>
+      </form>
+    </control>
+  </controls>
+</page>

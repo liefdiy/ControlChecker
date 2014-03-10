@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidateResult>
+  <Page url="/demo/AppForm.aspx">
+    <Controls>
+      <Control id="appForm" type="AppForm" describe="表单">
+        <Children>
+          <Control type="tab">
+            <Children>
+              <Control type="section" describe="">
+                <Children>
+                  <Control type="datetime" describe="经办日期"/>
+                  <Control type="number" describe="单价"/>
+                  <Control type="number" describe="房间总价"/>
+                  <Control type="number" describe="合同总价"/>
+                  <Control type="text" describe="客户名称">
+                    <Properties>
+                      <Property name="field" type="string" describe="字段名称"/>
+                      <Property name="title" type="string" describe="标题"/>
+                      <Property name="req" type="list" describe="必填类型">
+                        <Option value="0" text="非必填"/>
+                        <Option value="1" text="必填"/>
+                        <Option value="2" text="建议填"/>
+                      </Property>
+                      <Property name="colspan" type="int" describe="控件所占列数"/>
+                      <Property name="createapi" type="boolean" describe="新增记录时，控件是否可填"/>
+                      <Property name="updateapi" type="boolean" describe="修改记录时，控件是否可填"/>
+                      <Property name="icontip" type="string" describe="辅助录入提示信息"/>
+                    </Properties>
+                  </Control>
+                  <Control type="radio" describe="客户类型"/>
+                </Children>
+                <Properties>
+                  <Property name="title" type="string" describe="标题"/>
+                  <Property name="showtitle" type="boolean" describe="是否显示标题"/>
+                  <Property name="showbar" type="string" describe="是否显示标题分隔条"/>
+                  <Property name="cols" type="string" describe="指定每行包含的录入控件数量"/>
+                  <Property name="titlewidth" type="string" describe="控件前面的标题所占的列宽"/>
+                </Properties>
+              </Control>
+              <Control type="section" describe="">
+                <Children>
+                  <Control type="text" describe="营业执照">
+                    <Properties>
+                      <Property name="field" type="string" describe="字段名称"/>
+                      <Property name="title" type="string" describe="标题"/>
+                      <Property name="req" type="list" describe="必填类型">
+                        <Option value="0" text="非必填"/>
+                        <Option value="1" text="必填"/>
+                        <Option value="2" text="建议填"/>
+                      </Property>
+                      <Property name="colspan" type="int" describe="控件所占列数"/>
+                      <Property name="createapi" type="boolean" describe="新增记录时，控件是否可填"/>
+                      <Property name="updateapi" type="boolean" describe="修改记录时，控件是否可填"/>
+                      <Property name="icontip" type="string" describe="辅助录入提示信息"/>
+                    </Properties>
+                  </Control>
+                  <Control type="text" describe="法人代表">
+                    <Properties>
+                      <Property name="field" type="string" describe="字段名称"/>
+                      <Property name="title" type="string" describe="标题"/>
+                      <Property name="req" type="list" describe="必填类型">
+                        <Option value="0" text="非必填"/>
+                        <Option value="1" text="必填"/>
+                        <Option value="2" text="建议填"/>
+                      </Property>
+                      <Property name="colspan" type="int" describe="控件所占列数"/>
+                      <Property name="createapi" type="boolean" describe="新增记录时，控件是否可填"/>
+                      <Property name="updateapi" type="boolean" describe="修改记录时，控件是否可填"/>
+                      <Property name="icontip" type="string" describe="辅助录入提示信息"/>
+                    </Properties>
+                  </Control>
+                </Children>
+                <Properties>
+                  <Property name="title" type="string" describe="标题"/>
+                  <Property name="showtitle" type="boolean" describe="是否显示标题"/>
+                  <Property name="showbar" type="string" describe="是否显示标题分隔条"/>
+                  <Property name="cols" type="string" describe="指定每行包含的录入控件数量"/>
+                  <Property name="titlewidth" type="string" describe="控件前面的标题所占的列宽"/>
+                </Properties>
+              </Control>
+              <Control type="section" describe="">
+                <Children>
+                  <Control type="text" describe="联络人">
+                    <Properties>
+                      <Property name="field" type="string" describe="字段名称"/>
+                      <Property name="title" type="string" describe="标题"/>
+                      <Property name="req" type="list" describe="必填类型">
+                        <Option value="0" text="非必填"/>
+                        <Option value="1" text="必填"/>
+                        <Option value="2" text="建议填"/>
+                      </Property>
+                      <Property name="colspan" type="int" describe="控件所占列数"/>
+                      <Property name="createapi" type="boolean" describe="新增记录时，控件是否可填"/>
+                      <Property name="updateapi" type="boolean" describe="修改记录时，控件是否可填"/>
+                      <Property name="icontip" type="string" describe="辅助录入提示信息"/>
+                    </Properties>
+                  </Control>
+                  <Control type="text" describe="国籍">
+                    <Properties>
+                      <Property name="field" type="string" describe="字段名称"/>
+                      <Property name="title" type="string" describe="标题"/>
+                      <Property name="req" type="list" describe="必填类型">
+                        <Option value="0" text="非必填"/>
+                        <Option value="1" text="必填"/>
+                        <Option value="2" text="建议填"/>
+                      </Property>
+                      <Property name="colspan" type="int" describe="控件所占列数"/>
+                      <Property name="createapi" type="boolean" describe="新增记录时，控件是否可填"/>
+                      <Property name="updateapi" type="boolean" describe="修改记录时，控件是否可填"/>
+                      <Property name="icontip" type="string" describe="辅助录入提示信息"/>
+                    </Properties>
+                  </Control>
+                  <Control type="text" describe="证件号码">
+                    <Properties>
+                      <Property name="field" type="string" describe="字段名称"/>
+                      <Property name="title" type="string" describe="标题"/>
+                      <Property name="req" type="list" describe="必填类型">
+                        <Option value="0" text="非必填"/>
+                        <Option value="1" text="必填"/>
+                        <Option value="2" text="建议填"/>
+                      </Property>
+                      <Property name="colspan" type="int" describe="控件所占列数"/>
+                      <Property name="createapi" type="boolean" describe="新增记录时，控件是否可填"/>
+                      <Property name="updateapi" type="boolean" describe="修改记录时，控件是否可填"/>
+                      <Property name="icontip" type="string" describe="辅助录入提示信息"/>
+                    </Properties>
+                  </Control>
+                  <Control type="datetime" describe="出生日期"/>
+                  <Control type="radio" describe="性别"/>
+                  <Control type="number" describe="移动电话"/>
+                  <Control type="number" describe="办公电话"/>
+                  <Control type="text" describe="传真">
+                    <Properties>
+                      <Property name="field" type="string" describe="字段名称"/>
+                      <Property name="title" type="string" describe="标题"/>
+                      <Property name="req" type="list" describe="必填类型">
+                        <Option value="0" text="非必填"/>
+                        <Option value="1" text="必填"/>
+                        <Option value="2" text="建议填"/>
+                      </Property>
+                      <Property name="colspan" type="int" describe="控件所占列数"/>
+                      <Property name="createapi" type="boolean" describe="新增记录时，控件是否可填"/>
+                      <Property name="updateapi" type="boolean" describe="修改记录时，控件是否可填"/>
+                      <Property name="icontip" type="string" describe="辅助录入提示信息"/>
+                    </Properties>
+                  </Control>
+                  <Control type="text" describe="住宅电话">
+                    <Properties>
+                      <Property name="field" type="string" describe="字段名称"/>
+                      <Property name="title" type="string" describe="标题"/>
+                      <Property name="req" type="list" describe="必填类型">
+                        <Option value="0" text="非必填"/>
+                        <Option value="1" text="必填"/>
+                        <Option value="2" text="建议填"/>
+                      </Property>
+                      <Property name="colspan" type="int" describe="控件所占列数"/>
+                      <Property name="createapi" type="boolean" describe="新增记录时，控件是否可填"/>
+                      <Property name="updateapi" type="boolean" describe="修改记录时，控件是否可填"/>
+                      <Property name="icontip" type="string" describe="辅助录入提示信息"/>
+                    </Properties>
+                  </Control>
+                  <Control type="text" describe="电子邮箱">
+                    <Properties>
+                      <Property name="field" type="string" describe="字段名称"/>
+                      <Property name="title" type="string" describe="标题"/>
+                      <Property name="req" type="list" describe="必填类型">
+                        <Option value="0" text="非必填"/>
+                        <Option value="1" text="必填"/>
+                        <Option value="2" text="建议填"/>
+                      </Property>
+                      <Property name="colspan" type="int" describe="控件所占列数"/>
+                      <Property name="createapi" type="boolean" describe="新增记录时，控件是否可填"/>
+                      <Property name="updateapi" type="boolean" describe="修改记录时，控件是否可填"/>
+                      <Property name="icontip" type="string" describe="辅助录入提示信息"/>
+                    </Properties>
+                  </Control>
+                  <Control type="lookup" describe="所属单位"/>
+                  <Control type="text" describe="公司电话">
+                    <Properties>
+                      <Property name="field" type="string" describe="字段名称"/>
+                      <Property name="title" type="string" describe="标题"/>
+                      <Property name="req" type="list" describe="必填类型">
+                        <Option value="0" text="非必填"/>
+                        <Option value="1" text="必填"/>
+                        <Option value="2" text="建议填"/>
+                      </Property>
+                      <Property name="colspan" type="int" describe="控件所占列数"/>
+                      <Property name="createapi" type="boolean" describe="新增记录时，控件是否可填"/>
+                      <Property name="updateapi" type="boolean" describe="修改记录时，控件是否可填"/>
+                      <Property name="icontip" type="string" describe="辅助录入提示信息"/>
+                    </Properties>
+                  </Control>
+                  <Control type="text" describe="测试秒">
+                    <Properties>
+                      <Property name="field" type="string" describe="字段名称"/>
+                      <Property name="title" type="string" describe="标题"/>
+                      <Property name="req" type="list" describe="必填类型">
+                        <Option value="0" text="非必填"/>
+                        <Option value="1" text="必填"/>
+                        <Option value="2" text="建议填"/>
+                      </Property>
+                      <Property name="colspan" type="int" describe="控件所占列数"/>
+                      <Property name="createapi" type="boolean" describe="新增记录时，控件是否可填"/>
+                      <Property name="updateapi" type="boolean" describe="修改记录时，控件是否可填"/>
+                      <Property name="icontip" type="string" describe="辅助录入提示信息"/>
+                    </Properties>
+                  </Control>
+                </Children>
+                <Properties>
+                  <Property name="title" type="string" describe="标题"/>
+                  <Property name="showtitle" type="boolean" describe="是否显示标题"/>
+                  <Property name="showbar" type="string" describe="是否显示标题分隔条"/>
+                  <Property name="cols" type="string" describe="指定每行包含的录入控件数量"/>
+                  <Property name="titlewidth" type="string" describe="控件前面的标题所占的列宽"/>
+                </Properties>
+              </Control>
+              <Control type="section" describe="地址">
+                <Children>
+                  <Control type="text" describe="国家/地区">
+                    <Properties>
+                      <Property name="field" type="string" describe="字段名称"/>
+                      <Property name="title" type="string" describe="标题"/>
+                      <Property name="req" type="list" describe="必填类型">
+                        <Option value="0" text="非必填"/>
+                        <Option value="1" text="必填"/>
+                        <Option value="2" text="建议填"/>
+                      </Property>
+                      <Property name="colspan" type="int" describe="控件所占列数"/>
+                      <Property name="createapi" type="boolean" describe="新增记录时，控件是否可填"/>
+                      <Property name="updateapi" type="boolean" describe="修改记录时，控件是否可填"/>
+                      <Property name="icontip" type="string" describe="辅助录入提示信息"/>
+                    </Properties>
+                  </Control>
+                  <Control type="text" describe="省/州">
+                    <Properties>
+                      <Property name="field" type="string" describe="字段名称"/>
+                      <Property name="title" type="string" describe="标题"/>
+                      <Property name="req" type="list" describe="必填类型">
+                        <Option value="0" text="非必填"/>
+                        <Option value="1" text="必填"/>
+                        <Option value="2" text="建议填"/>
+                      </Property>
+                      <Property name="colspan" type="int" describe="控件所占列数"/>
+                      <Property name="createapi" type="boolean" describe="新增记录时，控件是否可填"/>
+                      <Property name="updateapi" type="boolean" describe="修改记录时，控件是否可填"/>
+                      <Property name="icontip" type="string" describe="辅助录入提示信息"/>
+                    </Properties>
+                  </Control>
+                  <Control type="text" describe="城市">
+                    <Properties>
+                      <Property name="field" type="string" describe="字段名称"/>
+                      <Property name="title" type="string" describe="标题"/>
+                      <Property name="req" type="list" describe="必填类型">
+                        <Option value="0" text="非必填"/>
+                        <Option value="1" text="必填"/>
+                        <Option value="2" text="建议填"/>
+                      </Property>
+                      <Property name="colspan" type="int" describe="控件所占列数"/>
+                      <Property name="createapi" type="boolean" describe="新增记录时，控件是否可填"/>
+                      <Property name="updateapi" type="boolean" describe="修改记录时，控件是否可填"/>
+                      <Property name="icontip" type="string" describe="辅助录入提示信息"/>
+                    </Properties>
+                  </Control>
+                  <Control type="text" describe="区">
+                    <Properties>
+                      <Property name="field" type="string" describe="字段名称"/>
+                      <Property name="title" type="string" describe="标题"/>
+                      <Property name="req" type="list" describe="必填类型">
+                        <Option value="0" text="非必填"/>
+                        <Option value="1" text="必填"/>
+                        <Option value="2" text="建议填"/>
+                      </Property>
+                      <Property name="colspan" type="int" describe="控件所占列数"/>
+                      <Property name="createapi" type="boolean" describe="新增记录时，控件是否可填"/>
+                      <Property name="updateapi" type="boolean" describe="修改记录时，控件是否可填"/>
+                      <Property name="icontip" type="string" describe="辅助录入提示信息"/>
+                    </Properties>
+                  </Control>
+                  <Control type="text" describe="路">
+                    <Properties>
+                      <Property name="field" type="string" describe="字段名称"/>
+                      <Property name="title" type="string" describe="标题"/>
+                      <Property name="req" type="list" describe="必填类型">
+                        <Option value="0" text="非必填"/>
+                        <Option value="1" text="必填"/>
+                        <Option value="2" text="建议填"/>
+                      </Property>
+                      <Property name="colspan" type="int" describe="控件所占列数"/>
+                      <Property name="createapi" type="boolean" describe="新增记录时，控件是否可填"/>
+                      <Property name="updateapi" type="boolean" describe="修改记录时，控件是否可填"/>
+                      <Property name="icontip" type="string" describe="辅助录入提示信息"/>
+                    </Properties>
+                  </Control>
+                  <Control type="text" describe="地址号码">
+                    <Properties>
+                      <Property name="field" type="string" describe="字段名称"/>
+                      <Property name="title" type="string" describe="标题"/>
+                      <Property name="req" type="list" describe="必填类型">
+                        <Option value="0" text="非必填"/>
+                        <Option value="1" text="必填"/>
+                        <Option value="2" text="建议填"/>
+                      </Property>
+                      <Property name="colspan" type="int" describe="控件所占列数"/>
+                      <Property name="createapi" type="boolean" describe="新增记录时，控件是否可填"/>
+                      <Property name="updateapi" type="boolean" describe="修改记录时，控件是否可填"/>
+                      <Property name="icontip" type="string" describe="辅助录入提示信息"/>
+                    </Properties>
+                  </Control>
+                  <Control type="text" describe="通讯地址">
+                    <Properties>
+                      <Property name="field" type="string" describe="字段名称"/>
+                      <Property name="title" type="string" describe="标题"/>
+                      <Property name="req" type="list" describe="必填类型">
+                        <Option value="0" text="非必填"/>
+                        <Option value="1" text="必填"/>
+                        <Option value="2" text="建议填"/>
+                      </Property>
+                      <Property name="colspan" type="int" describe="控件所占列数"/>
+                      <Property name="createapi" type="boolean" describe="新增记录时，控件是否可填"/>
+                      <Property name="updateapi" type="boolean" describe="修改记录时，控件是否可填"/>
+                      <Property name="icontip" type="string" describe="辅助录入提示信息"/>
+                    </Properties>
+                  </Control>
+                  <Control type="text" describe="邮政编码">
+                    <Properties>
+                      <Property name="field" type="string" describe="字段名称"/>
+                      <Property name="title" type="string" describe="标题"/>
+                      <Property name="req" type="list" describe="必填类型">
+                        <Option value="0" text="非必填"/>
+                        <Option value="1" text="必填"/>
+                        <Option value="2" text="建议填"/>
+                      </Property>
+                      <Property name="colspan" type="int" describe="控件所占列数"/>
+                      <Property name="createapi" type="boolean" describe="新增记录时，控件是否可填"/>
+                      <Property name="updateapi" type="boolean" describe="修改记录时，控件是否可填"/>
+                      <Property name="icontip" type="string" describe="辅助录入提示信息"/>
+                    </Properties>
+                  </Control>
+                </Children>
+                <Properties>
+                  <Property name="title" type="string" describe="标题"/>
+                  <Property name="showtitle" type="boolean" describe="是否显示标题"/>
+                  <Property name="showbar" type="string" describe="是否显示标题分隔条"/>
+                  <Property name="cols" type="string" describe="指定每行包含的录入控件数量"/>
+                  <Property name="titlewidth" type="string" describe="控件前面的标题所占的列宽"/>
+                </Properties>
+              </Control>
+            </Children>
+            <Properties>
+              <Property name="title" type="string" describe="标题"/>
+            </Properties>
+          </Control>
+          <Control type="tab">
+            <Children>
+              <Control type="section" describe="">
+                <Children>
+                  <Control type="number" describe="单价"/>
+                  <Control type="number" describe="房间总价"/>
+                  <Control type="number" describe="合同总价"/>
+                  <Control type="text" describe="客户名称">
+                    <Properties>
+                      <Property name="field" type="string" describe="字段名称"/>
+                      <Property name="title" type="string" describe="标题"/>
+                      <Property name="req" type="list" describe="必填类型">
+                        <Option value="0" text="非必填"/>
+                        <Option value="1" text="必填"/>
+                        <Option value="2" text="建议填"/>
+                      </Property>
+                      <Property name="colspan" type="int" describe="控件所占列数"/>
+                      <Property name="createapi" type="boolean" describe="新增记录时，控件是否可填"/>
+                      <Property name="updateapi" type="boolean" describe="修改记录时，控件是否可填"/>
+                      <Property name="icontip" type="string" describe="辅助录入提示信息"/>
+                    </Properties>
+                  </Control>
+                  <Control type="radio" describe="客户类型"/>
+                </Children>
+                <Properties>
+                  <Property name="title" type="string" describe="标题"/>
+                  <Property name="showtitle" type="boolean" describe="是否显示标题"/>
+                  <Property name="showbar" type="string" describe="是否显示标题分隔条"/>
+                  <Property name="cols" type="string" describe="指定每行包含的录入控件数量"/>
+                  <Property name="titlewidth" type="string" describe="控件前面的标题所占的列宽"/>
+                </Properties>
+              </Control>
+            </Children>
+            <Properties>
+              <Property name="title" type="string" describe="标题"/>
+            </Properties>
+          </Control>
+        </Children>
+        <Properties>
+          <Property name="title" type="string" describe="标题"/>
+        </Properties>
+      </Control>
+    </Controls>
+  </Page>
+</ValidateResult>

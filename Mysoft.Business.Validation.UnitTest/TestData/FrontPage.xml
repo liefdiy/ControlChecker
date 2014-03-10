@@ -1,0 +1,31 @@
+<Page url="/cbgl/HTDL/Contract.aspx" xml="TestData/Contract.xml" title="合同列表">
+  <SubPage id="appIframe" url="/cbgl/HTDL/Contract.aspx" xml="TestData/Contract_Grid.xml" title="合同列表">
+    <Controls>
+      <Control id="" type="" />
+      <Control id="" type="" />
+    </Controls>
+  </SubPage>
+
+  <SubPage id="appIframe2" url="/cbgl/HTDL/Contract.aspx" xml="/cbgl/HTDL/Contract.xml" title="合同列表2">
+    <SubPage id="irame2" url="/cbgl/HTDL/Contract.aspx" xml="/cbgl/HTDL/Contract.xml" title="合同列表2">
+      <Controls>
+        <Control id="" type="" />
+        <Control id="" type="" />
+      </Controls>
+    </SubPage>
+  </SubPage>
+</Page>
+
+<!-- 
+  当读取到xml中有appViewList时，则到直接子集SubPage中找id="appIframe"的项；
+  如果没找到，则SubPage的xml为其配置项；
+  找到了，则用该页面xml中的配置项替换，填充多个SubPage
+  
+  <Page url="/cbgl/HTDL/Contract.aspx" xml="/cbgl/HTDL/Contract.xml" title="合同列表">
+    <SubPage id="appIframe" url="/cbgl/HTDL/Contract.aspx" xml="/cbgl/HTDL/Contract.xml" title="合同列表">
+      <SubPage id="irame" url="/cbgl/HTDL/Contract.aspx" xml="/cbgl/HTDL/Contract.xml" title="合同列表"></SubPage>
+      <SubPage id="irame" url="/cbgl/HTDL/Contract.aspx" xml="/cbgl/HTDL/Contract.xml2" title="合同列表2"></SubPage>
+      <SubPage id="irame" url="/cbgl/HTDL/Contract.aspx" xml="/cbgl/HTDL/Contract.xml3" title="合同列表3"></SubPage>
+    </SubPage>
+  </Page>
+-->

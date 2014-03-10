@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="gb2312" ?>
+<page funcid="02010304;02060301">
+	<controls>
+	
+		<control id="appViewList">
+			<view groupid="cbgl.HTDL.Contract.aspx" resultxmlurl="/CBGL/HTDL/Contract_Grid.xml">
+				<item viewid="view_0" xmlurl="/CBGL/HTDL/Contract_Grid.xml" selected="true">所有合同</item>
+				<item viewid="view_1" xmlurl="/CBGL/HTDL/Contract_Grid_YJHT.xml">预计合同</item>
+				<item viewid="view_2" xmlurl="/CBGL/HTDL/Contract_Grid_YDHT.xml">已定合同</item>
+				<item viewid="view_3" xmlurl="/CBGL/HTDL/Contract_Grid_YJFHT.xml">预计非合同</item>
+				<item viewid="view_4" xmlurl="/CBGL/HTDL/Contract_Grid_YDFHT.xml">已定非合同</item>
+                 <item viewid="view_6" xmlurl="/CBGL/HTDL/Contract_Grid_WSPZHT.xml">我经办的审核中的合同</item>
+			</view> 
+		</control>
+			
+		<control id="appGridTree2">
+			<datasource>
+				<sql>SELECT HtTypeGUID, HtTypeShortName, Typecode,HtTypeCode,HtTypeName FROM vcb_HtType WHERE (1=1) AND BUGUID=[当前公司] ORDER BY Typecode</sql> <!--取数 SQL 语句-->
+			</datasource>
+			<gridtree>
+				<defaultexpandlevel>2</defaultexpandlevel> <!--默认初始展开级别(级别从1始算，0表示默认不展开)-->
+				<titles>
+				</titles>
+				<colors>
+					<divborder>#ffffff</divborder>
+					<tableborder>#ffffff</tableborder>
+					<level>#CAD3E4</level> <!-- 第一个 level 节点为选中行背景颜色 -->
+					<level>#ffffff</level> <!-- 第二个 level 节点为最末行背景色 -->
+					<level>#ffffff</level> <!-- 以下为 1 ～ 5 级背景色 -->
+					<level>#ffffff</level>
+					<level>#ffffff</level>
+					<level>#ffffff</level>
+					<level>#ffffff</level>
+				</colors>
+				<row levelcell="0" levelfield="Typecode" onclick="" ondblclick="">
+					<!-- levelcell 表示树状结构显示在第几列 -->
+					<!-- levelfield 表示层级代码对应的字段 -->
+					<!-- 单双击事件中，必须用 event.srcRow 获取触发事件所在行(TR) -->
+					<attributes>
+						<!-- 定义 TR 上的属性，属性值来自 field 指定的字段 -->
+						<attribute name="oid" field="HtTypeCode" />
+						<attribute name="HtTypeCode" field="HtTypeCode" />
+						<attribute name="HtTypeName" field="HtTypeName" />
+					</attributes>
+					<cell field="HtTypeShortName" title="" />
+				</row>
+			</gridtree>
+			
+		</control>
+				
+		<control id="appFind">
+			<query isshowcheckbox="true" entity="cb_Contract" keyname="ContractGUID" groupid="cbgl.Contract.aspx" filter="false">
+				<standard>
+					<items>
+						<item field="ContractName" type="text" operator="like" title="合同名称" />
+						<item field="ContractCode" type="text" operator="like" title="合同编号"  />
+						<item field="YfProviderName" type="text" operator="like" title="乙方单位" />
+						<item field="Jbr" type="text" operator="like" title="经办人" />
+					</items>
+				</standard>
+				<advanced>
+					<items>
+						<item field="ContractName" type="text" operator="like" title="合同名称" />
+						<item field="ContractCode" type="text" operator="like" title="合同编号"  />
+						<item field="JfProviderName" type="text" operator="like" title="甲方单位"  />
+						<item field="YfProviderName" type="text" operator="like" title="乙方单位"  />
+						<item field="BfProviderName" type="text" operator="like" title="丙方单位"  />
+						<item field="HtKind" type="select" operator="like" title="合同细类"  >
+							<option operator="eq" value="其它类">其它类</option>
+							<option operator="eq" value="工程类">工程类</option>
+							<option operator="eq" value="采购类">甲供材采购类</option>														
+						</item>
+						<item field="SignDate" type="datetime" operator="ge" title="签约日期 从" />
+						<item field="SignDate" type="datetime" operator="le" title="到" />
+						<item field="Jbr" type="text" operator="like" title="经办人" />
+					</items>
+				</advanced>
+			</query>
+		</control>
+	</controls>
+</page>

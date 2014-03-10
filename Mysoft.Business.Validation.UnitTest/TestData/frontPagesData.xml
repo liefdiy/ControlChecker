@@ -1,0 +1,21 @@
+<Page url="http://localhost:7019/cbgl/HTDL/Contract_Edit.aspx?mode=3&amp;Title=%u4FEE%u6539%u5408%u540C&amp;oid=8fdb9138-a34d-e211-93ee-90b11c25ccb5&amp;funcid=02010304" xml="/cbgl/HTDL/Contract_Edit.xml" title="查看合同">
+  <Controls/>
+  <SubPage id="frm1392771781912" url="http://localhost:7019/cbgl/HTDL/Contract_Edit.aspx?mode=3&amp;Title=%u4FEE%u6539%u5408%u540C&amp;oid=8fdb9138-a34d-e211-93ee-90b11c25ccb5&amp;funcid=02010304" xml="/cbgl/HTDL/Contract_Edit.xml">
+    <Controls/>
+    <SubPage id="appIframeHYGH" url="http://localhost:7019/CBGL/HTDL/Budget_Grid.aspx" xml="/CBGL/HTDL/Budget_Grid.xml">
+      <Controls/>
+    </SubPage>
+    <SubPage id="__appNavBar_areaAddress1Frame" url="http://localhost:7019/cbgl/htdl/contract_edit_fkcondition.aspx?mode=3&amp;ContractGUID=8fdb9138-a34d-e211-93ee-90b11c25ccb5" xml="/cbgl/htdl/contract_edit_fkcondition.xml">
+      <Controls/>
+    </SubPage>
+    <SubPage id="__appNavBar_areaAddress2Frame" url="http://localhost:7019/cbgl/htdl/contract_edit_productbudget.aspx?mode=3&amp;ContractGUID=8fdb9138-a34d-e211-93ee-90b11c25ccb5" xml="/cbgl/htdl/contract_edit_productbudget.xml">
+      <Controls/>
+    </SubPage>
+    <SubPage id="__appNavBar_areaAddress6Frame" url="http://localhost:7019/cbgl/pub/tab_doclist.aspx?mode=3&amp;FkGUID=8fdb9138-a34d-e211-93ee-90b11c25ccb5&amp;PageState=3&amp;DocType=%u5408%u540C%u767B%u8BB0" xml="/cbgl/pub/tab_doclist.xml">
+      <Controls/>
+    </SubPage>
+    <SubPage id="__appNavBar_areaAddress10Frame" url="http://localhost:7019/cgztb/interface/cbgl/contracttacticprotocol.aspx?mode=3&amp;ContractGUID=8fdb9138-a34d-e211-93ee-90b11c25ccb5" xml="/cgztb/interface/cbgl/contracttacticprotocol.xml">
+      <Controls/>
+    </SubPage>
+  </SubPage>
+</Page>

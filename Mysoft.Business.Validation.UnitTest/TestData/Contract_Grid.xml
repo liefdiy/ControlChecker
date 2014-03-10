@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="gb2312" ?>
+<page funcid="02010304,02060301">
+	<controls>
+		<control id="appGridMenu">
+			<title>合同列表</title>
+			<menu title="操作">
+				<menuitem actionid="06" title="删除" action="openDelWin()" />
+				<menuitem id="m2" title="-" />
+				<menuitem id="m91" actionid="91" title="打印" action="AppGridPrint(appGrid);"  />				 
+				<menuitem id="m92" actionid="92" title="导出" action="AppGridToExcel(appGrid);"  />
+				<menuitem id="m3" title="-" />				 
+				<menuitem id="m21" actionid="21" title="替换经办人" action="openChangeJbr()"  />
+        <menuitem id="scBudgetGuiJi" actionid="30" title="合约规划重新归集" action="BudgetGuiJi()"  />
+				<menuitem id="scChgHtAmount" actionid="05"  display="false" title="修改合同金额" action="ChgHtAmount()"  />
+				<menuitem id="m5" title="-" />
+				<menuitem actionid="09" title="直接授权" action="openContractPrivilege('直接授权')"  />
+			</menu>
+			<shortcuts>
+				<shortcut title="新增" icon="/cbgl/images/Newcb_16_blue.gif" >
+					<menuitem id="scAddYJHT" actionid="01" title="预计合同" action="openAddWin('预计合同');" />
+					<menuitem id="scAddYDHT" actionid="02" title="已定合同" action="openAddWin('已定合同');" />
+					<menuitem id="scAddYJFHT" actionid="01" title="预计非合同" action="openAddWin('预计非合同');" display="false" />
+					<menuitem id="scAddYDFHT" actionid="02" title="已定非合同" action="openAddWin('已定非合同');" display="false" />
+				</shortcut>
+				<shortcut id="shtProcess" title="审批" icon="/cbgl/images/Examine_16_blue.gif">
+                    <menuitem id="mNewProcess" actionid="07" title="发起审批" action="doNewProcess()" />
+                    <menuitem id="mOpenProcess" actionid="08"  title="审批过程" action="doOpenProcess()" />
+
+                    <menuitem id="mNewProcess_2" actionid="16" title="提交审批" action="doProcessLaunch()" />
+                    <menuitem id="mProcessPass" actionid="17"  title="审批通过" action="doProcessPass()" />
+                    <menuitem id="mProcessIgnore" actionid="18"  title="审批驳回" action="doProcessIgnore()" />
+				</shortcut>				
+				<!--<shortcut id="mnHttz" title="合同台帐" action="ContractAllInfo();" icon="/cbgl/images/ContractEstradecb_16_blue.gif" />-->				
+				<shortcut id="sPrint" title="打印合同会签单" actionid="13" icon="/images/Print_16_blue.gif" action="" display="false" />
+				<shortcut id="shtLock" actionid="19" title="锁定" icon="/cbgl/images/suoding_16.gif">
+					<menuitem id="mLock" actionid="19" title="锁定" action="doLock()" />
+					<menuitem id="mUnLock" actionid="19" title="解锁" action="doUnLock()" />
+				</shortcut>
+			</shortcuts>
+		</control>
+		<control id="appGrid">
+			<datasource entity="vcb_ContractGrid" keyname="ContractGUID">
+				<sql>
+                    SELECT  --dbo.fn_GetContractProj(ContractGUID,'ProjName') as HtProjName,
+                    ProjectName as HtProjName,
+                    ContractGUID,
+                    BUGUID,
+                    HtTypeCode,
+                    ApproveState,
+                    ApproveStateFlag,
+                    JsState,
+                    IsJtContract,
+                    MasterContractGUID,
+                    IfDdhs,
+                    HtCfStateShow,
+                    CfMode,
+                    HtClass,
+                    ContractCode,
+                    ContractName,
+                    HtAmount,
+                    SignDate,
+                    YfProviderName,
+                    YfCorporation,
+                    jbrGUID,
+                    IsLock,
+                    ProjType,
+                    isUseYgAmount,
+                    (case when IsLock=1 then '已锁定' else '未锁定' end) as ShowLock
+                    FROM vcb_ContractGrid
+                    WHERE (1=1) AND BUGUID=[当前公司] AND (2=2)
+                </sql>
+				<order field="ContractCode" descending="true" />
+			</datasource>
+			<grid ondblclick="openModiWin('0');" onclick="changeSpMode(this)">
+				<row>
+					<attributes>
+						<attribute name="oid" field="ContractGUID" datatype="varchar" />
+                        <attribute name="HtTypeCode" field="HtTypeCode" datatype="varchar" />
+                        <attribute name="ApproveState" field="ApproveState" datatype="varchar" />
+						<attribute name="JsState" field="JsState" datatype="varchar" />
+						<attribute name="HtClass" field="HtClass" datatype="varchar" />
+						<attribute name="IfDdhs" field="IfDdhs" datatype="varchar" />
+            <attribute name="isUseYgAmount" field="isUseYgAmount" datatype="varchar" />
+						<attribute name="MasterContractGUID" field="MasterContractGUID" datatype="varchar" />
+						<attribute name="IsJtContract" field="IsJtContract" datatype="varchar" />
+						<attribute name="ContractName" field="ContractName" datatype="varchar" />
+						<attribute name="jbrGUID" field="jbrGUID" datatype="varchar" />
+						<attribute name="IsLock" field="IsLock" datatype="varchar" />
+            <attribute name="ProjType" field="ProjType" datatype="varchar" />
+					</attributes>
+					<cell field="ApproveState" title="审核状态" width="50" />
+					<cell field="JsState" title="结算状态" width="50" />
+					<cell field="HtClass" title="合同属性" width="60" />
+					<cell field="ContractCode" title="合同编号" width="150" />
+					<cell field="ContractName" title="合同名称" width="150" />
+					<cell field="HtAmount" title="有效签约金额" width="80" format="#,##0.00">
+						<attribute align="right" />
+					</cell>
+					<cell field="SignDate" title="签约日期" width="80" format="yyyy-MM-dd">
+						<attribute align="center" />
+					</cell>
+					<cell field="YfProviderName" title="乙方单位" width="120" />
+					<cell field="HtProjName" title="所属项目" orderby ="ProjectName" />
+					<cell field="ShowLock" title="锁定状态" width="50" orderby="isLock"/>
+				</row>
+			</grid>
+		</control>
+	</controls>
+</page>

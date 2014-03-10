@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="gb2312"?>
+<page funcid="00000101">
+  <controls>
+    <control id="appGridMenu">
+      <title>系统用户</title>
+      <shortcuts>
+      </shortcuts>
+    </control>
+    <control id="appGrid">
+      <datasource entity="myUserRoles">
+        <sql>SELECT UserGUID,UserCode,UserName,BUName
+	 				  ,CASE WHEN IsDisabeld='1' THEN '&lt;font color=red&gt;禁用&lt;/font&gt;' ELSE '启用' END AS State
+	 				  ,CASE WHEN IsAdvanceUser='1' THEN '&lt;font color=red&gt;高级&lt;/font&gt;' ELSE '普通' END AS IsAdvanceUser
+					 FROM e_myUser
+					 WHERE IsAdmin=1
+					 UNION 
+	 				 SELECT u.UserGUID,u.UserCode,u.UserName,u.BUName
+	 				  ,CASE WHEN u.IsDisabeld='1' THEN '&lt;font color=red&gt;禁用&lt;/font&gt;' ELSE '启用' END AS State
+	 				  ,CASE WHEN u.IsAdvanceUser='1' THEN '&lt;font color=red&gt;高级&lt;/font&gt;' ELSE '普通' END AS IsAdvanceUser
+				  	 FROM myStationUser su
+				  	 INNER JOIN myStationRights sr ON sr.StationGUID=su.StationGUID
+					 INNER JOIN myFunction f ON f.FunctionCode = sr.ObjectType 
+					 INNER JOIN e_myUser u ON su.UserGUID = u.UserGUID
+					 WHERE (1=1) AND (2=2) AND u.IsAdmin=0
+					 GROUP BY u.UserGUID,u.UserCode,u.UserName,u.BUName,u.IsDisabeld,u.IsAdvanceUser
+					 ORDER BY State DESC,IsAdvanceUser DESC,BUName,UserCode,UserName</sql>
+      </datasource>
+      <grid ondblclick="openUserWin();">
+        <row>
+          <attributes>
+            <attribute name="oid" field="UserGUID" datatype="varchar" />
+          </attributes>
+          <cell field="UserCode" title="用户代码" width="120" orderby="UserCode" />
+          <cell field="UserName" title="用户名称" orderby="UserName" />
+          <cell field="BUName" title="所属单位" width="200" orderby="BUName" />
+          <cell field="State" title="状态" width="40" orderby="State" format="HTML" />
+          <cell field="IsAdvanceUser" title="高级用户" width="60" orderby="IsAdvanceUser" format="HTML" />
+        </row>
+      </grid>
+    </control>
+  </controls>
+</page>

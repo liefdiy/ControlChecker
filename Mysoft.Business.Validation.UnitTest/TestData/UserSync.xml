@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<page funcid="00000105" xmlns="http://map.mysoft.com/2_0/XMLSchema">
+  <controls>
+    <control id="appGridMenu">
+      <title>修改用户列表</title>
+      <html>&lt;span id='spanLevel' &gt;&lt;/span&gt;</html>
+    </control>
+    <control id="appGrid">
+      <datasource keyname="LDAPSynclogGUID">
+        <sql>
+          SELECT LDAPSyncLogGUID,UserGUID ,UserCode,UserName,[description] FROM myLDAPSyncLogDetail
+          WHERE (1=1) AND OperateMode='Modify'
+          ORDER BY UserCode ASC
+        </sql>
+      </datasource>
+      <grid ondblclick="openEditWin()">
+        <row>
+          <attributes>
+            <attribute name="oid" field="UserGUID" datatype="varchar" />
+          </attributes>
+          <cell field="UserCode" title="用户代码" datatype="varchar" width="80" sortable="false" />
+          <cell field="UserName" title="用户名称" datatype="varchar" width="80" sortable="false" />
+          <cell field="description" title="描述" datatype="varchar" sortable="false" />
+        </row>
+      </grid>
+    </control>
+  </controls>
+</page>
