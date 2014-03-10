@@ -46,12 +46,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppValidationManager.cs" />
+    <Compile Include="Controls\AppFormValidation.cs" />
     <Compile Include="Controls\AppGridTreeValidation.cs" />
     <Compile Include="Controls\AppGridValidation.cs" />
     <Compile Include="CommonValidation.cs" />
     <Compile Include="AppValidationBase.cs" />
     <Compile Include="Controls\AppViewListValidation.cs" />
     <Compile Include="Controls\DataSourceValidation.cs" />
+    <Compile Include="Controls\AppFindValidation.cs" />
     <Compile Include="IAppValidation.cs" />
     <Compile Include="Db\DbAccessManager.cs" />
     <Compile Include="Entity\Result.cs" />

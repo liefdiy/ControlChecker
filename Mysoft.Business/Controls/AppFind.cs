@@ -101,6 +101,11 @@ namespace Mysoft.Business.Controls
 
     public class AppFindQuery
     {
+        public AppFindQuery()
+        {
+            IsShowCheckboxDefault = true;
+        }
+
         /// <summary>
         /// 是否显示“视图内查询”复选框
         /// </summary>
@@ -113,7 +118,7 @@ namespace Mysoft.Business.Controls
         /// </summary>
         [XmlAttribute(AttributeName = "checkboxdefault")]
         [MapContract(Describe = "“视图内查询”选项默认是否勾选”")]
-        public bool IsShoCheckboxDefault { get; set; }
+        public bool IsShowCheckboxDefault { get; set; }
 
         /// <summary>
         /// 是否显示【结果中查找】按钮
@@ -121,6 +126,25 @@ namespace Mysoft.Business.Controls
         [XmlAttribute(AttributeName = "queryinresult")]
         [MapContract(Describe = "是否显示【结果中查找】按钮")]
         public bool IsShowQueryInResult { get; set; }
+
+        /// <summary>
+        /// 数据结构名称
+        /// </summary>
+        [MapContract(Describe = "数据结构名称(如表名、视图名)")]
+        [XmlAttribute(AttributeName = "entity")]
+        public string Entity { get; set; }
+
+        [MapContract(Describe = "主键")]
+        [XmlAttribute(AttributeName = "keyname")]
+        public string KeyName { get; set; }
+
+        /// <summary>
+        /// 保存“历史查询”时，标识该历史查询所属的页面
+        /// 当用户打开页面时，底层根据groupid从数据库中获取历史查询列表。
+        /// </summary>
+        [MapContract(Describe = "历史查询所属页面标识")]
+        [XmlAttribute(AttributeName = "groupid")]
+        public string GroupId { get; set; }
 
         /// <summary>
         /// 标准查找
@@ -139,14 +163,20 @@ namespace Mysoft.Business.Controls
     {
         [XmlArray(ElementName = "items")]
         [XmlArrayItem(ElementName = "item")]
-        public List<AppFindQueryItem> AppFindViewItems { get; set; }
+        public List<AppFindQueryItem> Items { get; set; }
+
+        /// <summary>
+        /// 宽度
+        /// </summary>
+        [XmlElement(ElementName = "titlewidth")]
+        public string TitleWidth { get; set; }
     }
 
     public class AppFindQueryAdvanced
     {
         [XmlArray(ElementName = "items")]
         [XmlArrayItem(ElementName = "item")]
-        public List<AppFindQueryItem> AppFindViewItems { get; set; }
+        public List<AppFindQueryItem> Items { get; set; }
     }
 
     public class AppFindQueryItem
@@ -160,21 +190,28 @@ namespace Mysoft.Business.Controls
         [XmlAttribute(AttributeName = "field")]
         public string Field { get; set; }
 
-        [MapContract(Describe = "字段类型")]
+        [MapContract(Describe = "字段类型，datetime,select,lookup,number或自定义")]
         [XmlAttribute(AttributeName = "type")]
-        public AppFormItemType Type { get; set; }
+        public string Type { get; set; }
 
         [MapContract(Describe = "查找方式")]
         [XmlAttribute(AttributeName = "operator")]
-        public string Operator { get; set; }
+        public OperatorType Operator { get; set; }
 
         [MapContract(Describe = "标题")]
         [XmlAttribute(AttributeName = "title")]
         public string Title { get; set; }
 
-        [MapContract(Describe = "查询SQL")]
+        /// <summary>
+        /// 仅select控件有用
+        /// </summary>
+        [MapContract(Describe = "查询SQL，仅select控件有用")]
         [XmlAttribute(AttributeName = "sql")]
         public string Sql { get; set; }
+
+        [MapContract(Describe = "查询SQL，仅lookup控件有用")]
+        [XmlAttribute(AttributeName = "action")]
+        public string Action { get; set; }
 
         [XmlAnyAttribute]
         public Collection<XmlAttribute> OtherAttributes { get; set; }

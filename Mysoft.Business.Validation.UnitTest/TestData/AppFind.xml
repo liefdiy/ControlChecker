@@ -9,7 +9,10 @@
       <query isshowcheckbox="true">
         <standard>
           <items>
+            <item field="FunctionCod2e" type="datetime" time="3" operator="like" title="姓名" />
             <item field="FunctionCode" type="text" operator="like" title="姓名" />
+            <item field="FunctionCode" type="select" operator="like" title="姓名" />
+			      <item field="FunctionCode1" type="text" operator="like" title="姓名111" />
             <item field="FunctionName" type="text" operator="like" title="工号" />
           </items>
         </standard>

@@ -38,6 +38,74 @@ namespace Mysoft.Business.Controls
         public const string AppNavItem = "navitem";
     }
 
+    public enum OperatorType
+    {
+        [MapContract(Describe = "等于")]
+        [XmlEnum(Name = "eq")]
+        Eq,
+
+        [MapContract(Describe = "不等于")]
+        [XmlEnum(Name = "ne")]
+        NotEqual,
+
+        [MapContract(Describe = "大于")]
+        [XmlEnum(Name = "gt")]
+        Greater,
+
+        [MapContract(Describe = "大于等于")]
+        [XmlEnum(Name = "ge")]
+        GreaterAndEqual,
+
+        [MapContract(Describe = "小于")]
+        [XmlEnum(Name = "lt")]
+        Lower,
+
+        [MapContract(Describe = "小于等于")]
+        [XmlEnum(Name = "le")]
+        LowerAndEqual,
+
+        [MapContract(Describe = "类似。自动在值前后加“%”")]
+        [XmlEnum(Name = "like")]
+        Like,
+
+        [MapContract(Describe = "类似。自动在值前面加“%”")]
+        [XmlEnum(Name = "llike")]
+        LikeBefore,
+
+        [MapContract(Describe = "类似。自动在值后面加“%”")]
+        [XmlEnum(Name = "rlike")]
+        LikeAfter,
+
+        [MapContract(Describe = "类似。不自动加“%”")]
+        [XmlEnum(Name = "nlike")]
+        LikeEqual,
+
+        [MapContract(Describe = "不类似")]
+        [XmlEnum(Name = "not-like")]
+        NotLike,
+
+        [MapContract(Describe = "为空")]
+        [XmlEnum(Name = "null")]
+        Null,
+
+        [MapContract(Describe = "非空")]
+        [XmlEnum(Name = "not-null")]
+        NotNull,
+
+        [MapContract(Describe = "包含")]
+        [XmlEnum(Name = "in")]
+        In,
+
+        [MapContract(Describe = "不包含")]
+        [XmlEnum(Name = "not-in")]
+        NotIn,
+
+        [MapContract(Describe = "特殊操作符，直接使用给定的值作为过滤条件。")]
+        [XmlEnum(Name = "replace")]
+        Replace,
+
+    }
+
     public enum AppFormItemType
     {
         [XmlEnum(Name = "text")]
@@ -136,6 +204,7 @@ namespace Mysoft.Business.Controls
             Describe = "";
         }
 
+        [MapContract(Required = true)]
         [XmlAttribute(AttributeName = "id")]
         public string Id { get; set; }
 

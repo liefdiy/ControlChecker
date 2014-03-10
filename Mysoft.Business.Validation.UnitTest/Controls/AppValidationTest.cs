@@ -33,7 +33,7 @@ namespace Mysoft.Business.Validation.UnitTest.Controls
             AppConfigManager.Setting.WebSite.SiteRoot = @"E:\10.5.11.17\四川新希望\ERP302\安全漏洞检测-分支\明源整体解决方案\Map";
             string testdata = "";
             //testdata = @"E:\10.5.11.17\四川新希望\ERP302\安全漏洞检测-分支\明源整体解决方案\Map\Cbgl\PUB\SelectProductPlanProduct.xml";
-            testdata = @"E:\10.5.11.17\四川新希望\ERP302\安全漏洞检测-分支\明源整体解决方案\Map\Zlxt\SCYX\MarketingMNG_Grid.xml";
+            testdata = @"E:\360云盘\Mysoft\源码\MySourceCode\ControlChecker\Mysoft.Business.Validation.UnitTest\TestData\AppFind.xml";
 
             var boo = AppValidationManager.IsMapXml(testdata);
 

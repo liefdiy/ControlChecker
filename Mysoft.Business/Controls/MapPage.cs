@@ -27,6 +27,11 @@ namespace Mysoft.Business.Controls
         [XmlAttribute(AttributeName = "funcid")]
         public string Funcid { get; set; }
 
+        /// 功能权限。
+        [MapContract(Ignore = true)]
+        [XmlAttribute(AttributeName = "actionid")]
+        public string ActionId { get; set; }
+
         /// 页面所属的系统代码。
         [MapContract(Ignore = true)]
         [XmlAttribute(AttributeName = "application")]

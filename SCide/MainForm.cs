@@ -666,6 +666,7 @@ namespace SCide
                 }
             }
 
+            ShowNumbers();
             progressStripStatusLabel.Text = string.Format("DB: {0}", AppConfigManager.ConnectionString);
         }
 
@@ -767,6 +768,15 @@ namespace SCide
             return page;
         }
 
+        private void ShowNumbers()
+        {
+            lineNumbersToolStripMenuItem.Checked = true;
+            foreach (DocumentForm docForm in dockPanel.Documents)
+            {
+                docForm.Scintilla.Margins.Margin0.Width = LINE_NUMBERS_MARGIN_WIDTH;
+            }
+        }
+
         private void TestConnection()
         {
             //探测数据库连接
@@ -774,7 +784,6 @@ namespace SCide
             if (!setting.CanAccessDb(AppConfigManager.ConnectionString))
             {
                 setting.ShowDialog();
-                return;
             }
         }
 

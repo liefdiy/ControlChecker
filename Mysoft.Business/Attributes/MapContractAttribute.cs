@@ -11,5 +11,10 @@ namespace ControlCheck.Business.Attributes
         public bool Ignore { get; set; }
 
         public Type EnumType { get; set; }
+
+        /// <summary>
+        /// 是否必须字段
+        /// </summary>
+        public bool Required { get; set; }
     }
 }
