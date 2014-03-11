@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Text;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mysoft.Business.Controls;
 using Mysoft.Business.Manager;
 using Mysoft.Business.Validation.Db;
@@ -19,6 +20,25 @@ namespace Mysoft.Business.Validation.UnitTest.Controls
         [TestMethod]
         public void CommmonTest()
         {
+            //AppForm form = new AppForm();
+            //var tab = new AppFormTab();
+            //var section = new AppFormSection();
+            //var item = new AppFormItem();
+            //item.Options = new List<SelectOption>();
+            //SelectOption so1 = new SelectOption();
+            //so1.Value = "1";
+            //so1.Text = "yes ";
+            //SelectOption so2 = new SelectOption();
+            //so2.Value = "0";
+            //so2.Text = "no ";
+            //item.Options.Add(so1);
+            //item.Options.Add(so2);
+            //section.Items.Add(item);
+            //tab.Sections.Add(section);
+            //form.Tabs.Add(tab);
+
+            //var formXml = XmlHelper.XmlSerialize(form);
+
             DbAccessManager.Init("Server=wh-pc066;database=dotnet_erp302sp1_scxxw;user id=sa;password=95938");
             MapPage page = GetPage();
             PageResult pageresult = AppValidationManager.ValidatePage(page);
@@ -33,7 +53,7 @@ namespace Mysoft.Business.Validation.UnitTest.Controls
             AppConfigManager.Setting.WebSite.SiteRoot = @"E:\10.5.11.17\四川新希望\ERP302\安全漏洞检测-分支\明源整体解决方案\Map";
             string testdata = "";
             //testdata = @"E:\10.5.11.17\四川新希望\ERP302\安全漏洞检测-分支\明源整体解决方案\Map\Cbgl\PUB\SelectProductPlanProduct.xml";
-            testdata = @"E:\360云盘\Mysoft\源码\MySourceCode\ControlChecker\Mysoft.Business.Validation.UnitTest\TestData\AppFind.xml";
+            testdata = @"E:\360云盘\Mysoft\源码\MySourceCode\ControlChecker\Mysoft.Business.Validation.UnitTest\TestData\AppForm.xml";
 
             var boo = AppValidationManager.IsMapXml(testdata);
 

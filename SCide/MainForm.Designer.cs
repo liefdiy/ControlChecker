@@ -1133,7 +1133,7 @@ namespace SCide
             this.runcheckStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.runcheckStripButton.Name = "runcheckStripButton";
             this.runcheckStripButton.Size = new System.Drawing.Size(23, 22);
-            this.runcheckStripButton.Text = "执行校验";
+            this.runcheckStripButton.Text = "执行校验(F5)";
             this.runcheckStripButton.Click += new System.EventHandler(this.runcheckStripButton_Click);
             // 
             // toolStripSeparator2

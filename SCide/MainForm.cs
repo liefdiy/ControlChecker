@@ -679,6 +679,7 @@ namespace SCide
         {
             try
             {
+                this.runcheckStripButton.Enabled = false;
                 this.progressStripStatusLabel.Text = "ºÏ≤‚÷–...";
 
                 TestConnection();
@@ -688,15 +689,22 @@ namespace SCide
                 page.PageXml = ActiveDocument.FilePath;
                 DbAccessManager.Init(AppConfigManager.ConnectionString);
                 var pageresult = AppValidationManager.ValidatePage(page);
+                if (this.outputPanel.DockState == DockState.Hidden)
+                {
+                    this.outputPanel.Show(dockPanel);
+                }
+                outputPanelToolStripMenuItem.Checked = true;
                 this.outputPanel.VisibleState = DockState.DockBottom;
                 this.outputPanel.ShowPageResult(pageresult);
             }
             catch (Exception ex)
             {
+                FileHelper.Write("error.log", ex.StackTrace);
                 MessageBox.Show(ex.Message);
             }
             finally
             {
+                this.runcheckStripButton.Enabled = true;
                 this.progressStripStatusLabel.Text = "Connection:" + AppConfigManager.ConnectionString;
             }
         }

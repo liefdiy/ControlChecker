@@ -23,7 +23,15 @@ namespace SCide
 
         public void ShowPageResult(PageResult page)
         {
+            SetColor(allToolStripButton);
+
             _pageResults.Clear();
+
+            if (page.Results.Count == 0)
+            {
+                page.Results.Add(new Result("验证通过", "配置正确  " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), Level.Success, typeof(OutputWindow)));
+            }
+
             _pageResults.Add(page);
             ShowPageResults(_showLevel);
         }
@@ -43,11 +51,6 @@ namespace SCide
                         data.Add(result);
                     }
                 }
-            }
-
-            if (data.Count == 0 && level == _showLevel)
-            {
-                data.Add(new Result("验证通过", "配置正确  " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), Level.Success, typeof(OutputWindow)));
             }
 
             dataGridView.DataSource = data;
@@ -72,7 +75,20 @@ namespace SCide
         {
             ToolStripButton btn = sender as ToolStripButton;
             if (btn == null) return;
+            
+            SetColor(btn);
 
+            string str = btn.Tag.ToString();
+            Level level = (Level.Error | Level.Warn | Level.Message | Level.Success);
+            if (!str.Equals("All"))
+            {
+                level = (Level)Enum.Parse(typeof(Level), str);
+            }
+            ShowPageResults(level);
+        }
+
+        private void SetColor(ToolStripButton btn)
+        {
             foreach (var c in toolStrip1.Items)
             {
                 ToolStripButton ctrl = c as ToolStripButton;
@@ -83,14 +99,6 @@ namespace SCide
             }
 
             btn.BackColor = System.Drawing.Color.FromArgb(196, 225, 255);
-
-            string str = btn.Tag.ToString();
-            Level level = (Level.Error | Level.Warn | Level.Message | Level.Success);
-            if (!str.Equals("All"))
-            {
-                level = (Level)Enum.Parse(typeof(Level), str);
-            }
-            ShowPageResults(level);
         }
     }
 }

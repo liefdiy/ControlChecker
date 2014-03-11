@@ -158,7 +158,7 @@ namespace Mysoft.Business.Validation.Controls
                         }
                     }
                 }
-                catch (SqlException exception)
+                catch (SqlException)
                 {
                 }
             }

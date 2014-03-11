@@ -140,7 +140,8 @@ namespace Mysoft.Common.Utility
         /// <param name="path">路径，如果路径不存在会自动创建</param>
         /// <param name="message">要写的内容</param>
         /// <param name="encoding">编码，默认UTF8</param>
-        public static void Write(string path, string message, Encoding encoding = null)
+        /// <param name="append">是否附加</param>
+        public static void Write(string path, string message, Encoding encoding = null, bool append = false)
         {
             if (encoding == null)
             {
@@ -153,7 +154,7 @@ namespace Mysoft.Common.Utility
                 Directory.CreateDirectory(fi.Directory.FullName);
             }
 
-            FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+            FileStream fs = new FileStream(path, append ? FileMode.OpenOrCreate : FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
             StreamWriter sw = new StreamWriter(fs, encoding);
             sw.BaseStream.Seek(0, SeekOrigin.End);
             sw.WriteLine(message);

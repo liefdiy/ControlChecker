@@ -19,6 +19,8 @@ namespace Mysoft.Business.Validation
 
             //移除类似[本人]的查询关键字
             temp = DbAccessManager.Keyword.Aggregate(temp, (current, k) => current.Replace(k, "(null)"));
+            temp = temp.Replace("[授权系统]", "select application from myapplication");
+            temp = temp.Replace("[用户所属公司及下级公司过滤]", "''");
 
             return temp;
         }
