@@ -67,11 +67,11 @@ namespace Mysoft.Business.Controls
         public List<ColorItem> Levels { get; set; }
     }
 
-    public class ColorItem
-    {
-        [XmlText]
-        public string ColorValue { get; set; }
-    }
+        public class ColorItem
+        {
+            [XmlText]
+            public string ColorValue { get; set; }
+        }
 
     public class AppGridTreeFixedTitles
     {

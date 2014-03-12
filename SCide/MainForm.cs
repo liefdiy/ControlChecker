@@ -1,5 +1,6 @@
 #region Using Directives
 
+using System.Drawing;
 using System.Drawing.Text;
 using System.Xml;
 using Mysoft.Business.Controls;
@@ -35,6 +36,7 @@ namespace SCide
         private string[] _args;
         private int _zoomLevel;
         private bool m_bSaveLayout = true;
+        SettingForm setting = new SettingForm();
 
         #endregion Fields
 
@@ -266,6 +268,8 @@ namespace SCide
 
         public DocumentForm OpenFile(string filePath)
         {
+            if (!File.Exists(filePath)) return null;
+
             foreach (DocumentForm documentForm in dockPanel.Documents)
             {
                 if (filePath.EqualIgnoreCase(documentForm.FilePath))
@@ -637,6 +641,11 @@ namespace SCide
             }
         }
 
+        private void dbConfigToolStripButton_Click(object sender, EventArgs e)
+        {
+            setting.ShowDialog();
+        }
+
         private void exitWithoutSavingLayout_Click(object sender, EventArgs e)
         {
             m_bSaveLayout = false;
@@ -788,7 +797,6 @@ namespace SCide
         private void TestConnection()
         {
             //探测数据库连接
-            SettingForm setting = new SettingForm();
             if (!setting.CanAccessDb(AppConfigManager.ConnectionString))
             {
                 setting.ShowDialog();

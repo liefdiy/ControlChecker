@@ -4,6 +4,9 @@ using System;
 
 namespace Mysoft.Business.Validation.Controls
 {
+    /// <summary>
+    /// 不支持缓存依赖SQL的检测
+    /// </summary>
     public class AppGridTreeValidation : AppValidationBase
     {
         public override void Validate(AppControl control)

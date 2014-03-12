@@ -205,7 +205,7 @@ namespace SCide
             this.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Name = "OutputWindow";
             this.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.DockBottomAutoHide;
-            this.Text = "OutputWindow";
+            this.Text = "输出";
             ((System.ComponentModel.ISupportInitialize)(dataGridView)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
             this.toolStrip1.ResumeLayout(false);

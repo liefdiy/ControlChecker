@@ -12,6 +12,15 @@ namespace SCide
             InitializeComponent();
         }
 
+        protected override void OnLoad(EventArgs e)
+        {
+            txbDb.Text = AppConfigManager.Setting.Db.Database;
+            txbUserId.Text = AppConfigManager.Setting.Db.UserId;
+            txbPwd.Text = AppConfigManager.Setting.Db.Password;
+            txbServer.Text = AppConfigManager.Setting.Db.Server;
+            base.OnLoad(e);
+        }
+
         private void btntest_Click(object sender, EventArgs e)
         {
             string connstring = string.Format("Server={0};database={1};user id={2};password={3}", 
