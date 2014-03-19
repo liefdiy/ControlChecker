@@ -31,38 +31,38 @@ namespace Mysoft.Business.Controls
         [XmlElement(ElementName = "row")]
         public AppGridTreeRow Row { get; set; }
 
-        [MapContract(Describe = "定义用于生成查询条件的表达式。其中的关键字“[code]”会被层级代码替换。", Ignore = true)]
+        [MapContract(Describe = "定义用于生成查询条件的表达式。其中的关键字“[code]”会被层级代码替换。")]
         [XmlElement(ElementName = "queryreplace")]
         public AppGridTreeQueryReplace QueryPlace { get; set; }
 
-        [MapContract(Describe = "是否支持多选")]
+        [MapContract(Describe = "是否支持多选", Type = FieldType.Boolean)]
         [XmlAttribute(AttributeName = "mutiSelect")]
-        public bool IsSupportMultiSelect { get; set; }
+        public string IsSupportMultiSelect { get; set; }
 
-        [MapContract(Describe = "是否启用异步加载", Ignore = true)]
+        [MapContract(Describe = "是否启用异步加载", Type = FieldType.Boolean)]
         [XmlAttribute(AttributeName = "syncload")]
-        public bool IsSyncload { get; set; }
+        public string IsSyncload { get; set; }
 
     }
 
     public class AppGridTreeExpandLevel
     {
-        [MapContract(Describe = "是否启用异步加载", Ignore = true)]
+        [MapContract(Describe = "是否启用异步加载", Type = FieldType.Boolean)]
         [XmlAttribute(AttributeName = "syncload")]
-        public bool IsSyncload { get; set; }
+        public string IsSyncload { get; set; }
     }
 
     public class AppGridTreeColor
     {
-        [MapContract(Describe = "Div块边框颜色", Ignore = true)]
+        [MapContract(Describe = "Div块边框颜色")]
         [XmlElement(ElementName = "divborder")]
         public ColorItem DivBorder { get; set; }
 
-        [MapContract(Describe = "表格边框颜色", Ignore = true)]
+        [MapContract(Describe = "表格边框颜色")]
         [XmlElement(ElementName = "tableborder")]
         public ColorItem TableBorder { get; set; }
 
-        [MapContract(Describe = "节点背景色", Ignore = true)]
+        [MapContract(Describe = "节点背景色")]
         [XmlElement(ElementName = "level")]
         public List<ColorItem> Levels { get; set; }
     }
@@ -128,8 +128,8 @@ namespace Mysoft.Business.Controls
             Title = "";
         }
 
-        [MapContract(Describe = "是否冻结列")]
+        [MapContract(Describe = "是否冻结列", Type = FieldType.Boolean)]
         [XmlAttribute(AttributeName = "fixed")]
-        public bool IsFixed { get; set; }
+        public string IsFixed { get; set; }
     }
 }

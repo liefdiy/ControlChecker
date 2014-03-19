@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace Mysoft.Common.Extensions
 {
@@ -12,7 +13,7 @@ namespace Mysoft.Common.Extensions
         /// <returns></returns>
         public static bool EqualIgnoreCase(this string me, string other)
         {
-            return String.Compare(me, other, true, System.Globalization.CultureInfo.CurrentCulture) == 0;
+            return String.Compare(me, other, true, CultureInfo.CurrentCulture) == 0;
         }
 
         public static bool IsBoolean(this string me)
@@ -23,8 +24,8 @@ namespace Mysoft.Common.Extensions
 
         public static bool IsNumber(this string me)
         {
-            int v = 0;
-            return int.TryParse(me, out v);
+            double v = 0;
+            return double.TryParse(me, out v);
         }
 
         public static bool IsBetween(this string me, int begin, int end)
@@ -37,6 +38,44 @@ namespace Mysoft.Common.Extensions
         public static bool IsNotNull(this string me)
         {
             return me != null;
+        }
+
+        public static bool IsTypeOfEnum(this string me, Type type)
+        {
+            try
+            {
+                Enum.Parse(type, me, true);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public static bool IsFloat(this string me)
+        {
+            float result = 0f;
+            return float.TryParse(me, out result);
+        }
+
+        public static bool IsDateTime(this string me, string format = "")
+        {
+            if (string.IsNullOrEmpty(format))
+            {
+                switch (me.Trim().Length)
+                {
+                    case 14:
+                        format = "yyyy-MM-dd HH:mm";
+                        break;
+
+                    case 19:
+                        format = "yyyy-MM-dd HH:mm:ss";
+                        break;
+                }
+            }
+            DateTime dt = new DateTime();
+            return DateTime.TryParseExact(me, format, null, DateTimeStyles.None, out dt);
         }
     }
 }

@@ -1,23 +1,28 @@
 ﻿using System.Xml;
-using Mysoft.Business.Controls;
-using Mysoft.Business.Manager;
-using Mysoft.Business.Validation.Db;
-using Mysoft.Business.Validation.Entity;
-using Mysoft.Common.Extensions;
-using Mysoft.Common.Utility;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 namespace Mysoft.Business.Validation
 {
+    using ControlCheck.Business.Attributes;
+    using Mysoft.Business.Controls;
+    using Mysoft.Business.Manager;
+    using Mysoft.Business.Validation.Db;
+    using Mysoft.Business.Validation.Entity;
+    using Mysoft.Common.Extensions;
+    using Mysoft.Common.Utility;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using System.Text.RegularExpressions;
+    using System.Xml.Serialization;
+
     public delegate void OnNotifyHandler(object sender, EventArgs e);
 
     public static class AppValidationManager
     {
+        private static IDictionary<Type, IDictionary<string, int>> EnumDics = new Dictionary<Type, IDictionary<string, int>>();
         private static readonly object s_locker = new object();
-
         private static readonly List<Type> s_Validations = new List<Type>();
 
         public static event OnNotifyHandler OnNotify;
@@ -37,11 +42,40 @@ namespace Mysoft.Business.Validation
             }
         }
 
-        /// <summary>
-        /// 特殊规则验证，得到验证不通过的结果
-        /// </summary>
-        /// <param name="control"></param>
-        /// <returns></returns>
+        private static bool IsValid(MapContractAttribute mc, string value)
+        {
+            switch (mc.Type)
+            {
+                case FieldType.Number:
+                    return (string.IsNullOrEmpty(value) || value.IsNumber());
+
+                case FieldType.Float:
+                    return (string.IsNullOrEmpty(value) || value.IsFloat());
+
+                case FieldType.DateTime:
+                    return (string.IsNullOrEmpty(value) || value.IsDateTime(""));
+
+                case FieldType.Boolean:
+                    return (string.IsNullOrEmpty(value) || value.IsBoolean());
+
+                case FieldType.Custom:
+                    {
+                        Regex regex = new Regex(mc.Regex);
+                        return regex.Match(value).Success;
+                    }
+            }
+            return true;
+        }
+
+        public static List<PageResult> Validate(string dir)
+        {
+            if (!Directory.Exists(dir))
+            {
+                throw new DirectoryNotFoundException("指定ERP站点路径不存在");
+            }
+            return ValidateFiles(Directory.GetFiles(dir, "*.xml", SearchOption.AllDirectories).ToList<string>());
+        }
+
         public static List<Result> ValidateControl(AppControl control)
         {
             List<Result> properties = new List<Result>();
@@ -52,31 +86,183 @@ namespace Mysoft.Business.Validation
                 {
                     validation.Validate(control);
                     List<Result> list = validation.GetResults() as List<Result>;
-                    if (list == null) continue;
-                    properties.AddRange(list);
-                    validation.Dispose();
+                    if (list != null)
+                    {
+                        properties.AddRange(list);
+                    }
                 }
             }
-
             return properties;
+        }
+
+        public static List<Result> ValidateFields(object mp)
+        {
+            List<Result> results = new List<Result>();
+            PropertyInfo[] properties = mp.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach (PropertyInfo property in properties)
+            {
+                object[] mapContract = property.GetCustomAttributes(typeof(MapContractAttribute), false);
+                object value = property.GetValue(mp, null);
+                MapContractAttribute mc = null;
+                if (mapContract.Length > 0)
+                {
+                    mc = mapContract[0] as MapContractAttribute;
+                    if ((value == null) && mc.IsRequired)
+                    {
+                        results.Add(new Result("必须字段未配置", string.Format("{0}字段不能为空，{1}", property.Name, mc.Describe), Level.Error, typeof(AppValidationManager)));
+                    }
+                    if (mc.PassValid) continue;
+                }
+                if (property.PropertyType.IsGenericType && (property.PropertyType.GetGenericTypeDefinition() == typeof(List<>)))
+                {
+                    if (value != null)
+                    {
+                        int count = Convert.ToInt32(property.PropertyType.GetProperty("Count", BindingFlags.Public | BindingFlags.Instance).GetValue(value, null));
+                        for (int i = 0; i < count; i++)
+                        {
+                            object obj = property.PropertyType.GetProperty("Item").GetValue(value, new object[] { i });
+                            try
+                            {
+                                results.AddRange(ValidateFields(obj));
+                            }
+                            catch (Exception)
+                            {
+                            }
+                        }
+                    }
+                }
+                else if (property.PropertyType.Module.Name.EqualIgnoreCase(typeof(MapContractAttribute).Assembly.ManifestModule.Name) && (value != null))
+                {
+                    try
+                    {
+                        results.AddRange(ValidateFields(value));
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+                if (mc != null)
+                {
+                    value = (value == null) ? "" : value.ToString();
+                    if (mc.EnumType != null)
+                    {
+                        int v;
+                        if (!EnumDics.ContainsKey(mc.EnumType))
+                        {
+                            IDictionary<string, int> dic = new Dictionary<string, int>();
+                            FieldInfo[] efields = mc.EnumType.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
+                            foreach (FieldInfo ef in efields)
+                            {
+                                object[] attrs = ef.GetCustomAttributes(typeof(XmlEnumAttribute), false);
+                                if (attrs.Length > 0)
+                                {
+                                    XmlEnumAttribute xmlEnum = attrs[0] as XmlEnumAttribute;
+                                    if (!string.IsNullOrEmpty(xmlEnum.Name))
+                                    {
+                                        v = (int)Enum.Parse(mc.EnumType, ef.GetValue(mp).ToString(), true);
+                                        dic.Add(xmlEnum.Name.ToLower(), v);
+                                    }
+                                }
+                            }
+                            EnumDics.Add(mc.EnumType, dic);
+                        }
+                        if (mc.EnumValueType == EnumValueType.Value)
+                        {
+                            v = -1;
+                            if (!int.TryParse(value.ToString(), out v))
+                            {
+                                results.Add(new Result("配置错误", string.Format("{0}字段值必须为数字，配置值:{1}。{2}", property.Name, value, mc.InvalidMessage), Level.Error, typeof(AppValidationManager)));
+                            }
+                            else if (Enum.GetName(mc.EnumType, v) == null)
+                            {
+                                results.Add(new Result("配置错误", string.Format("{0}字段值配置错误:{1}。{2}", property.Name, value, mc.InvalidMessage), Level.Error, typeof(AppValidationManager)));
+                            }
+                        }
+                        else if (!EnumDics[mc.EnumType].ContainsKey(value.ToString().ToLower()))
+                        {
+                            results.Add(new Result("配置错误", string.Format("{0}字段值配置错误:{1}。{2}", property.Name, value, mc.InvalidMessage), Level.Error, typeof(AppValidationManager)));
+                        }
+                    }
+                    else if (!IsValid(mc, value.ToString()))
+                    {
+                        results.Add(new Result("配置错误", string.Format("{0}字段应为{1}类型，配置值：{2}。{3}", new object[] { property.Name, mc.Type.ToString(), value, mc.InvalidMessage }), Level.Error, typeof(AppValidationManager)));
+                    }
+                }
+            }
+            return results;
+        }
+
+        public static List<PageResult> ValidateFiles(List<string> files)
+        {
+            DbAccessManager.Init(AppConfigManager.ConnectionString);
+
+            List<PageResult> pageResults = new List<PageResult>();
+            if (files != null)
+            {
+                int total = files.Count<string>();
+                for (int i = 0; i < total; i++)
+                {
+                    Exception ex;
+                    PageResult pr = null;
+                    string file = files[i];
+                    Notify(string.Format("检测({0}/{1}):{2}", i + 1, total, file));
+
+                    MapPage page = null;
+                    try
+                    {
+                        page = GetPage(file);
+                    }
+                    catch (Exception exception1)
+                    {
+                        ex = exception1;
+                        if (IsMapXml(file))
+                        {
+                            pr = GetPageResult("配置文件不规范", ex.Message, file);
+                        }
+                        else
+                        {
+                            pr = GetPageResult("忽略文件", "非MAP配置文件。", file, Level.Message);
+                        }
+                        pageResults.Add(pr);
+                    }
+                    if (page != null)
+                    {
+                        pr = new PageResult();
+                        try
+                        {
+                            pr = ValidatePage(page);
+                        }
+                        catch (Exception exception2)
+                        {
+                            ex = exception2;
+                            pr.Results.Add(new Result("验证执行出错", ex.StackTrace, Level.Warn, typeof(AppValidationManager)));
+                        }
+                        if (pr.Results.Count > 0)
+                        {
+                            pageResults.Add(pr);
+                        }
+                    }
+                }
+            }
+            return pageResults;
         }
 
         public static PageResult ValidatePage(MapPage mp)
         {
-            PageResult page = new PageResult();
-            page.Xml = mp.PageXml;
-            page.Results = new List<Result>();
+            PageResult page = new PageResult
+            {
+                Xml = mp.PageXml,
+                Results = new List<Result>()
+            };
+            page.Results.AddRange(ValidateFields(mp));
 
             foreach (AppControl appControl in mp.Controls)
             {
                 page.Results.AddRange(ValidateControl(appControl));
-
                 if (appControl.View != null)
                 {
                     page.SubPages = new List<PageResult>();
-
-                    //视图
-                    foreach (var item in appControl.View.AppFindViewItems)
+                    foreach (AppFindViewItem item in appControl.View.AppFindViewItems)
                     {
                         if (item.SubPage != null)
                         {
@@ -91,83 +277,16 @@ namespace Mysoft.Business.Validation
                 }
             }
 
-            //子页面
             if (mp.SubPages != null)
             {
-                foreach (var subPage in mp.SubPages)
+                foreach (MapPage subPage in mp.SubPages)
                 {
-                    if (subPage.PageXml.EqualIgnoreCase(page.Xml)) continue;
-                    page.SubPages.Add(ValidatePage(subPage));
-                }
-            }
-
-            return page;
-        }
-
-        public static List<PageResult> Validate(string dir)
-        {
-            if (!Directory.Exists(dir)) throw new DirectoryNotFoundException("指定ERP站点路径不存在");
-            string[] files = Directory.GetFiles(dir, "*.xml", SearchOption.AllDirectories);
-            return ValidateFiles(files.ToList());
-        }
-
-        public static List<PageResult> ValidateFiles(List<string> files)
-        {
-            DbAccessManager.Init(AppConfigManager.ConnectionString);
-            List<PageResult> pageResults = new List<PageResult>();
-            if (files == null) return pageResults;
-
-            int total = files.Count();
-            for (int i = 0; i < total; i++)
-            {
-                string file = files[i];
-                Notify(string.Format("检测({0}/{1}):{2}", i + 1, total, file));
-
-                MapPage page = null;
-                try
-                {
-                    page = GetPage(file);
-                }
-                catch (Exception ex)
-                {
-                    PageResult pr = null;
-                    if (IsMapXml(file))
+                    if (!subPage.PageXml.EqualIgnoreCase(page.Xml))
                     {
-                        pr = GetPageResult("配置文件不规范", ex.Message, file);
-                    }
-                    else
-                    {
-                        pr = GetPageResult("忽略文件", "非MAP配置文件。", file, Level.Message);
-                    }
-                    pageResults.Add(pr);
-                }
-
-                if (page != null)
-                {
-                    PageResult pr = new PageResult();
-
-                    try
-                    {
-                        pr = ValidatePage(page);
-                    }
-                    catch (Exception ex)
-                    {
-                        pr.Results.Add(new Result("验证执行出错", ex.StackTrace, Level.Warn, typeof(AppValidationManager)));
-                    }
-                    if (pr.Results.Count > 0)
-                    {
-                        pageResults.Add(pr);
+                        page.SubPages.Add(ValidatePage(subPage));
                     }
                 }
             }
-
-            return pageResults;
-        }
-
-        public static MapPage GetPage(string filepath)
-        {
-            MapPage page = XmlHelper.XmlDeserializeFromFile<MapPage>(filepath);
-            page.PageXml = filepath;
             return page;
         }
 
@@ -192,7 +311,6 @@ namespace Mysoft.Business.Validation
             }
             catch (Exception)
             {
-                
             }
             return result;
         }
@@ -203,6 +321,13 @@ namespace Mysoft.Business.Validation
             {
                 OnNotify(message, new EventArgs());
             }
+        }
+
+        public static MapPage GetPage(string filepath)
+        {
+            MapPage page = XmlHelper.XmlDeserializeFromFile<MapPage>(filepath);
+            page.PageXml = filepath;
+            return page;
         }
     }
 }

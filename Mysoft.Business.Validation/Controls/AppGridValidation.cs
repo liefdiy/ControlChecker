@@ -17,7 +17,7 @@ namespace Mysoft.Business.Validation.Controls
             if (grid == null) return;  //不是grid
             if (grid.Row != null && grid.Row.AppGridCells.Count > 0)
             {
-                if (grid.Row.AppGridCells[0].CellType != AppGridCellType.None)
+                if (!string.IsNullOrEmpty(grid.Row.AppGridCells[0].CellType))
                 {
                     //不管appGridE
                     return;
@@ -70,7 +70,9 @@ namespace Mysoft.Business.Validation.Controls
         /// <returns></returns>
         private void ValidateDataSource(DataSource ds)
         {
-            Results.AddRange(AnalysisSql(ds.Sql, ds.Entity, ds.KeyName, ds.PageMode, ds.Order));
+            int pagemode = 0;
+            Int32.TryParse(ds.PageMode, out pagemode);
+            Results.AddRange(AnalysisSql(ds.Sql, ds.Entity, ds.KeyName, pagemode, ds.Order));
         }
 
         private List<Result> AnalysisSql(string sql, string entity, string primaryKey, int pagemode, Order order)

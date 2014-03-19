@@ -15,9 +15,10 @@ namespace Mysoft.Business.Controls
         {
             Id = "";
             Describe = "";
+            SerialType = "0";
         }
 
-        [MapContract(Describe = "id", Ignore = true)]
+        [MapContract(Describe = "id")]
         [XmlAttribute(AttributeName = "id")]
         public string Id { get; set; }
 
@@ -32,13 +33,14 @@ namespace Mysoft.Business.Controls
 
         #region AppGridE的属性
 
-        [MapContract(Describe = "冻结列数")]
+        [MapContract(Describe = "冻结列数", Type = FieldType.Number)]
         [XmlAttribute(AttributeName = "fastnesscount")]
-        public int FastNessCount { get; set; }
+        public string FastNessCount { get; set; }
 
-        [MapContract(Describe = "行头风格，0，不启用 1，序号列 2，复选框列")]
+        [MapContract(Describe = "行头风格，0，不启用 1，序号列 2，复选框列", EnumType = typeof(SerialType), EnumValueType = EnumValueType.Value
+            , InvalidMessage = "行头风格，仅支持：0，不启用 1，序号列 2，复选框列")]
         [XmlAttribute(AttributeName = "SerialType")]
-        public int SerialType { get; set; }
+        public string SerialType { get; set; }
 
         #endregion AppGridE的属性
 
@@ -49,7 +51,7 @@ namespace Mysoft.Business.Controls
         {
             if (Row != null)
             {
-                var cellTypeCells = Row.AppGridCells.Find(a => a.CellType != AppGridCellType.None);
+                var cellTypeCells = Row.AppGridCells.Find(a => !string.IsNullOrEmpty(a.CellType));
                 if (cellTypeCells != null)
                 {
                     
@@ -130,19 +132,19 @@ namespace Mysoft.Business.Controls
             Name = "";
             DataType = "varchar";
             OtherAttributes = new Collection<XmlAttribute>();
-            CellType = AppGridCellType.None;
+            CellType = "";
         }
 
         /// <summary>
         /// 指定合计字段名（支持SQL表达式：Summary1+Summary2），该字段只能是数值类型
         /// </summary>
-        [MapContract(Describe = "合计字段名", Ignore = true)]
+        [MapContract(Describe = "合计字段名")]
         [XmlAttribute(AttributeName = "sumtotalfield")]
         public string SumTotalField { get; set; }
 
-        [MapContract(Describe = "标题列宽", Ignore = true)]
+        [MapContract(Describe = "标题列宽", Type = FieldType.Number)]
         [XmlAttribute(AttributeName = "titlewidth")]
-        public int TitleWidth { get; set; }
+        public string TitleWidth { get; set; }
 
         [MapContract(Describe = "数据输出格式")]
         [XmlAttribute(AttributeName = "format")]
@@ -152,17 +154,17 @@ namespace Mysoft.Business.Controls
         [XmlAttribute(AttributeName = "align")]
         public string Align { get; set; }
 
-        [MapContract(Describe = "是否允许排序")]
+        [MapContract(Describe = "是否允许排序", Type = FieldType.Boolean)]
         [XmlAttribute(AttributeName = "sortable")]
-        public bool Sortable { get; set; }
+        public string Sortable { get; set; }
 
         #region 非SDK定义但归属于它的成员
 
-        [MapContract(Describe = "属性名称", Ignore = true)]
+        [MapContract(Describe = "属性名称")]
         [XmlAttribute(AttributeName = "name")]
         public string Name { get; set; }
 
-        [MapContract(Describe = "数据类型", Ignore = true)]
+        [MapContract(Describe = "数据类型")]
         [XmlAttribute(AttributeName = "datatype")]
         public string DataType { get; set; }
 
@@ -173,29 +175,30 @@ namespace Mysoft.Business.Controls
         /// <summary>
         /// blank，check，datetime，hyperlink，layer，number，select，select2，text，texticon
         /// </summary>
-        [MapContract(Describe = "控件类型")]
+        [MapContract(Describe = "控件类型", EnumType = typeof(AppGridCellType), EnumValueType = EnumValueType.Text)]
         [XmlAttribute(AttributeName = "celltype")]
-        public AppGridCellType CellType { get; set; }
+        public string CellType { get; set; }
 
-        /// 新增记录时，控件是否可填。0 为只读，1 为可填，默认值为 1。
-        [XmlAttribute(AttributeName = "createapi")]
-        [MapContract(Describe = "新增记录时，控件是否可填")]
-        public bool Createapi { get; set; }
+        /// 新增记录时，控件是否可填。0 为只读，1 为可填，默认值为 1。这里跳过验证，放到验证器中验证可以指出具体是哪一列配置错误。
+        [XmlAttribute(AttributeName = "createapi")] 
+        [MapContract(Describe = "新增时能否编辑。0 为只读，1 为可填，默认值为 1"
+            , InvalidMessage = "0 为只读，1 为可填，默认值为 1", PassValid = true)]
+        public string Createapi { get; set; }
 
-        /// 修改记录时，控件是否可填。0 为只读，1 为可填，默认值为 1。
-        [XmlAttribute(AttributeName = "updateapi")]
-        [MapContract(Describe = "修改记录时，控件是否可填")]
-        public bool Updateapi { get; set; }
+        [XmlAttribute(AttributeName = "updateapi")] 
+        [MapContract(Describe = "更新时能否编辑。0 为只读，1 为可填，默认值为 1"
+            , InvalidMessage = "0 为只读，1 为可填，默认值为 1", PassValid = true)]
+        public string Updateapi { get; set; }
 
-        /// 是否必填项。0 为非必填，1 为必填，2 为建议填写，默认值为 0 。
         [XmlAttribute(AttributeName = "req")]
-        [MapContract(Describe = "是否必填项")]
-        public bool Req { get; set; }
+        [MapContract(Describe = "是否必填项", EnumType = typeof(RequireLevel), EnumValueType = EnumValueType.Value
+            , InvalidMessage = "0 为非必填，1 为必填，2 为建议填写，默认值为 0 。", PassValid = true)]
+        public string Req { get; set; }
 
         /// 是否必填项。0 为非必填，1 为必填，2 为建议填写，默认值为 0 。
         [XmlAttribute(AttributeName = "issave")]
-        [MapContract(Describe = "是否保存", Ignore = true)]
-        public bool IsSave { get; set; }
+        [MapContract(Describe = "是否保存", Type = FieldType.Boolean)]
+        public string IsSave { get; set; }
 
         #endregion AppGridE的属性
 
@@ -208,8 +211,8 @@ namespace Mysoft.Business.Controls
         /// <summary>
         /// 其余未被识别的节点
         /// </summary>
-        [XmlAnyElement]
-        public Collection<XmlElement> OtherElements { get; set; }
+        [XmlElement(ElementName = "attribute")]
+        public AppControlAttribute Attribute { get; set; }
     }
 
     /// <summary>
@@ -225,7 +228,7 @@ namespace Mysoft.Business.Controls
         [XmlAttribute(AttributeName = "title")]
         public string Title { get; set; }
 
-        [MapContract(Describe = "列宽", Ignore = true)]
+        [MapContract(Describe = "列宽")]
         [XmlAttribute(AttributeName = "width")]
         public string Width { get; set; }
     }

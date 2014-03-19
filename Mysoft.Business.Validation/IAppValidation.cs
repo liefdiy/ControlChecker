@@ -4,7 +4,7 @@ using System.Collections;
 
 namespace Mysoft.Business.Validation
 {
-    public interface IAppValidation : IDisposable
+    public interface IAppValidation
     {
         void Validate(AppControl control);
 

@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Xml;
-using System.Xml.Serialization;
-using ControlCheck.Business.Attributes;
+﻿using ControlCheck.Business.Attributes;
 using Mysoft.Business.Manager;
 using Mysoft.Common.Utility;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace Mysoft.Business.Controls
 {
@@ -18,7 +16,6 @@ namespace Mysoft.Business.Controls
     //{
     //}
 
-    [MapContract(Type = "appViewList", Describe = "视图列表")]
     public class AppFindView
     {
         public AppFindView()
@@ -28,11 +25,11 @@ namespace Mysoft.Business.Controls
             GroupId = "";
         }
 
-        [MapContract(Describe = "查询结果视图", Ignore = true)]
+        [MapContract(Describe = "查询结果视图")]
         [XmlAttribute(AttributeName = "resultxmlurl")]
         public string ResultXmlUrl { get; set; }
 
-        [MapContract(Describe = "历史查询所属的页面", Ignore = true)]
+        [MapContract(Describe = "历史查询所属的页面")]
         [XmlAttribute(AttributeName = "groupid")]
         public string GroupId { get; set; }
 
@@ -40,33 +37,32 @@ namespace Mysoft.Business.Controls
         public List<AppFindViewItem> AppFindViewItems { get; set; }
     }
 
-    [MapContract(Type = "view")]
     public class AppFindViewItem
     {
         /// <summary>
         /// 视图 id，定位视图用
         /// </summary>
         [XmlAttribute(AttributeName = "xmlid")]
-        [MapContract(Describe = "视图id", Ignore = true)]
+        [MapContract(Describe = "视图id")]
         public string XmlId { get; set; }
 
         /// <summary>
         /// 视图对应的 XML 文件地址
         /// </summary>
         [XmlAttribute(AttributeName = "xmlurl")]
-        [MapContract(Describe = "视图XML路径", Ignore = true)]
+        [MapContract(Describe = "视图XML路径")]
         public string XmlUrl { get; set; }
 
         [XmlText]
         public string Title { get; set; }
 
         [XmlAttribute(AttributeName = "viewid")]
-        [MapContract(Describe = "视图id", Ignore = true)]
+        [MapContract(Describe = "视图id")]
         public string ViewId { get; set; }
 
         [XmlAttribute(AttributeName = "selected")]
-        [MapContract(Describe = "是否默认视图")]
-        public bool IsSelected { get; set; }
+        [MapContract(Describe = "是否默认视图", Type = FieldType.Boolean)]
+        public string IsSelected { get; set; }
 
         private MapPage _SubPage = null;
 
@@ -89,7 +85,6 @@ namespace Mysoft.Business.Controls
                     }
                     catch (Exception)
                     {
-
                     }
                 }
 
@@ -103,29 +98,31 @@ namespace Mysoft.Business.Controls
     {
         public AppFindQuery()
         {
-            IsShowCheckboxDefault = true;
+            IsShowCheckboxDefault = "true";
+            IsShowCheckbox = "false";
+            IsShowQueryInResult = "false";
         }
 
         /// <summary>
         /// 是否显示“视图内查询”复选框
         /// </summary>
-        [MapContract(Describe = "是否显示“视图内查询”")]
+        [MapContract(Describe = "是否显示“视图内查询”", Type = FieldType.Boolean)]
         [XmlAttribute(AttributeName = "isshowcheckbox")]
-        public bool IsShowCheckbox { get; set; }
+        public string IsShowCheckbox { get; set; }
 
         /// <summary>
         /// 在“视图内查询”选项默认是否勾选
         /// </summary>
         [XmlAttribute(AttributeName = "checkboxdefault")]
-        [MapContract(Describe = "“视图内查询”选项默认是否勾选”")]
-        public bool IsShowCheckboxDefault { get; set; }
+        [MapContract(Describe = "“视图内查询”选项默认是否勾选”", Type = FieldType.Boolean)]
+        public string IsShowCheckboxDefault { get; set; }
 
         /// <summary>
         /// 是否显示【结果中查找】按钮
         /// </summary>
         [XmlAttribute(AttributeName = "queryinresult")]
-        [MapContract(Describe = "是否显示【结果中查找】按钮")]
-        public bool IsShowQueryInResult { get; set; }
+        [MapContract(Describe = "是否显示【结果中查找】按钮", Type = FieldType.Boolean)]
+        public string IsShowQueryInResult { get; set; }
 
         /// <summary>
         /// 数据结构名称
@@ -184,19 +181,21 @@ namespace Mysoft.Business.Controls
         public AppFindQueryItem()
         {
             OtherAttributes = new Collection<XmlAttribute>();
+            Type = AppFormItemType.Text.ToString();
         }
 
         [MapContract(Describe = "字段名")]
         [XmlAttribute(AttributeName = "field")]
         public string Field { get; set; }
 
-        [MapContract(Describe = "字段类型，datetime,select,lookup,number或自定义")]
+        [MapContract(Describe = "字段类型，datetime,select,lookup,number或自定义", EnumType = typeof(AppFormItemType), EnumValueType = EnumValueType.Text
+            , InvalidMessage = "控件类型如datetime,select,lookup,number等，请参照SDK")]
         [XmlAttribute(AttributeName = "type")]
         public string Type { get; set; }
 
-        [MapContract(Describe = "查找方式")]
+        [MapContract(Describe = "查找方式", EnumType = typeof(OperatorType))]
         [XmlAttribute(AttributeName = "operator")]
-        public OperatorType Operator { get; set; }
+        public string Operator { get; set; }
 
         [MapContract(Describe = "标题")]
         [XmlAttribute(AttributeName = "title")]

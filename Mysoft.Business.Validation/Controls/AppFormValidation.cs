@@ -1,4 +1,5 @@
-﻿using Mysoft.Business.Controls;
+﻿using System.Collections.Generic;
+using Mysoft.Business.Controls;
 using Mysoft.Business.Validation.Entity;
 
 namespace Mysoft.Business.Validation.Controls
@@ -13,11 +14,8 @@ namespace Mysoft.Business.Validation.Controls
             AppForm form = control.Control as AppForm;
             if (form == null) return;  //不是grid
 
-            ValidateForm(form);
-        }
+            List<string> fields = GetFields(control.DataSource.Sql);
 
-        private void ValidateForm(AppForm form)
-        {
             foreach (AppFormTab tab in form.Tabs)
             {
                 foreach (AppFormSection section in tab.Sections)
@@ -46,15 +44,19 @@ namespace Mysoft.Business.Validation.Controls
                             if (!string.IsNullOrEmpty(item.Sql))
                             {
                                 string error = "";
-                                bool b = ValidateSql(item.Sql, out error);
-                                if (b == false)
+                                if (ValidateSql(item.Sql, out error) == false)
                                 {
                                     AddResult(field, "sql", "正确执行", error, Level.Error);
                                 }
                             }
                         }
 
-                        ValidateAttribute(item.OtherAttributes);
+                        if (!fields.Contains(item.Field) && !string.IsNullOrEmpty(item.Field))
+                        {
+                            Results.Add(new Result("字段配置错误", "SQL中未包含列" + item.Field, Level.Error, typeof(AppFormValidation)));
+                        }
+
+                        ValidateAttribute(item.OtherAttributes, item.Title);
                     }
                 }
             }

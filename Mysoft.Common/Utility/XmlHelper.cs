@@ -154,5 +154,32 @@
             }
             return XmlDeserializeFromFile<T>(path, encoding);
         }
+
+        public static string FormatXml(string xml)
+        {
+            XmlTextWriter w = null;
+            StringBuilder sb = new StringBuilder();
+            try
+            {
+                XmlDocument document = new XmlDocument();
+                document.LoadXml(xml);
+                StringWriter writer2 = new StringWriter(sb);
+                w = new XmlTextWriter(writer2)
+                {
+                    Formatting = Formatting.Indented,
+                    Indentation = 2,
+                    IndentChar = ' '
+                };
+                document.WriteTo(w);
+            }
+            finally
+            {
+                if (w != null)
+                {
+                    w.Close();
+                }
+            }
+            return sb.ToString();
+        }
     }
 }

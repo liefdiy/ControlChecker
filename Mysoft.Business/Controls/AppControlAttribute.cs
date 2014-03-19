@@ -16,15 +16,12 @@ namespace Mysoft.Business.Controls
             Attributes = new Collection<XmlAttribute>();
         }
 
-        [MapContract(Ignore = true)]
         [XmlAttribute(AttributeName = "name")]
         public string Name { get; set; }
 
-        [MapContract(Ignore = true)]
         [XmlAttribute(AttributeName = "field")]
         public string Field { get; set; }
 
-        [MapContract(Ignore = true)]
         [XmlAttribute(AttributeName = "datatype")]
         public string DataType { get; set; }
 

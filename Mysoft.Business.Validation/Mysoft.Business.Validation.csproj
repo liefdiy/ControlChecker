@@ -34,6 +34,12 @@
     <Reference Include="gudusoft.gsqlparser">
       <HintPath>..\Mysoft.Common\libs\gudusoft.gsqlparser.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Data.Schema.ScriptDom">
+      <HintPath>..\Mysoft.Common\libs\Microsoft.Data.Schema.ScriptDom.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Schema.ScriptDom.Sql">
+      <HintPath>..\Mysoft.Common\libs\Microsoft.Data.Schema.ScriptDom.Sql.dll</HintPath>
+    </Reference>
     <Reference Include="Mysoft.Map.Extensions">
       <HintPath>..\Mysoft.Common\libs\Mysoft.Map.Extensions.dll</HintPath>
     </Reference>
@@ -46,7 +52,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppValidationManager.cs" />
+    <Compile Include="Controls\AppDropDownListValidation.cs" />
     <Compile Include="Controls\AppFormValidation.cs" />
+    <Compile Include="Controls\AppGridEValidation.cs" />
     <Compile Include="Controls\AppGridTreeValidation.cs" />
     <Compile Include="Controls\AppGridValidation.cs" />
     <Compile Include="CommonValidation.cs" />
@@ -54,6 +62,7 @@
     <Compile Include="Controls\AppViewListValidation.cs" />
     <Compile Include="Controls\DataSourceValidation.cs" />
     <Compile Include="Controls\AppFindValidation.cs" />
+    <Compile Include="Controls\AppDropDownTreeValidation.cs" />
     <Compile Include="IAppValidation.cs" />
     <Compile Include="Db\DbAccessManager.cs" />
     <Compile Include="Entity\Result.cs" />

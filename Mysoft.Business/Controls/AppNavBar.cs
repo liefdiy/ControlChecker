@@ -19,25 +19,25 @@ namespace Mysoft.Business.Controls
 
     public class AppNavItem
     {
-        [MapContract(Describe = "Id", Ignore = true)]
+        [MapContract(Describe = "Id")]
         [XmlAttribute(AttributeName = "id")]
         public string Id { get; set; }
 
-        [MapContract(Describe = "标签页显示名", Ignore = true)]
+        [MapContract(Describe = "标签页显示名")]
         [XmlAttribute(AttributeName = "title")]
         public string Title { get; set; }
 
-        [MapContract(Describe = "新增状态是否显示该标签页", Ignore = true)]
+        [MapContract(Describe = "新增状态是否显示该标签页")]
         [XmlAttribute(AttributeName = "isshowonadd")]
         public string IsShowOnAdd { get; set; }
 
-        [MapContract(Describe = "标签页对应的页面地址", Ignore = true)]
+        [MapContract(Describe = "标签页对应的页面地址")]
         [XmlAttribute(AttributeName = "url")]
         public string Url { get; set; }
 
-        [MapContract(Describe = "是否显示")]
+        [MapContract(Describe = "是否显示", Type = FieldType.Boolean)]
         [XmlAttribute(AttributeName = "display")]
-        public bool IsDisplay { get; set; }
+        public string IsDisplay { get; set; }
 
         /// <summary>
         /// 其它参数

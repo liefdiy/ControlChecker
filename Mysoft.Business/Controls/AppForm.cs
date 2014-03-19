@@ -12,11 +12,12 @@ namespace Mysoft.Business.Controls
         public AppForm()
         {
             Tabs = new List<AppFormTab>();
+            ShowTab = "false";
         }
 
-        [MapContract(Describe = "是否输出标签头", Ignore = true)]
+        [MapContract(Describe = "是否输出标签头", Type = FieldType.Boolean)]
         [XmlAttribute(AttributeName = "showtab")]
-        public bool ShowTab { get; set; }
+        public string ShowTab { get; set; }
 
         [XmlElement(ElementName = "tab")]
         public List<AppFormTab> Tabs { get; set; }
@@ -28,12 +29,12 @@ namespace Mysoft.Business.Controls
         {
             Title = "";
             Sections = new List<AppFormSection>();
+            Display = "false";
         }
 
-
-        [MapContract(Describe = "是否有选中标签", Ignore = true)]
+        [MapContract(Describe = "是否有选中标签", Type = FieldType.Boolean)]
         [XmlAttribute(AttributeName = "display")]
-        public bool Display { get; set; }
+        public string Display { get; set; }
 
         [XmlAttribute(AttributeName = "title")]
         public string Title { get; set; }
@@ -48,9 +49,9 @@ namespace Mysoft.Business.Controls
         {
             Title = "";
             SecId = "";
-            Display = true;
-            Cols = 2;
-            TitleWidth = 115;
+            Display = "true";
+            Cols = "2";
+            TitleWidth = "115";
             Items = new List<AppFormItem>();
         }
 
@@ -58,38 +59,38 @@ namespace Mysoft.Business.Controls
         [XmlAttribute(AttributeName = "title")]
         public string Title { get; set; }
 
-        [MapContract(Describe = "是否显示区域标题", Ignore = true)]
+        [MapContract(Describe = "是否显示区域标题", Type = FieldType.Boolean)]
         [XmlAttribute(AttributeName = "showtitle")]
-        public bool ShowTitle { get; set; }
+        public string ShowTitle { get; set; }
 
-        [MapContract(Ignore = true, Describe = "指定每行包含的录入控件数量")]
+        [MapContract(Describe = "指定每行包含的录入控件数量", Type = FieldType.Number)]
         [XmlAttribute(AttributeName = "cols")]
-        public int Cols { get; set; }
+        public string Cols { get; set; }
 
-        [MapContract(Ignore = true, Describe = "控件前面的标题所占的列宽")]
+        [MapContract(Describe = "控件前面的标题所占的列宽", Type = FieldType.Number)]
         [XmlAttribute(AttributeName = "titlewidth")]
-        public int TitleWidth { get; set; }
+        public string TitleWidth { get; set; }
 
-        [MapContract(Ignore = true, Describe = "单元格高度")]
+        [MapContract(Describe = "单元格高度", Type = FieldType.Number)]
         [XmlAttribute(AttributeName = "height")]
-        public int Height { get; set; }
+        public string Height { get; set; }
 
-        [MapContract(Ignore = true, Describe = "单元格边距")]
+        [MapContract(Describe = "单元格边距")]
         [XmlAttribute(AttributeName = "cellpadding")]
         public string CellPadding { get; set; }
 
-        [MapContract(Ignore = true, Describe = "Section ID")]
+        [MapContract(Describe = "Section ID")]
         [XmlAttribute(AttributeName = "secid")]
         public string SecId { get; set; }
 
-        [MapContract(Describe = "是否显示标题分隔条", Ignore = true)]
+        [MapContract(Describe = "是否显示标题分隔条", Type = FieldType.Boolean)]
         [XmlAttribute(AttributeName = "showbar")]
-        public bool ShowBar { get; set; }
+        public string ShowBar { get; set; }
 
         /// 是否显示标题分隔条
-        [MapContract(Describe = "是否显示")]
+        [MapContract(Describe = "是否显示", Type = FieldType.Boolean)]
         [XmlAttribute(AttributeName = "display")]
-        public bool Display { get; set; }
+        public string Display { get; set; }
 
         [XmlElement(ElementName = "item")]
         public List<AppFormItem> Items { get; set; }
@@ -111,7 +112,7 @@ namespace Mysoft.Business.Controls
             Updateapi = "1";
             Createapi = "1";
             Req = "0";
-            Colspan = 1;
+            Colspan = "1";
             Href = "?";
             Target = "_blank";
             Options = new List<SelectOption>();
@@ -153,19 +154,20 @@ namespace Mysoft.Business.Controls
         public string Title { get; set; }
 
         [XmlAttribute(AttributeName = "colspan")]
-        [MapContract(Describe = "控件所占列宽")]
-        public int Colspan { get; set; }
+        [MapContract(Describe = "控件所占列宽", Type = FieldType.Number)]
+        public string Colspan { get; set; }
 
         /// 是否必填项。0 为非必填，1 为必填，2 为建议填写，默认值为 0 。
         [XmlAttribute(AttributeName = "req")]
-        [MapContract(Describe = "是否必填项", EnumType = typeof(RequireLevel))]
+        [MapContract(Describe = "是否必填项", EnumType = typeof(RequireLevel), EnumValueType = EnumValueType.Value
+            , InvalidMessage = "0 为非必填，1 为必填，2 为建议填写，默认值为 0 。")]
         public string Req { get; set; }
 
-        [MapContract(Ignore = true, Describe = "单元格高度")]
+        [MapContract(Describe = "单元格高度", Type = FieldType.Number)]
         [XmlAttribute(AttributeName = "height")]
-        public int Height { get; set; }
+        public string Height { get; set; }
 
-        [MapContract(Ignore = true, Describe = "控件属性，number控件的内置属性：acc:小数保留位, grp:千分号 ")]
+        [MapContract(Describe = "控件属性，number控件的内置属性：acc:小数保留位, grp:千分号 ")]
         [XmlElement(ElementName = "attribute")]
         public AppControlAttribute OtherAttributes { get; set; }
 
@@ -237,11 +239,11 @@ namespace Mysoft.Business.Controls
         [MapContract(Describe = "辅助录入图标")]
         public string AssistantIcon { get; set; }
         
-        [MapContract(Ignore = true, Describe = "图标宽度")]
+        [MapContract(Describe = "图标宽度")]
         [XmlAttribute(AttributeName = "iconwidth")]
         public string IconWidth { get; set; }
 
-        [MapContract(Ignore = true, Describe = "图标对齐方式(css align属性)")]
+        [MapContract(Describe = "图标对齐方式(css align属性)")]
         [XmlAttribute(AttributeName = "iconalign")]
         public string IconAlign { get; set; }
 

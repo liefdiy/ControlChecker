@@ -684,6 +684,15 @@ namespace SCide
             AppConfigManager.Load(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), AppConfigManager.Name));
         }
 
+        private void formatXmlToolStripButton_Click(object sender, EventArgs e)
+        {
+            string temp = XmlHelper.FormatXml(ActiveDocument.Scintilla.Text);
+            if (!string.IsNullOrEmpty(temp))
+            {
+                ActiveDocument.Scintilla.Text = temp;
+            }
+        }
+
         private void runcheckStripButton_Click(object sender, EventArgs e)
         {
             try

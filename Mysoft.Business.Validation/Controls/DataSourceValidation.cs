@@ -1,168 +1,111 @@
-﻿using gudusoft.gsqlparser;
-using Mysoft.Business.Controls;
-using Mysoft.Business.Validation.Db;
-using Mysoft.Business.Validation.Entity;
-using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Text.RegularExpressions;
-using Mysoft.Common.Extensions;
-
-namespace Mysoft.Business.Validation.Controls
+﻿namespace Mysoft.Business.Validation.Controls
 {
+    using Mysoft.Business.Controls;
+    using Mysoft.Business.Validation;
+    using Mysoft.Business.Validation.Db;
+    using Mysoft.Business.Validation.Entity;
+    using Mysoft.Common.Extensions;
+    using System;
+    using System.Collections.Generic;
+    using System.Data.SqlClient;
+    using System.Text.RegularExpressions;
+
     public class DataSourceValidation : AppValidationBase
     {
-        static readonly TGSqlParser Sqlparser = new TGSqlParser(TDbVendor.DbVMssql);
-
-        public override void Dispose()
-        {
-            try
-            {
-                Sqlparser.Destroy();
-                Sqlparser.Dispose();
-            }
-            catch (Exception)
-            {
-            }
-            base.Dispose();
-        }
-
-        /// <summary>
-        /// 暂不支持SQL缓存依赖检测
-        /// </summary>
-        /// <param name="control"></param>
-        /// <returns></returns>
         public override void Validate(AppControl control)
         {
-            if (control.DataSource == null) return;
-            if (control.Control is AppGridTree) return;    //appGridTree不处理
-            AppGrid grid = control.Control as AppGrid;
-            if (grid != null)
+            if ((control.DataSource != null) && !(control.Control is AppGridTree))
             {
-                if (grid.Row != null && grid.Row.AppGridCells.Count > 0)
+                AppGrid grid = control.Control as AppGrid;
+                if (((grid == null) || ((grid.Row == null) || (grid.Row.AppGridCells.Count <= 0))) || string.IsNullOrEmpty(grid.Row.AppGridCells[0].CellType))
                 {
-                    if (grid.Row.AppGridCells[0].CellType != AppGridCellType.None)
-                    {
-                        //appGridE不处理
-                        return;
-                    }
+                    base.Results.AddRange(ValidateSql(control.DataSource));
                 }
             }
-
-            Results.AddRange(ValidateSql(control.DataSource));
-        }
-
-        /// <summary>
-        /// 验证SQL能否正确执行
-        /// </summary>
-        /// <param name="ds"></param>
-        /// <returns></returns>
-        private List<Result> ValidateSql(DataSource ds)
-        {
-            List<Result> list = new List<Result>();
-
-            if (!Regex.IsMatch(ds.Sql, "(select|from|where)", RegexOptions.IgnoreCase))
-            {
-                //可能是存储过程，则type必须为SP或StoredProcedure
-                if ((ds.Type.EqualIgnoreCase("sp") || ds.Type.EqualIgnoreCase("StoredProcedure")) == false)
-                {
-                    list.Add(new Result("DataSource的Type配置错误", "ERP3.0后SQL若配置为存储过程，则type必须为SP或StoredProcedure", Level.Error, GetType()));
-                }
-            }
-
-            //SELECT、FROM、WHERE大小写
-            if (!CommonValidation.CheckCase(ds.Sql, ds.PageMode))
-            {
-                list.Add(new Result("SQL关键字大小写检查", string.Format("SQL语句中不存在大写的SELECT、FROM、WHERE\n{0}", ds.Sql), Level.Error, GetType()));
-            }
-
-            try
-            {
-                //替换变量
-                string sql = Regex.Replace(ds.Sql, @"([=|in|<>]+\s*)\[[^a-z]*\]", "$1(null)", RegexOptions.IgnoreCase);
-                if (NoAliasSql(sql) || NoAliasSqlCustom(sql))
-                {
-                    list.Add(new Result("SQL中的Select字段检查", "无别名", Level.Error, GetType()));
-                }
-
-                if (CommonValidation.HasSqlKeywords(sql))
-                {
-                    //存在sql关键字
-                    list.Add(new Result("SQL中特定关键字检查", string.Format("存在特定关键字option|COMPUTE\n{0}", ds.Sql), Level.Error, GetType()));
-                }
-            }
-            catch (Exception e)
-            {
-                list.Add(new Result("执行错误", "SQL语法检查" + e.StackTrace, Level.Warn, GetType()));
-            }
-
-            return list;
-        }
-
-        private bool NoAliasSql(string sql)
-        {
-            Sqlparser.SqlText.Text = sql;
-            int iRet = -1;
-            try
-            {
-                iRet = Sqlparser.Parse();
-            }
-            catch (Exception)
-            {
-                //这个东西有bug
-            }
-            
-            //前提是SQL可以正确被解析
-            if (iRet == 0)
-            {
-                foreach (var stmt in Sqlparser.SqlStatements)
-                {
-                    foreach (var field in stmt.Fields)
-                    {
-                        if (field.FieldType != TLzFieldType.lftAttr && field.FieldAlias == "")
-                        {
-                            var match = Regex.Match(field.FieldDesc, @"^([^=\s]+)\s*=.*", RegexOptions.IgnoreCase);
-                            if (!match.Success)
-                            {
-                                return true;
-                            }
-                        }
-                    }
-                }
-                return false;
-            }
-            return false;
         }
 
         private static bool NoAliasSqlCustom(string sql)
         {
-            if (string.IsNullOrEmpty(sql))
-                return false;
-
-            string temp = CommonValidation.GetFilter(sql);
-            using (var connection = new SqlConnection(DbAccessManager.Connectstring))
+            if (!string.IsNullOrEmpty(sql))
             {
-                connection.Open();
-
-                //重新创建
-                try
+                string temp = CommonValidation.GetFilter(sql);
+                using (SqlConnection connection = new SqlConnection(DbAccessManager.Connectstring))
                 {
-                    var createCommand = new SqlCommand(temp, connection);
-                    using (var sqlReader = createCommand.ExecuteReader())
+                    connection.Open();
+                    try
                     {
-                        for (int index = 0; index < sqlReader.FieldCount; index++)
+                        SqlCommand createCommand = new SqlCommand(temp, connection);
+                        using (SqlDataReader sqlReader = createCommand.ExecuteReader())
                         {
-                            var name = sqlReader.GetName(index);
-                            if (string.IsNullOrEmpty(name))
-                                return true;
+                            for (int index = 0; index < sqlReader.FieldCount; index++)
+                            {
+                                if (string.IsNullOrEmpty(sqlReader.GetName(index)))
+                                {
+                                    return true;
+                                }
+                            }
                         }
                     }
-                }
-                catch (SqlException)
-                {
+                    catch (SqlException ex)
+                    {
+                        throw ex;
+                    }
                 }
             }
             return false;
+        }
+
+        private List<Result> ValidateSql(DataSource ds)
+        {
+            List<Result> list = new List<Result>();
+            if (!Regex.IsMatch(ds.Sql, "(select|from|where)", RegexOptions.IgnoreCase) && !(ds.Type.EqualIgnoreCase("sp") || ds.Type.EqualIgnoreCase("StoredProcedure")))
+            {
+                list.Add(new Result("DataSource的Type配置错误", "ERP3.0后SQL若配置为存储过程，则type必须为SP或StoredProcedure", Level.Error, base.GetType()));
+            }
+
+            int pagemode = Convert.ToInt32(ds.PageMode);
+            if(pagemode > 2 || pagemode < 0)
+            {
+                list.Add(new Result("DataSource的pagemode属性值错误", "仅支持0,1,2", Level.Error, base.GetType()));
+                return list;
+            }
+
+            if (!CommonValidation.CheckCase(ds.Sql, pagemode))
+            {
+                list.Add(new Result("SQL关键字大小写检查", string.Format("SQL语句中不存在大写的SELECT、FROM、WHERE。\n{0}", ds.Sql), Level.Error, base.GetType()));
+            }
+
+            try
+            {
+                if (IsIncorrectSql(ds.Sql))
+                {
+                    list.Add(new Result("SQL语句有误", "SQL语法错误", Level.Error, base.GetType()));
+                    return list;
+                }
+
+                string sql = Regex.Replace(ds.Sql, @"([=|in|<>]+\s*)\[[^a-z]*\]", "$1(null)", RegexOptions.IgnoreCase);
+                
+                if (NoAliasSqlCustom(sql))
+                {
+                    list.Add(new Result("SQL中的Select字段检查", "无别名", Level.Error, base.GetType()));
+                }
+
+                if (CommonValidation.HasSqlKeywords(sql))
+                {
+                    list.Add(new Result("SQL中特定关键字检查", string.Format("存在特定关键字option|COMPUTE\n{0}", ds.Sql), Level.Error, base.GetType()));
+                }
+
+                ds.IsSqlPassed = true;
+            }
+            catch (SqlException sqlException)
+            {
+                list.Add(new Result("执行错误", "SQL语法检查" + sqlException.Message, Level.Error, base.GetType()));
+            }
+            catch (Exception e)
+            {
+                list.Add(new Result("执行错误", "SQL语法检查" + e.StackTrace, Level.Warn, base.GetType()));
+            }
+            return list;
         }
     }
 }
