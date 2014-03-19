@@ -107,7 +107,7 @@ namespace Mysoft.Business.Controls
         public AppFormItem()
         {
             Title = "";
-            Type = AppFormItemType.Text;
+            Type = AppFormItemType.Text.ToString();
             Field = "";
             Updateapi = "1";
             Createapi = "1";
@@ -127,8 +127,9 @@ namespace Mysoft.Business.Controls
         /// “datetime”表示控件为日期录入控件。
         /// </summary>
         [XmlAttribute(AttributeName = "type")]
-        [MapContract(Describe = "控件类型")]
-        public AppFormItemType Type { get; set; }
+        [MapContract(Describe = "控件类型", EnumType = typeof(AppFormItemType), EnumValueType = EnumValueType.Text
+            , InvalidMessage = "控件类型支持text, memo, number等，请查阅SDK")]
+        public string Type { get; set; }
 
         [XmlAttribute(AttributeName = "name")]
         [MapContract(Describe = "控件名")]

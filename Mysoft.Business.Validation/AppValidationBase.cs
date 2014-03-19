@@ -51,22 +51,6 @@ namespace Mysoft.Business.Validation
         }
 
         /// <summary>
-        /// 校验SQL语句
-        /// </summary>
-        /// <param name="sql"></param>
-        /// <returns></returns>
-        protected bool IsIncorrectSql(string sql)
-        {
-            TSql100Parser parser = new TSql100Parser(false);
-            IList<ParseError> errors = new List<ParseError>();
-            using (StringReader reader = new StringReader(sql))
-            {
-                parser.Parse(reader, out errors);
-                return (errors.Count > 0);
-            }
-        }
-
-        /// <summary>
         /// 获取SQL中查询出来的全部列名
         /// </summary>
         /// <param name="sql"></param>

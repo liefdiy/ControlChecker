@@ -717,13 +717,13 @@ namespace SCide
             }
             catch (Exception ex)
             {
-                FileHelper.Write("error.log", ex.StackTrace);
+                FileHelper.Write("error.log", ex.StackTrace, Encoding.UTF8, true);
                 MessageBox.Show(ex.Message);
             }
             finally
             {
                 this.runcheckStripButton.Enabled = true;
-                this.progressStripStatusLabel.Text = "Connection:" + AppConfigManager.ConnectionString;
+                this.progressStripStatusLabel.Text = "ºÏ≤‚÷¥––ÕÍ±œ£∫" + DateTime.Now.ToString();
             }
         }
 

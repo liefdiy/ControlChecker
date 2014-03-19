@@ -23,7 +23,7 @@ namespace Mysoft.Business.Validation.Controls
                         {
                             if (attr.Name.EqualIgnoreCase("sql"))
                             {
-                                if (IsIncorrectSql(attr.Value))
+                                if (CommonValidation.IsIncorrectSql(attr.Value))
                                 {
                                     Results.Add(new Result("AppGridE", string.Format("[{0}]单元格的SQL有误：{1}", cell.Title, attr.Value), Level.Error, typeof(AppGridEValidation)));
                                 }

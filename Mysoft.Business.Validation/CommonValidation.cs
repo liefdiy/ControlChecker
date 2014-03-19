@@ -1,4 +1,9 @@
-﻿namespace Mysoft.Business.Validation
+﻿using System.Collections.Generic;
+using System.IO;
+using Microsoft.Data.Schema.ScriptDom;
+using Microsoft.Data.Schema.ScriptDom.Sql;
+
+namespace Mysoft.Business.Validation
 {
     using Mysoft.Business.Validation.Db;
     using System;
@@ -9,6 +14,22 @@
     public static class CommonValidation
     {
         private static readonly Regex EqualRegex = new Regex(@"[1-4]+\s*=\s*[1-4]+", RegexOptions.IgnoreCase);
+
+        /// <summary>
+        /// 校验SQL语句
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        public static bool IsIncorrectSql(string sql)
+        {
+            TSql100Parser parser = new TSql100Parser(false);
+            IList<ParseError> errors = new List<ParseError>();
+            using (StringReader reader = new StringReader(sql))
+            {
+                parser.Parse(reader, out errors);
+                return (errors.Count > 0);
+            }
+        }
 
         public static bool CheckCase(string sql, int pagemode)
         {

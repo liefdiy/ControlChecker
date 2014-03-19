@@ -175,7 +175,8 @@ namespace Mysoft.Business.Controls
         /// <summary>
         /// blank，check，datetime，hyperlink，layer，number，select，select2，text，texticon
         /// </summary>
-        [MapContract(Describe = "控件类型", EnumType = typeof(AppGridCellType), EnumValueType = EnumValueType.Text)]
+        [MapContract(Describe = "控件类型", EnumType = typeof(AppGridCellType), EnumValueType = EnumValueType.Text
+            , InvalidMessage = "控件类型支持text, memo, number等，请查阅SDK")]
         [XmlAttribute(AttributeName = "celltype")]
         public string CellType { get; set; }
 

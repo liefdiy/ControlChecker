@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Mysoft.Business.Controls;
+using Mysoft.Common.Extensions;
 using Mysoft.Business.Validation.Entity;
 
 namespace Mysoft.Business.Validation.Controls
@@ -26,7 +27,7 @@ namespace Mysoft.Business.Validation.Controls
 
                         if (string.IsNullOrEmpty(field))
                         {
-                            AddResult("未设置控件名，请设置field或name的值，否则控件将自动命名为Unnamed{x}", Level.Warn);
+                            //AddResult(string.Format("{0}未设置item控件名，请设置field或name的值，否则控件将自动命名为Unnamed+数字", item.Title), Level.Warn);
                             field = string.Format("tab:{0}, section: {1},", tab.Title, section.Title);
                         }
 
@@ -34,12 +35,12 @@ namespace Mysoft.Business.Validation.Controls
                         ValidateCreateapi(item.Createapi, field);
                         ValidateUpdateapi(item.Updateapi, field);
 
-                        if (item.Type == AppFormItemType.Datetime)
+                        if (item.Type.EqualIgnoreCase(AppFormItemType.Datetime.ToString()))
                         {
                             ValidateTime(item.Time, field);
                         }
 
-                        if (item.Type == AppFormItemType.Select)
+                        if (item.Type.EqualIgnoreCase(AppFormItemType.Select.ToString()))
                         {
                             if (!string.IsNullOrEmpty(item.Sql))
                             {
@@ -51,9 +52,13 @@ namespace Mysoft.Business.Validation.Controls
                             }
                         }
 
-                        if (!fields.Contains(item.Field) && !string.IsNullOrEmpty(item.Field))
+                        if (control.DataSource.IsSqlPassed)
                         {
-                            Results.Add(new Result("字段配置错误", "SQL中未包含列" + item.Field, Level.Error, typeof(AppFormValidation)));
+                            if (!fields.Contains(item.Field) && !string.IsNullOrEmpty(item.Field))
+                            {
+                                Results.Add(new Result("字段配置错误", "SQL中未包含列" + item.Field, Level.Error,
+                                                       typeof (AppFormValidation)));
+                            }
                         }
 
                         ValidateAttribute(item.OtherAttributes, item.Title);

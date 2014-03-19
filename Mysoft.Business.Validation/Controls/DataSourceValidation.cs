@@ -77,7 +77,7 @@
 
             try
             {
-                if (IsIncorrectSql(ds.Sql))
+                if (!ds.IsSqlPassed)
                 {
                     list.Add(new Result("SQL语句有误", "SQL语法错误", Level.Error, base.GetType()));
                     return list;
@@ -94,8 +94,6 @@
                 {
                     list.Add(new Result("SQL中特定关键字检查", string.Format("存在特定关键字option|COMPUTE\n{0}", ds.Sql), Level.Error, base.GetType()));
                 }
-
-                ds.IsSqlPassed = true;
             }
             catch (SqlException sqlException)
             {

@@ -84,6 +84,10 @@ namespace Mysoft.Business.Validation
                 IAppValidation validation = Activator.CreateInstance(type) as IAppValidation;
                 if (validation != null)
                 {
+                    if(control.DataSource != null)
+                    {
+                        control.DataSource.IsSqlPassed = !CommonValidation.IsIncorrectSql(control.DataSource.Sql);
+                    }
                     validation.Validate(control);
                     List<Result> list = validation.GetResults() as List<Result>;
                     if (list != null)
