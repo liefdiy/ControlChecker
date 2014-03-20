@@ -56,7 +56,8 @@
     <Compile Include="Utility\XmlReaderEx.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="libs\gudusoft.gsqlparser.dll" />
+    <Content Include="libs\Microsoft.Data.Schema.ScriptDom.dll" />
+    <Content Include="libs\Microsoft.Data.Schema.ScriptDom.Sql.dll" />
     <Content Include="libs\Mysoft.Map.Extensions.dll" />
     <Content Include="libs\NChardet.dll" />
     <Content Include="libs\Newtonsoft.Json.dll" />

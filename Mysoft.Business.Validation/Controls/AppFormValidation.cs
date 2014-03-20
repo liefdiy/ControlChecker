@@ -74,7 +74,7 @@ namespace Mysoft.Business.Validation.Controls
         {
             if(string.IsNullOrEmpty(value)) return;
 
-            AppFormItemType type = (AppFormItemType)Enum.Parse(typeof(AppFormItemType), itemType);
+            AppFormItemType type = (AppFormItemType)Enum.Parse(typeof(AppFormItemType), itemType, true);
             switch (type)
             {
                 //case AppFormItemType.Text:

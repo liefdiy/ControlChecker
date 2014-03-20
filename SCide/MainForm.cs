@@ -717,7 +717,7 @@ namespace SCide
             }
             catch (Exception ex)
             {
-                FileHelper.Write("error.log", ex.StackTrace, Encoding.UTF8, true);
+                FileHelper.Write("error.log", string.Format("---\t{0}\t---\r\n{1}\r\n-------------\r\n", DateTime.Now, ex.StackTrace), Encoding.UTF8, true);
                 MessageBox.Show(ex.Message);
             }
             finally
@@ -761,6 +761,7 @@ namespace SCide
 
         private MapPage GetEntity()
         {
+            if(ActiveDocument == null) return null;
             FileInfo fi = new FileInfo(ActiveDocument.FilePath);
             if (!fi.Extension.EqualIgnoreCase(".xml"))
             {
