@@ -1,6 +1,4 @@
-﻿using System.Xml;
-
-namespace Mysoft.Business.Validation
+﻿namespace Mysoft.Business.Validation
 {
     using ControlCheck.Business.Attributes;
     using Mysoft.Business.Controls;
@@ -15,6 +13,7 @@ namespace Mysoft.Business.Validation
     using System.Linq;
     using System.Reflection;
     using System.Text.RegularExpressions;
+    using System.Xml;
     using System.Xml.Serialization;
 
     public delegate void OnNotifyHandler(object sender, EventArgs e);
@@ -25,6 +24,7 @@ namespace Mysoft.Business.Validation
         /// 枚举类型字典，Key：枚举类，Value: [key: 枚举项text, value: 枚举项value]
         /// </summary>
         private static IDictionary<Type, IDictionary<string, int>> EnumDics = new Dictionary<Type, IDictionary<string, int>>();
+
         private static readonly object s_locker = new object();
         private static readonly List<Type> s_Validations = new List<Type>();
 
@@ -53,16 +53,16 @@ namespace Mysoft.Business.Validation
             object[] bo = a.GetCustomAttributes(typeof(ValidationAttribute), false);
 
             int aorder = 999, border = 999;
-            if(ao.Length > 0)
+            if (ao.Length > 0)
             {
                 ValidationAttribute ava = ao[0] as ValidationAttribute;
-                if(ava != null) aorder = ava.Order;
+                if (ava != null) aorder = ava.Order;
             }
 
-            if(bo.Length > 0)
+            if (bo.Length > 0)
             {
                 ValidationAttribute bva = bo[0] as ValidationAttribute;
-                if(bva != null) border = bva.Order;
+                if (bva != null) border = bva.Order;
             }
 
             return aorder.CompareTo(border);
@@ -349,8 +349,7 @@ namespace Mysoft.Business.Validation
 
                 case FieldType.Custom:
                     {
-                        Regex regex = new Regex(mc.Regex);
-                        return regex.Match(value).Success;
+                        return Regex.IsMatch(value, mc.Regex, RegexOptions.IgnoreCase);
                     }
             }
             return true;
