@@ -53,11 +53,17 @@ namespace Mysoft.Business.Validation.Controls
                 //如果没有*
                 if (grid.Row == null || grid.Row.AppGridCells == null) return;
 
-                foreach (var appGridCell in grid.Row.AppGridCells)
+                //如果SQL语法没问题则校验绑定字段是否存在
+                if (ds.IsSqlPassed)
                 {
-                    if (ds.Sql.IndexOf(appGridCell.Field, StringComparison.OrdinalIgnoreCase) < 0)
+                    foreach (var appGridCell in grid.Row.AppGridCells)
                     {
-                        Results.Add(new Result(string.Format("检查数据列{0}", appGridCell.Field), string.Format("SQL中未包含{0}", appGridCell.Field), Level.Error, GetType()));
+                        if (ds.Sql.IndexOf(appGridCell.Field, StringComparison.OrdinalIgnoreCase) < 0)
+                        {
+                            Results.Add(new Result(string.Format("检查数据列{0}", appGridCell.Field),
+                                                   string.Format("SQL中未包含{0}", appGridCell.Field), Level.Error,
+                                                   GetType()));
+                        }
                     }
                 }
             }

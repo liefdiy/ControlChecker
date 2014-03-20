@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\MapContractAttribute.cs" />
+    <Compile Include="Attributes\ValidationAttribute.cs" />
     <Compile Include="Controls\AppControl.cs" />
     <Compile Include="Controls\AppControlAttribute.cs" />
     <Compile Include="Controls\AppDropDownList.cs">

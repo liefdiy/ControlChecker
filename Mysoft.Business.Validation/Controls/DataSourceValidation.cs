@@ -1,5 +1,6 @@
 ﻿namespace Mysoft.Business.Validation.Controls
 {
+    using ControlCheck.Business.Attributes;
     using Mysoft.Business.Controls;
     using Mysoft.Business.Validation;
     using Mysoft.Business.Validation.Db;
@@ -10,6 +11,7 @@
     using System.Data.SqlClient;
     using System.Text.RegularExpressions;
 
+    [Validation(Order = 1)]
     public class DataSourceValidation : AppValidationBase
     {
         public override void Validate(AppControl control)
@@ -64,7 +66,7 @@
             }
 
             int pagemode = Convert.ToInt32(ds.PageMode);
-            if(pagemode > 2 || pagemode < 0)
+            if (pagemode > 2 || pagemode < 0)
             {
                 list.Add(new Result("DataSource的pagemode属性值错误", "仅支持0,1,2", Level.Error, base.GetType()));
                 return list;
@@ -77,14 +79,8 @@
 
             try
             {
-                if (!ds.IsSqlPassed)
-                {
-                    list.Add(new Result("SQL语句有误", "SQL语法错误", Level.Error, base.GetType()));
-                    return list;
-                }
-
                 string sql = Regex.Replace(ds.Sql, @"([=|in|<>]+\s*)\[[^a-z]*\]", "$1(null)", RegexOptions.IgnoreCase);
-                
+
                 if (NoAliasSqlCustom(sql))
                 {
                     list.Add(new Result("SQL中的Select字段检查", "无别名", Level.Error, base.GetType()));
@@ -94,6 +90,9 @@
                 {
                     list.Add(new Result("SQL中特定关键字检查", string.Format("存在特定关键字option|COMPUTE\n{0}", ds.Sql), Level.Error, base.GetType()));
                 }
+
+                //标识SQL语法是否验证通过
+                ds.IsSqlPassed = !CommonValidation.IsIncorrectSql(ds.Sql);
             }
             catch (SqlException sqlException)
             {

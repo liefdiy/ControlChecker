@@ -32,7 +32,7 @@ namespace SCide
             this.logoPictureBox = new System.Windows.Forms.PictureBox();
             this.productNameLabel = new System.Windows.Forms.Label();
             this.versionLabel = new System.Windows.Forms.Label();
-            this.copyrightLabel = new System.Windows.Forms.Label();
+            this.copyrightLabel = new System.Windows.Forms.LinkLabel();
             this.companyNameLabel = new System.Windows.Forms.Label();
             this.descriptionTextBox = new System.Windows.Forms.TextBox();
             this.okButton = new System.Windows.Forms.Button();
@@ -112,8 +112,10 @@ namespace SCide
             this.copyrightLabel.Name = "copyrightLabel";
             this.copyrightLabel.Size = new System.Drawing.Size(271, 17);
             this.copyrightLabel.TabIndex = 21;
-            this.copyrightLabel.Text = "Copyright";
+            this.copyrightLabel.TabStop = true;
+            this.copyrightLabel.Text = "Help";
             this.copyrightLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.copyrightLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.copyrightLabel_LinkClicked);
             // 
             // companyNameLabel
             // 
@@ -181,7 +183,7 @@ namespace SCide
         private System.Windows.Forms.PictureBox logoPictureBox;
         private System.Windows.Forms.Label productNameLabel;
         private System.Windows.Forms.Label versionLabel;
-        private System.Windows.Forms.Label copyrightLabel;
+        private System.Windows.Forms.LinkLabel copyrightLabel;
         private System.Windows.Forms.Label companyNameLabel;
         private System.Windows.Forms.TextBox descriptionTextBox;
         private System.Windows.Forms.Button okButton;

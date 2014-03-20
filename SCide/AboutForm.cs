@@ -1,6 +1,7 @@
 #region Using Directives
 
 using System;
+using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -102,6 +103,20 @@ namespace SCide
             }
         }
 
+        private string AssemblyTrademark
+        {
+            get
+            {
+                // Get all Description attributes on this assembly
+                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTrademarkAttribute), false);
+                // If there aren't any Description attributes, return an empty string
+                if (attributes.Length == 0)
+                    return "";
+                // If there is a Description attribute, return its value
+                return ((AssemblyTrademarkAttribute) attributes[0]).Trademark;
+            }
+        }
+
         #endregion Properties
 
 
@@ -119,10 +134,16 @@ namespace SCide
             this.productNameLabel.Text = AssemblyProduct;
             this.versionLabel.Text = String.Format("Version {0}", AssemblyVersion);
             this.copyrightLabel.Text = AssemblyCopyright;
+            this.copyrightLabel.Links[0].LinkData = AssemblyTrademark;
             this.companyNameLabel.Text = AssemblyCompany;
             this.descriptionTextBox.Text = AssemblyDescription;
         }
 
         #endregion Constructors
+
+        private void copyrightLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("iexplore.exe", e.Link.LinkData.ToString());
+        }
     }
 }

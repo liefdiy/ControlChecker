@@ -2,6 +2,7 @@
 using Mysoft.Business.Controls;
 using Mysoft.Common.Extensions;
 using Mysoft.Business.Validation.Entity;
+using System;
 
 namespace Mysoft.Business.Validation.Controls
 {
@@ -62,8 +63,48 @@ namespace Mysoft.Business.Validation.Controls
                         }
 
                         ValidateAttribute(item.OtherAttributes, item.Title);
+
+                        ValidateValue(item.Type, item.DefaultValue, item.Title);
                     }
                 }
+            }
+        }
+
+        private void ValidateValue(string itemType, string value, string title)
+        {
+            if(string.IsNullOrEmpty(value)) return;
+
+            AppFormItemType type = (AppFormItemType)Enum.Parse(typeof(AppFormItemType), itemType);
+            switch (type)
+            {
+                //case AppFormItemType.Text:
+                //    break;
+                //case AppFormItemType.Memo:
+                //    break;
+                //case AppFormItemType.Password:
+                //    break;
+                case AppFormItemType.Number:
+                    if(!value.IsNumber())
+                    {
+                        Results.Add(new Result("字段默认值配置错误", string.Format("{0}的defaultvalue期望值为[数字类型]，实际值：{1}", title, value), Level.Error, typeof(AppFormValidation)));
+                    }
+                    break;
+                case AppFormItemType.Datetime:
+                    break;
+                //case AppFormItemType.Radio:
+                //    break;
+                //case AppFormItemType.Select:
+                //    break;
+                //case AppFormItemType.Lookup:
+                //    break;
+                //case AppFormItemType.Hidden:
+                //    break;
+                //case AppFormItemType.HyperLink:
+                //    break;
+                //case AppFormItemType.Blank:
+                //    break;
+                default:
+                    return;
             }
         }
     }
