@@ -118,6 +118,11 @@ namespace Mysoft.Business.Manager
         /// 站点根目录
         /// </summary>
         public string SiteRoot { get; set; }
+
+        /// <summary>
+        /// map版本
+        /// </summary>
+        public string Version { get; set; }
     }
 
     public class AppSetting

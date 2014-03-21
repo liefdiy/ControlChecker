@@ -105,6 +105,10 @@ namespace SCide
 
         public bool Save(string filePath)
         {
+            if ((File.GetAttributes(filePath) & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+            {
+                File.SetAttributes(filePath, FileAttributes.Normal);
+            }
             using (FileStream fs = File.Create(filePath))
             using (BinaryWriter bw = new BinaryWriter(fs))
                 bw.Write(scintilla.RawText, 0, scintilla.RawText.Length - 1); // Omit trailing NULL

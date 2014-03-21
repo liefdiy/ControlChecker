@@ -55,7 +55,7 @@ namespace Mysoft.Business.Validation.Controls
 
                         if (control.DataSource.IsSqlPassed)
                         {
-                            if (!fields.Contains(item.Field) && !string.IsNullOrEmpty(item.Field))
+                            if (!string.IsNullOrEmpty(item.Field) && !fields.Contains(item.Field.ToLower()))
                             {
                                 Results.Add(new Result("字段配置错误", "SQL中未包含列" + item.Field, Level.Error,
                                                        typeof (AppFormValidation)));

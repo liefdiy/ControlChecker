@@ -132,7 +132,7 @@ namespace Mysoft.Business.Controls
             Name = "";
             DataType = "varchar";
             OtherAttributes = new Collection<XmlAttribute>();
-            CellType = "";
+            CellType = AppGridCellType.Text.ToString();
         }
 
         /// <summary>
@@ -157,6 +157,10 @@ namespace Mysoft.Business.Controls
         [MapContract(Describe = "是否允许排序", Type = FieldType.Boolean)]
         [XmlAttribute(AttributeName = "sortable")]
         public string Sortable { get; set; }
+
+        [MapContract(Describe = "排序字段")]
+        [XmlAttribute(AttributeName = "orderby")]
+        public string OrderBy { get; set; }
 
         #region 非SDK定义但归属于它的成员
 

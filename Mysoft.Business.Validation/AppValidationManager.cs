@@ -190,7 +190,14 @@
                     }
                     else if (!IsValid(mc, value.ToString()))
                     {
-                        results.Add(new Result("配置错误", string.Format("{0}字段应为{1}类型，配置值：{2}。{3}", new object[] { property.Name, mc.Type.ToString(), value, mc.InvalidMessage }), Level.Error, typeof(AppValidationManager)));
+                        if(mc.Type != FieldType.Custom)
+                        {
+                            results.Add(new Result("配置错误", string.Format("{0}字段应为{1}类型，配置值：{2}。{3}", new object[] { property.Name, mc.Type.ToString(), value, mc.InvalidMessage }), Level.Error, typeof(AppValidationManager)));
+                        }
+                        else
+                        {
+                            results.Add(new Result("配置错误", string.Format("{0}字段，配置值：{1}。{2}", new object[] { property.Name, value, mc.InvalidMessage }), Level.Error, typeof(AppValidationManager)));
+                        }
                     }
                 }
             }
@@ -267,6 +274,7 @@
 
             foreach (AppControl appControl in mp.Controls)
             {
+                appControl.Verson = AppConfigManager.Setting.WebSite.Version;
                 page.Results.AddRange(ValidateControl(appControl));
                 if (appControl.View != null)
                 {

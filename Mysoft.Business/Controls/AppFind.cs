@@ -113,7 +113,7 @@ namespace Mysoft.Business.Controls
         /// <summary>
         /// 在“视图内查询”选项默认是否勾选
         /// </summary>
-        [XmlAttribute(AttributeName = "checkboxdefault")]
+        [XmlAttribute(AttributeName = "showcheckboxdefault")]
         [MapContract(Describe = "“视图内查询”选项默认是否勾选”", Type = FieldType.Boolean)]
         public string IsShowCheckboxDefault { get; set; }
 

@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.Schema.ScriptDom;
-using Microsoft.Data.Schema.ScriptDom.Sql;
+﻿using System.Data;
 
 namespace Mysoft.Business.Validation
 {
@@ -11,7 +10,6 @@ namespace Mysoft.Business.Validation
     using System.Collections;
     using System.Collections.Generic;
     using System.Data.SqlClient;
-    using System.IO;
     using System.Xml;
 
     public abstract class AppValidationBase : IAppValidation
@@ -41,10 +39,10 @@ namespace Mysoft.Business.Validation
             {
                 foreach (XmlAttribute xattr in attribute.Attributes)
                 {
-                    ValidNumber(xattr.Value, "maxlength", item, xattr.Name);
-                    ValidNumber(xattr.Value, "min", item, xattr.Name);
-                    ValidNumber(xattr.Value, "max", item, xattr.Name);
-                    ValidNumber(xattr.Value, "acc", item, xattr.Name);
+                    ValidNumber(xattr.Value, "maxlength", item, xattr.Name, Level.Warn);
+                    ValidNumber(xattr.Value, "min", item, xattr.Name, Level.Warn);
+                    ValidNumber(xattr.Value, "max", item, xattr.Name, Level.Warn);
+                    ValidNumber(xattr.Value, "acc", item, xattr.Name, Level.Warn);
                     ValidBoolean(xattr.Value, "grp", item, xattr.Name);
                 }
             }
@@ -72,9 +70,50 @@ namespace Mysoft.Business.Validation
                             for (int index = 0; index < sqlReader.FieldCount; index++)
                             {
                                 string name = sqlReader.GetName(index);
+                                Type fieldType = sqlReader.GetFieldType(index);
                                 if (!string.IsNullOrEmpty(name))
                                 {
-                                    list.Add(name);
+                                    list.Add(name.ToLower());
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (SqlException)
+                {
+                }
+            }
+            return list;
+        }
+
+
+        /// <summary>
+        /// 获取SQL中查询出来的全部列名，列类型
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        protected Dictionary<string, Type> GetFieldsDic(string sql)
+        {
+            Dictionary<string, Type> list = new Dictionary<string, Type>();
+            Dictionary<string, string> dic = new Dictionary<string, string>();
+            if (!string.IsNullOrEmpty(sql))
+            {
+                try
+                {
+                    string temp = CommonValidation.GetFilter(sql);
+                    using (SqlConnection connection = new SqlConnection(DbAccessManager.Connectstring))
+                    {
+                        connection.Open();
+                        SqlCommand createCommand = new SqlCommand(temp, connection);
+                        using (SqlDataReader sqlReader = createCommand.ExecuteReader())
+                        {
+                            for (int index = 0; index < sqlReader.FieldCount; index++)
+                            {
+                                string name = sqlReader.GetName(index);
+                                Type fieldType = sqlReader.GetFieldType(index);
+                                if (!string.IsNullOrEmpty(name))
+                                {
+                                    list.Add(name.ToLower(), fieldType);
                                 }
                             }
                         }
@@ -189,17 +228,17 @@ namespace Mysoft.Business.Validation
 
         protected void ValidBoolean(string str, string property, string item, string name)
         {
-            if ((name.EqualIgnoreCase(property) && str.IsNotNull()) && !str.IsBoolean())
+            if ((name.EqualIgnoreCase(property) && str.IsNotNullOrEmpty()) && !str.IsBoolean())
             {
                 this.AddResult(item ?? "控件属性", property, "[布尔类型]", str, Level.Error);
             }
         }
 
-        protected void ValidNumber(string str, string property, string item, string name)
+        protected void ValidNumber(string str, string property, string item, string name, Level level = Level.Error)
         {
-            if ((name.EqualIgnoreCase(property) && str.IsNotNull()) && !str.IsNumber())
+            if (name.EqualIgnoreCase(property) && str.IsNotNullOrEmpty() && !str.IsNumber())
             {
-                this.AddResult(item ?? "控件属性", property, "[数字类型]", str, Level.Error);
+                this.AddResult(item ?? "控件属性", property, "[数字类型]", str, level);
             }
         }
 
@@ -222,6 +261,5 @@ namespace Mysoft.Business.Validation
         {
             return string.Format("{0}：{1}值无效，期望值：{2}，实际值：{3}", item, property, expect, actual);
         }
-
     }
 }

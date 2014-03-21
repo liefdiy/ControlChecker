@@ -71,7 +71,7 @@ namespace Mysoft.Business.Controls
         [XmlAttribute(AttributeName = "titlewidth")]
         public string TitleWidth { get; set; }
 
-        [MapContract(Describe = "单元格高度", Type = FieldType.Number)]
+        [MapContract(Describe = "单元格高度", Type = FieldType.Custom, Regex = @"^(\s)*|(\d+(px|pt|%)?)$")]
         [XmlAttribute(AttributeName = "height")]
         public string Height { get; set; }
 
@@ -164,7 +164,7 @@ namespace Mysoft.Business.Controls
             , InvalidMessage = "0 为非必填，1 为必填，2 为建议填写，默认值为 0 。")]
         public string Req { get; set; }
 
-        [MapContract(Describe = "单元格高度", Type = FieldType.Number)]
+        [MapContract(Describe = "单元格高度", Type = FieldType.Custom, Regex = @"^(\s)*|(\d+(px|pt|%)?)$")]
         [XmlAttribute(AttributeName = "height")]
         public string Height { get; set; }
 

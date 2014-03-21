@@ -221,6 +221,9 @@ namespace Mysoft.Business.Controls
             Describe = "";
         }
 
+        [XmlIgnore]
+        public string Verson { get; set; }
+
         [XmlAttribute(AttributeName = "id")]
         public string Id { get; set; }
 

@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using Microsoft.Data.Schema.ScriptDom;
-using Microsoft.Data.Schema.ScriptDom.Sql;
-
-namespace Mysoft.Business.Validation
+﻿namespace Mysoft.Business.Validation
 {
+    using Microsoft.Data.Schema.ScriptDom;
+    using Microsoft.Data.Schema.ScriptDom.Sql;
     using Mysoft.Business.Validation.Db;
+    using Mysoft.Map.Extensions.DAL;
     using System;
+    using System.Collections.Generic;
     using System.Data.SqlClient;
+    using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
 
@@ -114,5 +114,32 @@ namespace Mysoft.Business.Validation
         {
             return Regex.IsMatch(sql, @"[^\w]+(option|COMPUTE)[^\w]+", RegexOptions.IgnoreCase);
         }
+
+        public static MssqlVersion GetDbVersion()
+        {
+            string version = CPQuery.From("select ServerProperty('Productversion')").ExecuteScalar<string>();
+            string ver = version.Substring(0, version.IndexOf('.'));
+            switch (ver)
+            {
+                case "8":
+                    return MssqlVersion.SQL2000;
+                case "9":
+                    return MssqlVersion.SQL2005;
+                case "10":
+                    return MssqlVersion.SQL2008;
+                case "11":
+                    return MssqlVersion.SQL2012;
+                default:
+                    throw new NotSupportedException("不支持此数据库版本：" + version);
+            }
+        }
+    }
+
+    public enum MssqlVersion
+    {
+        SQL2000,
+        SQL2005,
+        SQL2008,
+        SQL2012,
     }
 }

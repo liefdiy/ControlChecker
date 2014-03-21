@@ -16,6 +16,11 @@ namespace Mysoft.Common.Extensions
             return String.Compare(me, other, true, CultureInfo.CurrentCulture) == 0;
         }
 
+        public static bool ContainsIgnoreCase(this string me, string other)
+        {
+            return me.IndexOf(other, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
         public static bool IsBoolean(this string me)
         {
             bool b = true;
@@ -38,6 +43,11 @@ namespace Mysoft.Common.Extensions
         public static bool IsNotNull(this string me)
         {
             return me != null;
+        }
+
+        public static bool IsNotNullOrEmpty(this string me)
+        {
+            return !string.IsNullOrEmpty(me);
         }
 
         public static bool IsTypeOfEnum(this string me, Type type)
