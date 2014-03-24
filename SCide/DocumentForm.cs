@@ -105,8 +105,9 @@ namespace SCide
 
         public bool Save(string filePath)
         {
-            if ((File.GetAttributes(filePath) & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+            if (File.Exists(filePath) && (File.GetAttributes(filePath) & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
             {
+                //去只读
                 File.SetAttributes(filePath, FileAttributes.Normal);
             }
             using (FileStream fs = File.Create(filePath))

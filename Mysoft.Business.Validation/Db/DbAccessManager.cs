@@ -24,6 +24,7 @@ namespace Mysoft.Business.Validation.Db
             {
                 try
                 {
+                    //如何多次初始化，要更改连接字符串
                     Mysoft.Map.Extensions.Initializer.UnSafeInit(connstring);
                     s_connectstring = connstring;
                     s_status = true;

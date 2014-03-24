@@ -132,7 +132,7 @@ namespace Mysoft.Business.Controls
             Name = "";
             DataType = "varchar";
             OtherAttributes = new Collection<XmlAttribute>();
-            CellType = AppGridCellType.Text.ToString();
+            //CellType = AppGridCellType.Text.ToString();   //这个不能给初始值，appGridE和appGrid靠这个区分
         }
 
         /// <summary>

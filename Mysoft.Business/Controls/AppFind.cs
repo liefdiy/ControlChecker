@@ -193,7 +193,7 @@ namespace Mysoft.Business.Controls
         [XmlAttribute(AttributeName = "type")]
         public string Type { get; set; }
 
-        [MapContract(Describe = "查找方式", EnumType = typeof(OperatorType))]
+        [MapContract(Describe = "查找方式", EnumType = typeof(OperatorType), EnumValueType = EnumValueType.Text)]
         [XmlAttribute(AttributeName = "operator")]
         public string Operator { get; set; }
 

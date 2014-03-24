@@ -15,14 +15,14 @@ namespace Mysoft.Business.Validation.Controls
         {
             AppGrid grid = control.Control as AppGrid;
             if (grid == null) return;  //不是grid
-            if (grid.Row != null && grid.Row.AppGridCells.Count > 0)
-            {
-                if (!string.IsNullOrEmpty(grid.Row.AppGridCells[0].CellType))
-                {
-                    //不管appGridE
-                    return;
-                }
-            }
+            //if (grid.Row != null && grid.Row.AppGridCells.Count > 0)
+            //{
+            //    if (!string.IsNullOrEmpty(grid.Row.AppGridCells[0].CellType))
+            //    {
+            //        //不管appGridE
+            //        return;
+            //    }
+            //}
 
             if (control.DataSource != null)
             {
@@ -179,7 +179,10 @@ namespace Mysoft.Business.Validation.Controls
         {
             int pagemode = 0;
             Int32.TryParse(ds.PageMode, out pagemode);
-            Results.AddRange(AnalysisSql(ds.Sql, ds.Entity, ds.KeyName, pagemode, ds.Order));
+            if(pagemode == 0)
+            {
+                Results.AddRange(AnalysisSql(ds.Sql, ds.Entity, ds.KeyName, pagemode, ds.Order));
+            }
         }
 
         private List<Result> AnalysisSql(string sql, string entity, string primaryKey, int pagemode, Order order)

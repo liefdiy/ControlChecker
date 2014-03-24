@@ -182,7 +182,7 @@
                                 results.Add(new Result("配置错误", string.Format("{0}字段值配置错误:{1}。{2}", property.Name, value, mc.InvalidMessage), Level.Error, typeof(AppValidationManager)));
                             }
                         }
-                        else if (!EnumDics[mc.EnumType].ContainsKey(value.ToString().ToLower()))
+                        else if (value.ToString().IsNotNullOrEmpty() && !EnumDics[mc.EnumType].ContainsKey(value.ToString().ToLower()))
                         {
                             //配置值对应枚举的text
                             results.Add(new Result("配置错误", string.Format("{0}字段值配置错误:{1}。{2}", property.Name, value, mc.InvalidMessage), Level.Error, typeof(AppValidationManager)));

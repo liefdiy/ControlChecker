@@ -81,18 +81,21 @@
             {
                 string sql = Regex.Replace(ds.Sql, @"([=|in|<>]+\s*)\[[^a-z]*\]", "$1(null)", RegexOptions.IgnoreCase);
 
-                if (NoAliasSqlCustom(sql))
-                {
-                    list.Add(new Result("SQL中的Select字段检查", "无别名", Level.Error, base.GetType()));
-                }
-
                 if (CommonValidation.HasSqlKeywords(sql))
                 {
                     list.Add(new Result("SQL中特定关键字检查", string.Format("存在特定关键字option|COMPUTE\n{0}", ds.Sql), Level.Error, base.GetType()));
                 }
 
-                //标识SQL语法是否验证通过
-                ds.IsSqlPassed = !CommonValidation.IsIncorrectSql(ds.Sql);
+                //标识SQL语法是否验证通过，分页的SQL可能就是错的，就不执行语法检测了
+                if (pagemode == 0)
+                {
+                    if (NoAliasSqlCustom(sql))
+                    {
+                        list.Add(new Result("SQL中的Select字段检查", "无别名", Level.Error, base.GetType()));
+                    }
+
+                    ds.IsSqlPassed = !CommonValidation.IsIncorrectSql(ds.Sql);
+                }
             }
             catch (SqlException sqlException)
             {

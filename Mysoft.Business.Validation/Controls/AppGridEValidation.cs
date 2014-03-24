@@ -12,98 +12,115 @@ namespace Mysoft.Business.Validation.Controls
         public override void Validate(AppControl control)
         {
             AppGrid grid = control.Control as AppGrid;
-            if (grid == null) return;  //不是grid
+            if (grid == null) 
+            {
+                return;  //不是grid
+            }
 
             var ds = control.DataSource;
+            if(ds == null)
+            {
+                Results.Add(new Result("AppGridE", "未配置数据源", Level.Warn, typeof(AppGridEValidation)));
+                return;
+            }
 
             if (grid.Row != null && grid.Row.AppGridCells.Count > 0)
             {
-                if (!string.IsNullOrEmpty(grid.Row.AppGridCells[0].CellType))
+                //if (!string.IsNullOrEmpty(grid.Row.AppGridCells[0].CellType))
+                //{
+                //appGridE, appGrid
+                foreach (var cell in grid.Row.AppGridCells)
                 {
-                    //appGridE
-                    var fieldDic = GetFieldsDic(ds.Sql);
+                    string strSql1 = "", strSql2 = "", strSQL = CommonValidation.GetFilter(ds.Sql);
 
-                    string format = GetSqlFormat(ds);
-
-                    foreach (var cell in grid.Row.AppGridCells)
+                    if(ds.PageMode.EqualIgnoreCase("2"))
                     {
-                        if (cell.Attribute == null) continue;
+                        string[] arrSql = SplitSql(strSQL);
+                            
+                        if(arrSql != null)
+                        {
+                            strSql1 = arrSql[0];				    // 外层不带“SELECT”关键字的部分 SQL 语句
+					        strSQL = arrSql[1];				        // 内层从“SELECT”关键字开始的 SQL 语句
+					        strSql2 = GetSortedSql(arrSql[2], cell, ds);	// 外层 SQL
+                        }
+                    }
+
+                    strSQL = GetSortedSql(strSQL, cell, ds);
+
+                    string _strSQL = GetPageSql(strSQL, ds.Entity, ds.KeyName);
+                    _strSQL = strSql1 + _strSQL + strSql2;
+
+                    string error = string.Empty;
+                    if (strSQL.IsNotNullOrEmpty() && !ValidateSql(_strSQL, out error))
+                    {
+                        Results.Add(new Result(string.Format("检查数据列{0}", cell.Field),
+                                                string.Format("排序字段配置错误{0}：{1}", cell.OrderBy, error), Level.Error,
+                                                GetType()));
+                    }
+
+                    if (cell.Attribute != null)
+                    {
                         foreach (var attr in cell.Attribute.Attributes)
                         {
                             if (attr.Name.EqualIgnoreCase("sql"))
                             {
                                 if (CommonValidation.IsIncorrectSql(attr.Value))
                                 {
-                                    Results.Add(new Result("AppGridE", string.Format("[{0}]单元格的SQL有误：{1}", cell.Title, attr.Value), Level.Error, typeof(AppGridEValidation)));
+                                    Results.Add(new Result("AppGridE",
+                                                            string.Format("[{0}]单元格的SQL有误：{1}", cell.Title,
+                                                                            attr.Value), Level.Error,
+                                                            typeof (AppGridEValidation)));
                                 }
-                            }
-                        }
-
-                        if (ds != null)
-                        {
-                            if (!string.IsNullOrEmpty(cell.OrderBy))
-                            {
-                                if (fieldDic[cell.Field.ToLower()].Name.EqualIgnoreCase("text"))
-                                {
-                                    if (false == (cell.OrderBy.ContainsIgnoreCase("as") && cell.OrderBy.ContainsIgnoreCase("varchar")))
-                                    {
-                                        //如果是text或ntext类型，必须转为varchar，如果
-                                        //todo: 版本区分
-                                        //如何从DataTable中知道该字段在数据库中的类型？数据库查询需要区分该字段来源是表还是视图还是什么？
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                string orderby = ds.Entity + "." + cell.Field;
-                                //execute
                             }
                         }
                     }
                 }
+                //}
             }
         }
 
-        private string GetSqlFormat(DataSource ds)
+        private string GetSortedSql(string sql, AppGridCell cell, DataSource ds)
         {
-            //未包含as varchar, as nvarchar
-            string strSql = ds.Sql.Substring(ds.Sql.IndexOf("SELECT ", StringComparison.CurrentCulture) + 6);
-            strSql = CommonValidation.GetFilter(strSql);
-            string strOrderBy = string.Empty;
+            string entity = ds.Entity;
+            string pk = ds.KeyName;
 
-            if (strSql.LastIndexOf("ORDER BY") == 0)
+            if (cell.Sortable.EqualIgnoreCase("true"))
             {
-                strOrderBy = string.IsNullOrEmpty(ds.Entity) ? "" : (ds.Entity + ".") + ds.KeyName.Replace("'", "''");
-                strSql += " order by " + strOrderBy;
-            }
-            else
-            {
-                strOrderBy = strSql.Substring(strSql.LastIndexOf("ORDER BY") + 8).Trim();
+                //如果orderby为空则取entity.field作为排序条件，否则用orderby
+                string strSortCol = cell.OrderBy.IsNotNullOrEmpty() ? cell.OrderBy : cell.Field;
+
+                if (sql.LastIndexOf("ORDER BY") >= 0)
+                {
+                    //用当前列的orderby替换配置中的排序字段
+                    sql = sql.Substring(0, sql.LastIndexOf("ORDER BY")) + "ORDER BY ";
+                }
+                else
+                {
+                    sql += " ORDER BY ";
+                }
+
+                if (cell.DataType.EqualIgnoreCase("text") || cell.DataType.EqualIgnoreCase("ntext"))
+                {
+                    strSortCol = "cast(" + strSortCol + " as varchar(2000))";
+                }
+
+                sql += strSortCol;
+
+                if (pk.IsNotNullOrEmpty())
+                {
+                    if (!Regex.IsMatch(strSortCol, @"(^|\W)(" + pk + @")(\W|$)", RegexOptions.IgnoreCase))
+                    {
+                        sql += ",";
+                        if (string.IsNullOrEmpty(entity))
+                            sql += pk;
+                        else
+                            sql += entity + "." + pk;
+                    }
+                }
             }
 
-            var arrList = SplitOrderString(strOrderBy);
-            var arrTemp = new string[arrList.Count - 1];
-            var arrTemp2 = new string[arrList.Count - 1];
-
-            for (int i = 0; i < arrList.Count - 1; i++)
-            {
-                strSql = arrList[i] + " AS orderstr" + i.ToString() + "," + strSql;
-                arrTemp[i] = "orderstr" + i.ToString() + " DESC";
-                arrTemp2[i] = "orderstr" + i.ToString();
-            }
-
-            strSql = "SELECT * FROM (select top 1 * from (select top 1 " + strSql;
-            strSql += ") a order by " + string.Join(",", arrTemp) + ") b ORDER BY " + string.Join(",", arrTemp2);
-
-            string error = "";
-            if (!ValidateSql(strSql, out error))
-            {
-                Results.Add(new Result(string.Format("检查数据列{0}", cell.Field),
-                               string.Format("排序字段配置错误{0}：{1}", cell.OrderBy, error), Level.Error,
-                               GetType()));
-            }
+            return sql;
         }
-
 
         /// <summary>
         /// 拆分 SQL 中排序子句的各排序列
@@ -155,5 +172,101 @@ namespace Mysoft.Business.Validation.Controls
             return arrCols;
         }
 
+
+        private string[] SplitSql(string sql)
+        {
+            string[] arrSql = new string[3];
+            int intIndex = sql.IndexOf("SELECT ");
+			if (intIndex < 0)
+                return null;
+
+			arrSql[0] = sql.Substring(0, intIndex);		// 第一段 SQL
+
+            sql = sql.Substring(intIndex);
+            intIndex = SeekSqlEnd(sql);
+
+			arrSql[1] = sql.Substring(0, intIndex);		// 第二段 SQL
+            arrSql[2] = sql.Substring(intIndex);	// 第三段 SQL
+
+            return arrSql;
+        }
+
+        private int SeekSqlEnd(string s)
+        {
+            bool bInQuot = false;   //是否在引号中
+            int intParentheses = 0; //括号层数
+            int intCount = s.Length - 1;
+            int i = 0;
+            for (; i < intCount; i++ )
+            {
+                string t = s.Substring(i, 1);
+                switch (t)
+                {
+                    case "'":
+                        if (!bInQuot)
+                        {
+                            bInQuot = true;
+                        }
+                        else if (intCount > (i + 1) && s.Substring(i + 1, 1) == "'")
+                        {
+                            i++;
+                        }
+                        else
+                        {
+                            bInQuot = false;
+                        }
+
+                        //if (bInQuot)
+                        //{
+                        //    if (intCount > i && s.Substring(i + 1, 1) == "'")
+                        //    {
+                        //        i++;
+                        //    }
+                        //}
+                        //bInQuot = !bInQuot;
+                        break;
+                    case "(":
+                        if (!bInQuot) intParentheses++;
+                        break;
+
+                    case ")":
+                        if (!bInQuot)
+                        {
+                            intParentheses--;
+                            if (intParentheses < 0) return i;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return i;
+        }
+
+        private string GetPageSql(string sql, string entity, string primaryKey)
+        {
+            string strSql = sql.Substring(sql.IndexOf("SELECT ") + 6);
+            strSql = "SELECT TOP 10" + strSql;
+            if(primaryKey.IsNotNullOrEmpty())
+            {
+                string s = (entity.IsNotNullOrEmpty() ? entity + "." : "") + primaryKey.Replace("'", "''");
+                string strTemp = strSql.Substring(strSql.IndexOf("FROM"));
+                strTemp = s + " NOT IN (SELECT TOP 10 " + s + " " + strTemp + ")";
+
+                if(strSql.LastIndexOf("WHERE ") > 0)
+                {
+                    strSql = strSql.Replace("WHERE ", "WHERE " + strTemp + " AND ");
+                }
+                else if(strSql.IndexOf("ORDER BY ") > 0)
+                {
+                    strSql = strSql.Replace("ORDER BY ", "WHERE " + strTemp + " ORDER BY ");
+                }
+                else
+                {
+                    strSql = " WHERE " + strTemp;
+                }
+            }
+            return strSql;
+        }
     }
 }
