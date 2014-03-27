@@ -31,13 +31,13 @@
             this.components = new System.ComponentModel.Container();
             this.projectTreeView = new System.Windows.Forms.TreeView();
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.execute = new System.Windows.Forms.ToolStripMenuItem();
             this.openPath = new System.Windows.Forms.ToolStripMenuItem();
             this.txbFilter = new System.Windows.Forms.TextBox();
             this.lbFilter = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.lbCollapse = new System.Windows.Forms.Label();
             this.lbExpand = new System.Windows.Forms.Label();
-            this.execute = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -54,6 +54,7 @@
             this.projectTreeView.HotTracking = true;
             this.projectTreeView.Location = new System.Drawing.Point(0, 0);
             this.projectTreeView.Name = "projectTreeView";
+            this.projectTreeView.ShowNodeToolTips = true;
             this.projectTreeView.Size = new System.Drawing.Size(281, 565);
             this.projectTreeView.TabIndex = 0;
             this.projectTreeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.projectTreeView_NodeMouseDoubleClick);
@@ -65,7 +66,14 @@
             this.execute,
             this.openPath});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(185, 70);
+            this.contextMenuStrip.Size = new System.Drawing.Size(185, 48);
+            // 
+            // execute
+            // 
+            this.execute.Name = "execute";
+            this.execute.Size = new System.Drawing.Size(184, 22);
+            this.execute.Text = "执行验证";
+            this.execute.Click += new System.EventHandler(this.execute_Click);
             // 
             // openPath
             // 
@@ -147,13 +155,6 @@
             this.lbExpand.TabIndex = 5;
             this.lbExpand.Text = "+";
             this.lbExpand.Click += new System.EventHandler(this.btnExpandAll_Click);
-            // 
-            // execute
-            // 
-            this.execute.Name = "execute";
-            this.execute.Size = new System.Drawing.Size(184, 22);
-            this.execute.Text = "执行验证";
-            this.execute.Click += new System.EventHandler(this.execute_Click);
             // 
             // ProjectPanelWindow
             // 

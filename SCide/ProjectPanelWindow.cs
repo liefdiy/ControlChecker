@@ -56,6 +56,7 @@ namespace SCide
         {
             TreeNode rootNode = new TreeNode();
             rootNode.Text = root.Name;
+            rootNode.ToolTipText = root.FullName;
             rootNode.Tag = root;
             rootNode.ImageKey = "dir";
             rootNode.SelectedImageKey = rootNode.ImageKey;
@@ -87,6 +88,7 @@ namespace SCide
             TreeNode rootNode = new TreeNode();
             rootNode.Text = fi.Name;
             rootNode.Tag = fi;
+            rootNode.ToolTipText = fi.FullName;
             rootNode.ImageKey = fi.Extension.Replace(".", "").EqualIgnoreCase("xml") ? "xml" : "file";
             rootNode.SelectedImageKey = rootNode.ImageKey;
             return rootNode;
