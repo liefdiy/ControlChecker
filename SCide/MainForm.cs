@@ -707,7 +707,7 @@ namespace SCide
             }
         }
 
-        private void runcheckStripButton_Click(object sender, EventArgs e)
+        public void runcheckStripButton_Click(object sender, EventArgs e)
         {
             PageResult pageresult = null;
             string filepath = ActiveDocument.FilePath;
@@ -762,6 +762,7 @@ namespace SCide
 
         private void OnPageResultShown(object state)
         {
+            if(state == null) return;
             PageResult pageresult = state as PageResult;
             if (this.outputPanel.DockState == DockState.Hidden)
             {

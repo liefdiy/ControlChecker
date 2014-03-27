@@ -37,6 +37,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.lbCollapse = new System.Windows.Forms.Label();
             this.lbExpand = new System.Windows.Forms.Label();
+            this.execute = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -61,9 +62,10 @@
             // contextMenuStrip
             // 
             this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.execute,
             this.openPath});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(185, 26);
+            this.contextMenuStrip.Size = new System.Drawing.Size(185, 70);
             // 
             // openPath
             // 
@@ -146,6 +148,13 @@
             this.lbExpand.Text = "+";
             this.lbExpand.Click += new System.EventHandler(this.btnExpandAll_Click);
             // 
+            // execute
+            // 
+            this.execute.Name = "execute";
+            this.execute.Size = new System.Drawing.Size(184, 22);
+            this.execute.Text = "执行验证";
+            this.execute.Click += new System.EventHandler(this.execute_Click);
+            // 
             // ProjectPanelWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -175,5 +184,6 @@
         private System.Windows.Forms.Label lbCollapse;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem openPath;
+        private System.Windows.Forms.ToolStripMenuItem execute;
     }
 }

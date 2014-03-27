@@ -153,5 +153,19 @@ namespace SCide
                 }
             }
         }
+
+        private void execute_Click(object sender, EventArgs e)
+        {
+            TreeNode node = projectTreeView.SelectedNode;
+            if(node.Nodes.Count == 0)
+            {
+                //非目录
+                var fi = node.Tag as FileInfo;
+                MainForm frm = ParentForm as MainForm;
+                if (frm == null) return;
+                frm.OpenFile(fi.FullName);
+                frm.runcheckStripButton_Click(sender, e);
+            }
+        }
     }
 }
