@@ -9,6 +9,7 @@ using Mysoft.Business.Validation;
 using Mysoft.Business.Validation.Db;
 using Mysoft.Common.Extensions;
 using Mysoft.Common.Utility;
+using Mysoft.Map.Extensions.DAL;
 using ScintillaNET;
 using System;
 using System.Globalization;
@@ -16,13 +17,18 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
-
+using Mysoft.Business.Validation.Entity;
+using System.Threading;
 #endregion Using Directives
 
 namespace SCide
 {
+    public delegate void ExecuteHandler(object sender, EventArgs e);
+
     internal sealed partial class MainForm : Form
     {
+        private SynchronizationContext context;
+
         #region Constants
 
         private const string NEW_DOCUMENT_TEXT = "Untitled";
@@ -223,6 +229,10 @@ namespace SCide
             DocumentForm doc = new DocumentForm();
             SetScintillaToCurrentOptions(doc);
             doc.Text = String.Format(CultureInfo.CurrentCulture, "{0}{1}", NEW_DOCUMENT_TEXT, ++_newDocumentCount);
+            if (lineNumbersToolStripMenuItem.Checked)
+            {
+                doc.Scintilla.Margins.Margin0.Width = LINE_NUMBERS_MARGIN_WIDTH;
+            }
             doc.Show(dockPanel);
             toolIncremental.Searcher.Scintilla = doc.Scintilla;
             return doc;
@@ -286,6 +296,10 @@ namespace SCide
             doc.Scintilla.Modified = false;
             doc.Text = Path.GetFileName(filePath);
             doc.FilePath = filePath;
+            if (lineNumbersToolStripMenuItem.Checked)
+            {
+                doc.Scintilla.Margins.Margin0.Width = LINE_NUMBERS_MARGIN_WIDTH;
+            }
             doc.Show(dockPanel);
             toolIncremental.Searcher.Scintilla = doc.Scintilla;
             encodingToolStripStatusLabel.Text = encoding.BodyName;
@@ -695,36 +709,74 @@ namespace SCide
 
         private void runcheckStripButton_Click(object sender, EventArgs e)
         {
-            try
-            {
-                this.runcheckStripButton.Enabled = false;
-                this.progressStripStatusLabel.Text = "检测中...";
+            PageResult pageresult = null;
+            string filepath = ActiveDocument.FilePath;
+            string xml = ActiveDocument.Scintilla.Text;
 
-                TestConnection();
-                MapPage page = GetEntity();
-                if (page == null) return;
+            this.runcheckStripButton.Enabled = false;
+            this.progressStripStatusLabel.Text = "检测中，请稍后 ...";
+            this.outputPanel.ClearResult();
 
-                page.PageXml = ActiveDocument.FilePath;
-                DbAccessManager.Init(AppConfigManager.ConnectionString);
-                var pageresult = AppValidationManager.ValidatePage(page);
-                if (this.outputPanel.DockState == DockState.Hidden)
+            ExecuteHandler handler = (obj, args) => { 
+                try
                 {
-                    this.outputPanel.Show(dockPanel);
+                    TestConnection();
+                    pageresult = Run(filepath, xml);
+                    context.Post(OnPageResultShown, pageresult);
                 }
-                outputPanelToolStripMenuItem.Checked = true;
-                this.outputPanel.VisibleState = DockState.DockBottom;
-                this.outputPanel.ShowPageResult(pageresult);
-            }
-            catch (Exception ex)
+                catch (Exception ex)
+                {
+                    FileHelper.Write("error.log", string.Format("---\t{0}\t---\r\n{1}\r\n-------------\r\n", DateTime.Now, ex.StackTrace), Encoding.UTF8, true);
+                    
+                    //弹出消息，弹出框归属MainForm窗体，否则弹出框不容易被发现
+                    context.Post(d => MessageBox.Show(this, d.ToString()), ex.Message);
+                }
+                finally
+                {
+                    context.Post(OnRunFinished, null);
+                }
+            };
+
+            handler.BeginInvoke(sender, e, null, null);
+        }
+
+        /// <summary>
+        /// 执行检测
+        /// </summary>
+        /// <param name="filepath"></param>
+        /// <param name="xml"></param>
+        /// <returns></returns>
+        private PageResult Run(string filepath, string xml)
+        {
+            MapPage page = GetEntity(filepath, xml);
+            if (page == null) return null;
+
+            page.PageXml = filepath;
+
+            using (ConnectionScope scope = new ConnectionScope(TransactionMode.Inherits, AppConfigManager.ConnectionString))
             {
-                FileHelper.Write("error.log", string.Format("---\t{0}\t---\r\n{1}\r\n-------------\r\n", DateTime.Now, ex.StackTrace), Encoding.UTF8, true);
-                MessageBox.Show(ex.Message);
+                DbAccessManager.Reset();
+                return AppValidationManager.ValidatePage(page);
             }
-            finally
+        }
+
+        private void OnPageResultShown(object state)
+        {
+            PageResult pageresult = state as PageResult;
+            if (this.outputPanel.DockState == DockState.Hidden)
             {
-                this.runcheckStripButton.Enabled = true;
-                this.progressStripStatusLabel.Text = "检测执行完毕：" + DateTime.Now.ToString();
+                this.outputPanel.Show(dockPanel);
             }
+
+            outputPanelToolStripMenuItem.Checked = true;
+            this.outputPanel.VisibleState = DockState.DockBottom;
+            this.outputPanel.ShowPageResult(pageresult);
+        }
+
+        private void OnRunFinished(object state)
+        {
+            this.runcheckStripButton.Enabled = true;
+            this.progressStripStatusLabel.Text = "检测执行完毕：" + DateTime.Now.ToString();
         }
 
         private void MainForm_Closing(object sender, FormClosingEventArgs e)
@@ -759,17 +811,17 @@ namespace SCide
 
         }
 
-        private MapPage GetEntity()
+        private MapPage GetEntity(string filepath, string xml)
         {
             if(ActiveDocument == null) return null;
-            FileInfo fi = new FileInfo(ActiveDocument.FilePath);
+            FileInfo fi = new FileInfo(filepath);
             if (!fi.Extension.EqualIgnoreCase(".xml"))
             {
                 MessageBox.Show("非MAP配置文件！");
                 return null;
             }
 
-            string xml = ActiveDocument.Scintilla.Text;
+            //string xml = ActiveDocument.Scintilla.Text;
             if (string.IsNullOrEmpty(xml)) return null;
 
             MapPage page = new MapPage();
@@ -797,11 +849,13 @@ namespace SCide
 
         private void ShowNumbers()
         {
-            lineNumbersToolStripMenuItem.Checked = true;
+            bool isshow = false;
             foreach (DocumentForm docForm in dockPanel.Documents)
             {
+                if(!isshow) isshow = true;
                 docForm.Scintilla.Margins.Margin0.Width = LINE_NUMBERS_MARGIN_WIDTH;
             }
+            lineNumbersToolStripMenuItem.Checked = isshow;
         }
 
         private void TestConnection()
@@ -836,6 +890,9 @@ namespace SCide
             this.Icon = Properties.Resources.IconApplication;
 
             InitializeComponent();
+
+            DbAccessManager.Init(AppConfigManager.ConnectionString);
+            context = SynchronizationContext.Current;
         }
 
         public MainForm(string[] args)

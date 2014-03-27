@@ -1,61 +1,89 @@
 <?xml version="1.0" encoding="gb2312"?>
-<page>
+<page funcid="01010209">
   <controls>
     <control id="appGridMenu">
-      <title>用户列表</title>
-      <menu id="01" display="false" title="操作" downicon="/images/New_16_blue.gif">
-        <menuitem id="del" actionid="03" title="删除" action="alert()" />
+      <title>客户列表</title>
+      <menu title="操作">
+        <menuitem actionid="03" title="修改创建人权限" action="chgCreatorPower()" />
         <menuitem title="-" />
-        <menuitem title="移动">
-          <menuitem actionid="03" title="上移" action="moveUp()" />
-          <menuitem actionid="04" title="下移" action="moveDown()" />
-        </menuitem>
+        <menuitem id="m2" actionid="91" title="打印" action="AppGridPrint(appGrid);" />
+        <menuitem id="m3" actionid="92" title="导出" action="AppGridToExcel(appGrid);" />
       </menu>
-      <html>
-        html 区域
-      </html>
-      <shortcuts>
-        <shortcut id="sec" title="查看动作权限" action="openUserRightsWin()" tip="查看动作权限" icon="/_imgs/ico_16_1036_d.gif" />
-        <shortcut id="data" title="查看数据权限" action="openDataRightsWin()" tip="查看数据权限" icon="/_imgs/ico_16_1036_d.gif" />
-        <shortcut id="m_02" title="新增" tip="新增用户" icon="/images/New_16_blue.gif">
-          <menuitem id="m_02_01" title="普通用户" action="openUserRightsWin(1)" icon="/_imgs/ico_16_1036_d.gif" />
-          <menuitem title="移动">
-            <menuitem actionid="03" title="上移" action="moveUp()" />
-            <menuitem actionid="04" title="下移" action="moveDown()" />
-          </menuitem>
-          <menuitem id="m_02_02" title="高级用户" action="openUserRightsWin(2)" icon="/_imgs/ico_16_1036_d.gif" />
-        </shortcut>
-      </shortcuts>
     </control>
     <control id="appGrid">
-      <datasource keyname="BUGUID" pagemode="1">
+      <datasource entity="s_Opportunity" keyname="OppGUID" pagemode="2">
         <sql>
-			SELECT    BUGUID, BUName, CreatedOn,     IsEndCompany, IsCompany, [Level], BUType,
-			OrderCode, OrderHierarchyCode,  NamePath,1666.666 as Price,888888.8888 as Total,Level+1 as Level2
-			FROM         myBusinessUnit
-		</sql>
-        <dependencysql>
-          <sql>
-            select buguid from dbo.myBusinessUnit
-          </sql>
-        </dependencysql>
+          <![CDATA[
+            select 
+            p_Customer.CstGUID,
+            '<A href="JavaScript:parent.parent.openClientInfo(''' + convert(varchar(36),s_Opportunity.ProjGUID)+ ''',''' + convert(varchar(36),s_Opportunity.OppGUID)+ ''',''' + convert(varchar(36),p_Customer.CstGUID) + ''',''' + ISNULL(p_Customer.CstType,'') + ''');" ><u>'+p_Customer.CstName+'</u></A>' as CstName1 , 
+            p_Customer.Gender, 
+            p_Customer.CstType,
+            CASE WHEN p_Customer.MobileTel is null OR p_Customer.MobileTel ='' THEN '' ELSE '(M)' + p_Customer.MobileTel + ' ' END +
+            CASE WHEN p_Customer.HomeTel is null OR p_Customer.HomeTel ='' THEN '' ELSE '(H)' + p_Customer.HomeTel + ' ' END  + 
+            CASE WHEN p_Customer.OfficeTel is null OR p_Customer.OfficeTel ='' THEN '' ELSE '(O)' + p_Customer.OfficeTel + ' ' END +  
+            CASE WHEN p_Customer.Fax is null OR p_Customer.Fax ='' THEN '' ELSE '(F)' 
+            + p_Customer.Fax END  AS Lxdh, 
+            case when p_Customer.IsYZ = 1 then '业主' else '非业主' end as isyz1, 
+            s_Opportunity.Probability,  
+            s_Opportunity.Description, 
+            Gjjl.GjDate, 
+            Gjjl.Gfyx,
+            s_Opportunity.CreatedOn, 
+            Gjjl.NextDate, 
+            Gjjl.Remark,
+            s_Opportunity.ProjGUID, 
+            s_Opportunity.Status, 
+            s_Opportunity.OppGUID, 
+            d.UserName,
+            CASE WHEN s_Opportunity.Status = '丢失' THEN 0 ELSE 1 END AS OrderSort
+            from 
+            (SELECT p_Customer.CstGUID,s_Opportunity.OppGUID
+            FROM p_Customer 
+            INNER JOIN s_Opp2Cst b ON p_Customer.CstGUID = b.CstGUID AND CstNum=1 
+            INNER JOIN s_Opportunity ON b.OppGUID = s_Opportunity.OppGUID 
+            LEFT JOIN myUser d ON s_Opportunity.UserGUID = d.UserGUID 
+            left join s_Opp2Gjjl Gjjl  on Gjjl.GjjlGUID=s_Opportunity.lastgjjlguid
+            WHERE ((2=2))
+            ORDER BY s_Opportunity.LastDate DESC           
+            ,s_Opportunity.OppGUID) A
+            inner join p_Customer on A.CstGUID=p_Customer.CstGUID
+            inner join s_Opportunity on s_Opportunity.OppGUID = A.OppGUID 
+            left join myUser d on s_Opportunity.UserGUID = d.UserGUID 
+            left join s_Opp2Gjjl Gjjl  on Gjjl.GjjlGUID=s_Opportunity.lastgjjlguid
+            ORDER BY OrderSort DESC,s_Opportunity.LastDate ASC
+            ]]>
+        </sql>
       </datasource>
-      <grid onselectionchanged="alert('onselectionchanged');" onclick="alert('onclick');">
+      <grid ondblclick="openModiWin();">
         <row>
           <attributes>
-            <attribute name="oid" field="BUGUID" datatype="varchar" />
+            <attribute name="oid" field="OppGUID" datatype="varchar" />
+            <attribute name="ProjGUID" field="ProjGUID" datatype="varchar" />
+            <attribute name="CstGUID" field="CstGUID" datatype="varchar" />
+            <attribute name="CstType" field="CstType" datatype="varchar" />
           </attributes>
-          <cell field="BUName" title="组织名称" width="100" />
-          <cell field="NamePath" title="完整路径" />
-          <cell field="Level" title="层级" width="80" />
-		</row>
-        <summary title="认购统计：" sumtotalfilter="BuName&lt;&gt;'深圳公司'">
-          <!-- 合计 -->
-			<cell field="Level2" title="单价（本页合计）：" titlewidth="150" align="left" format="#,##0.00" />
-			<cell sumtotalfield="Level+1" title="单价（所有数据合计）：" titlewidth="150" align="left" format="#,##0.00" customformat='s_MjZero'/>
-		</summary>
+          <cell field="CstName1" title="客户姓名" width="120" orderby="p_Customer.CstName" format="HTML" />
+          <cell field="Gender" title="性别" width="30" orderby="p_Customer.Gender">
+            <attribute align="center" />
+          </cell>
+          <cell field="Lxdh" title="联系电话" sortable="false" />
+          <cell field="isyz1" title="是否业主" width="55" orderby="p_Customer.IsYZ" />
+          <cell field="Gfyx" title="购房意向" width="50" orderby="s_Opportunity.Gfyx" />
+          <cell field="Status" title="客户状态" width="50" orderby="s_Opportunity.Status" />
+          <cell field="UserName" title="置业顾问" width="70" orderby="d.UserName" />
+          <cell field="CreatedOn" title="创建日期" width="65" datatype="datetime" format="yyyy-MM-dd" orderby="s_Opportunity.CreatedOn">
+            <attribute align="center" />
+          </cell>
+          <cell field="GjDate" title="最近一次联系" width="80" datatype="datetime" format="yyyy-MM-dd" orderby="s_Opportunity.LastDate">
+            <attribute align="center" />
+          </cell>
+          <cell field="NextDate" title="下次跟进日期" width="80" datatype="datetime" format="yyyy-MM-dd" orderby="s_Opportunity.NextDate">
+            <attribute align="center" />
+          </cell>
+          <cell field="Remark" title="备注" sortable="true" width="250" orderby="cast(Gjjl.Remark as varchar(max))"/>
+        </row>
       </grid>
     </control>
   </controls>
 </page>
-<!--entity="myBusinessUnit" -->

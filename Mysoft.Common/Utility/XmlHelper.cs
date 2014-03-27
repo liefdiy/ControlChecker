@@ -157,6 +157,8 @@
 
         public static string FormatXml(string xml)
         {
+            if (string.IsNullOrEmpty(xml)) return "";
+
             XmlTextWriter w = null;
             StringBuilder sb = new StringBuilder();
             try

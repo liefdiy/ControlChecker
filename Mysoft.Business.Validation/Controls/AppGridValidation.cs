@@ -15,14 +15,6 @@ namespace Mysoft.Business.Validation.Controls
         {
             AppGrid grid = control.Control as AppGrid;
             if (grid == null) return;  //不是grid
-            //if (grid.Row != null && grid.Row.AppGridCells.Count > 0)
-            //{
-            //    if (!string.IsNullOrEmpty(grid.Row.AppGridCells[0].CellType))
-            //    {
-            //        //不管appGridE
-            //        return;
-            //    }
-            //}
 
             if (control.DataSource != null)
             {
@@ -58,57 +50,6 @@ namespace Mysoft.Business.Validation.Controls
                 {
                     foreach (var appGridCell in grid.Row.AppGridCells)
                     {
-                        if(!string.IsNullOrEmpty(appGridCell.OrderBy) && appGridCell.DataType.ContainsIgnoreCase("text"))
-                        {
-                            //如果是text或ntext类型，必须转为varchar
-                            //todo: 版本区分
-                            if(false == (appGridCell.OrderBy.ContainsIgnoreCase("as") && appGridCell.OrderBy.ContainsIgnoreCase("varchar")))
-                            {
-                                //未包含as varchar, as nvarchar
-                                string strSql = ds.Sql.Substring(ds.Sql.IndexOf("SELECT ", StringComparison.CurrentCulture) + 6);
-                                string strOrderBy = string.Empty;
-
-                                if(strSql.LastIndexOf("ORDER BY") == 0)
-                                {
-                                    strOrderBy = string.IsNullOrEmpty(ds.Entity) ? "" : (ds.Entity + ".") + ds.KeyName.Replace("'", "''");
-                                    strSql += " order by " + strOrderBy;
-                                }
-                                else
-                                {
-                                    strOrderBy = strSql.Substring(strSql.LastIndexOf("ORDER BY") + 8).Trim();
-                                }
-
-                                var arrList = SplitOrderString(strOrderBy);
-                                var arrTemp = new string[arrList.Count - 1];
-                                var arrTemp2 = new string[arrList.Count - 1];
-
-                                Regex r1 = new Regex(@"\s+DESC\s*$", RegexOptions.IgnoreCase);
-                                Regex r2 = new Regex(@"\s+ASC\s*$", RegexOptions.IgnoreCase);
-
-                                for (int i = 0; i < arrList.Count - 1; i++)
-                                {
-                                    strSql = r1.Replace(arrList[i], " AS orderstr" + i.ToString()) + "," + strSql;
-                                    //if (r1.Match(arrList[i]).Success)
-                                    //{
-                                    //    strSql = r1.Replace(arrList[i], " AS orderstr" + i.ToString()) + "," + strSql;
-                                    //    arrTemp[i] = "orderstr" + i.ToString();
-                                    //    arrTemp2[i] = "orderstr" + i.ToString() + " DESC";
-                                    //}
-                                }
-
-                                strSql = "SELECT * FROM (select top 1 * from (select top 1 " + strSql;
-                                strSql += ") a order by " + string.Join(",", arrTemp) + ") b ORDER BY " + string.Join(",", arrTemp2);
-
-                                string error = "";
-                                if (!ValidateSql(strSql, out error))
-                                {
-                                    Results.Add(new Result(string.Format("检查数据列{0}", appGridCell.Field),
-                                                   string.Format("排序字段配置错误{0}：{1}", appGridCell.OrderBy, error), Level.Error,
-                                                   GetType()));
-                                }
-                            }
-                        }
-
                         if (ds.Sql.IndexOf(appGridCell.Field, StringComparison.OrdinalIgnoreCase) < 0)
                         {
                             Results.Add(new Result(string.Format("检查数据列{0}", appGridCell.Field),
@@ -118,56 +59,6 @@ namespace Mysoft.Business.Validation.Controls
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// 拆分 SQL 中排序子句的各排序列
-        /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        private List<string> SplitOrderString(string s)
-        {
-            bool bInQuot = false;   //是否在引号中
-            int intParentheses = 0; //括号层数
-            int intCount = s.Length -1;
-            int intLastIndex = 0;
-            var arrCols = new List<string>();
-
-            for (int i = 0; i < intCount; i++)
-            {
-                string t = s.Substring(i, 1);
-                switch (t)
-                {
-                    case ",":
-                        if(!bInQuot && intParentheses == 0)
-                        {
-                            arrCols.Add(s.Substring(intLastIndex, i - intLastIndex));
-                            intLastIndex = i + 1;
-                        }
-                        break;
-                    case "'":
-                        if(bInQuot)
-                        {
-                            if (intCount > i && s.Substring(i + 1, 1) == "'")
-                            {
-                                i++;
-                            }
-                        }
-                        bInQuot = !bInQuot;
-                        break;
-                    case "(":
-                        if(!bInQuot) intParentheses++;
-                        break;
-                        
-                    case ")":
-                        if(!bInQuot) intParentheses--;
-                        break;
-                    default:
-                        break;
-                }
-            }
-            arrCols.Add(s.Substring(intLastIndex));
-            return arrCols;
         }
 
         /// <summary>
@@ -233,12 +124,6 @@ namespace Mysoft.Business.Validation.Controls
 
         private void CheckPageSql(string sql, string entity, string primaryKey, int pagemode, List<Result> list)
         {
-            //SELECT、FROM、WHERE大小写
-            if (!CommonValidation.CheckCase(sql, pagemode))
-            {
-                list.Add(new Result("分页SQL大小写检查", "SQL语句中不存在大写的SELECT、FROM、WHERE", Level.Error, GetType()));
-            }
-
             string temp = sql;
             switch (pagemode)
             {

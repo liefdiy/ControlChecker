@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.Threading;
 using System.Windows.Forms;
 using Mysoft.Business.Manager;
 
@@ -7,9 +8,12 @@ namespace SCide
 {
     public partial class SettingForm : Form
     {
+        private SynchronizationContext context;
+
         public SettingForm()
         {
             InitializeComponent();
+            context = SynchronizationContext.Current;
         }
 
         protected override void OnLoad(EventArgs e)
@@ -29,8 +33,19 @@ namespace SCide
                 txbUserId.Text, 
                 txbPwd.Text);
 
-            bool flag = CanAccessDb(connstring);
-            MessageBox.Show(flag ? "Succeed!" : "Failed!");
+            ExecuteHandler handler = (o, args) =>
+                                         {
+                                             bool flag = CanAccessDb(connstring);
+                                             
+                                             context.Post(d =>
+                                                              {
+                                                                  MessageBox.Show(this, (bool)d ? "Succeed!" : "Failed!"); 
+                                                                  btntest.Enabled = true;
+                                                              }, flag);
+                                         };
+
+            btntest.Enabled = false;
+            handler.BeginInvoke(sender, e, null, null);
         }
 
         private void btnOk_Click(object sender, EventArgs e)

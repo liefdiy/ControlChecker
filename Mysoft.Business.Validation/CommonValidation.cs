@@ -31,27 +31,39 @@
             }
         }
 
-        public static bool CheckCase(string sql, int pagemode)
+        public static bool CheckCase(string sql, int pagemode, out string error)
         {
-            if ((pagemode == 1) || (pagemode == 2))
+            //有的牛B开发吃透了MAP，玩法灵活，用子查询来实现排序，因此以下的检测反而不可靠
+
+            int start = sql.IndexOf("(");
+            error = "";
+            if (start >= 0)
             {
-                if (!Regex.IsMatch(sql, "(SELECT|FROM|WHERE)", RegexOptions.CultureInvariant))
+                string subsql = sql.Substring(start);
+                //若包含子查询
+                if (subsql.Trim().IndexOf("select", StringComparison.OrdinalIgnoreCase) == 0)
                 {
-                    return false;
-                }
-                int start = sql.IndexOf("(");
-                if (start >= 0)
-                {
+                    string temp = sql.Substring(0, start);
+                    //外层查询必须大写
+                    if (Regex.IsMatch(temp, "(select|from|where)", RegexOptions.CultureInvariant))
+                    {
+                        error = "外层查询关键字非大写，建议修改";
+                        return false;
+                    }
+
                     int end = sql.IndexOf(")", start);
                     //如果子查询使用了大写
-                    if (Regex.IsMatch(sql.Substring(start, end - start), "(SELECT|FROM|WHERE)", RegexOptions.CultureInvariant))
+                    if (Regex.IsMatch(sql.Substring(start, end - start), "(SELECT|FROM|WHERE)",
+                                      RegexOptions.CultureInvariant))
                     {
+                        error = "子查询关键字非小写，建议修改";
                         return false;
                     }
 
                     //如果SQL语句最后，最外层使用了小写
                     if (Regex.IsMatch(sql.Substring(end), "(order|by|where)", RegexOptions.CultureInvariant))
                     {
+                        error = "外层查询条件关键字非大写，建议修改";
                         return false;
                     }
                 }

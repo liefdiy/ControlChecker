@@ -72,9 +72,10 @@
                 return list;
             }
 
-            if (!CommonValidation.CheckCase(ds.Sql, pagemode))
+            string err;
+            if (!CommonValidation.CheckCase(ds.Sql, pagemode, out err))
             {
-                list.Add(new Result("SQL关键字大小写检查", string.Format("SQL语句中不存在大写的SELECT、FROM、WHERE。\n{0}", ds.Sql), Level.Error, base.GetType()));
+                list.Add(new Result("SQL关键字大小写检查", string.Format("{0}\n{1}", err, ds.Sql), Level.Warn, base.GetType()));
             }
 
             try

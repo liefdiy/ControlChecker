@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Mysoft.Business.Controls;
+﻿using Mysoft.Business.Controls;
 using Mysoft.Business.Validation.Entity;
 using Mysoft.Common.Extensions;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Mysoft.Business.Validation.Controls
 {
@@ -12,13 +11,13 @@ namespace Mysoft.Business.Validation.Controls
         public override void Validate(AppControl control)
         {
             AppGrid grid = control.Control as AppGrid;
-            if (grid == null) 
+            if (grid == null)
             {
                 return;  //不是grid
             }
 
             var ds = control.DataSource;
-            if(ds == null)
+            if (ds == null)
             {
                 Results.Add(new Result("AppGridE", "未配置数据源", Level.Warn, typeof(AppGridEValidation)));
                 return;
@@ -26,31 +25,74 @@ namespace Mysoft.Business.Validation.Controls
 
             if (grid.Row != null && grid.Row.AppGridCells.Count > 0)
             {
-                //if (!string.IsNullOrEmpty(grid.Row.AppGridCells[0].CellType))
-                //{
+                List<bool> _sumtype = new List<bool>();
+                string _strSumTemp = "";
+
+                if(grid.Summary != null && grid.Summary.AppGridCells.Count > 0)
+                {
+                    for (int i = 0; i < grid.Summary.AppGridCells.Count; i++)
+                    {
+                        var scell = grid.Summary.AppGridCells[i];
+                        if(scell.SumTotalField.IsNotNullOrEmpty())
+                        {
+                            _strSumTemp += "," + scell.SumTotalField + " AS _s" + i;
+                        }
+                    }
+                }
+
                 //appGridE, appGrid
                 foreach (var cell in grid.Row.AppGridCells)
                 {
-                    string strSql1 = "", strSql2 = "", strSQL = CommonValidation.GetFilter(ds.Sql);
+                    string strSql1 = "", strSql2 = "", _strSQL = "";
+                    string error = string.Empty;
 
-                    if(ds.PageMode.EqualIgnoreCase("2"))
+                    //替换关键字
+                    string strSQL = CommonValidation.GetFilter(ds.Sql);
+
+                    if (ds.PageMode.EqualIgnoreCase("2"))
                     {
                         string[] arrSql = SplitSql(strSQL);
-                            
-                        if(arrSql != null)
+
+                        if (arrSql != null)
                         {
                             strSql1 = arrSql[0];				    // 外层不带“SELECT”关键字的部分 SQL 语句
-					        strSQL = arrSql[1];				        // 内层从“SELECT”关键字开始的 SQL 语句
-					        strSql2 = GetSortedSql(arrSql[2], cell, ds);	// 外层 SQL
+                            strSQL = arrSql[1];				        // 内层从“SELECT”关键字开始的 SQL 语句
+                            strSql2 = GetSortedSql(arrSql[2], cell, ds);	// 外层 SQL
                         }
                     }
 
                     strSQL = GetSortedSql(strSQL, cell, ds);
 
-                    string _strSQL = GetPageSql(strSQL, ds.Entity, ds.KeyName);
-                    _strSQL = strSql1 + _strSQL + strSql2;
+                    //是否分页allowpaging, pageSize == 0
+                    //allowpaing
+                    if(ds.KeyName.IsNotNullOrEmpty())
+                    {
+                        //取记录数 if showPageCount
+                        string strSQLTemp = Regex.Replace(strSQL, @"SELECT\s+([\w|\W]+)\s+FROM", "SELECT COUNT(*)" + _strSumTemp + " FROM");
+                        strSQLTemp = Regex.Replace(strSQLTemp, @"\s+ORDER BY([\w|\W]+)", "");
+                        if (!ValidateSql(strSQLTemp, out error))
+                        {
+                            Results.Add(new Result(string.Format("检查数据列{0}", cell.Field),
+                                                string.Format("{0}字段当showPageCount == true时会出错：{1}", cell.OrderBy, error), Level.Error,
+                                                GetType()));
+                            return;
+                        }
+                        
+                        if (ds.PageMode.EqualIgnoreCase("2"))
+                        {
+                            _strSQL = GetPageSql(strSQL, ds.Entity, ds.KeyName);
+                            _strSQL = strSql1 + _strSQL + strSql2;
+                        }
+                        else
+                        {
+                            _strSQL = GetPageSql(strSQL, ds.Entity, ds.KeyName);
+                        }
+                    }
+                    else
+                    {
+                        //不指定主键的分页查询
+                    }
 
-                    string error = string.Empty;
                     if (strSQL.IsNotNullOrEmpty() && !ValidateSql(_strSQL, out error))
                     {
                         Results.Add(new Result(string.Format("检查数据列{0}", cell.Field),
@@ -69,13 +111,12 @@ namespace Mysoft.Business.Validation.Controls
                                     Results.Add(new Result("AppGridE",
                                                             string.Format("[{0}]单元格的SQL有误：{1}", cell.Title,
                                                                             attr.Value), Level.Error,
-                                                            typeof (AppGridEValidation)));
+                                                            typeof(AppGridEValidation)));
                                 }
                             }
                         }
                     }
                 }
-                //}
             }
         }
 
@@ -147,6 +188,7 @@ namespace Mysoft.Business.Validation.Controls
                             intLastIndex = i + 1;
                         }
                         break;
+
                     case "'":
                         if (bInQuot)
                         {
@@ -157,6 +199,7 @@ namespace Mysoft.Business.Validation.Controls
                         }
                         bInQuot = !bInQuot;
                         break;
+
                     case "(":
                         if (!bInQuot) intParentheses++;
                         break;
@@ -164,6 +207,7 @@ namespace Mysoft.Business.Validation.Controls
                     case ")":
                         if (!bInQuot) intParentheses--;
                         break;
+
                     default:
                         break;
                 }
@@ -172,20 +216,19 @@ namespace Mysoft.Business.Validation.Controls
             return arrCols;
         }
 
-
         private string[] SplitSql(string sql)
         {
             string[] arrSql = new string[3];
             int intIndex = sql.IndexOf("SELECT ");
-			if (intIndex < 0)
+            if (intIndex < 0)
                 return null;
 
-			arrSql[0] = sql.Substring(0, intIndex);		// 第一段 SQL
+            arrSql[0] = sql.Substring(0, intIndex);		// 第一段 SQL
 
             sql = sql.Substring(intIndex);
             intIndex = SeekSqlEnd(sql);
 
-			arrSql[1] = sql.Substring(0, intIndex);		// 第二段 SQL
+            arrSql[1] = sql.Substring(0, intIndex);		// 第二段 SQL
             arrSql[2] = sql.Substring(intIndex);	// 第三段 SQL
 
             return arrSql;
@@ -197,7 +240,7 @@ namespace Mysoft.Business.Validation.Controls
             int intParentheses = 0; //括号层数
             int intCount = s.Length - 1;
             int i = 0;
-            for (; i < intCount; i++ )
+            for (; i < intCount; i++)
             {
                 string t = s.Substring(i, 1);
                 switch (t)
@@ -215,16 +258,8 @@ namespace Mysoft.Business.Validation.Controls
                         {
                             bInQuot = false;
                         }
-
-                        //if (bInQuot)
-                        //{
-                        //    if (intCount > i && s.Substring(i + 1, 1) == "'")
-                        //    {
-                        //        i++;
-                        //    }
-                        //}
-                        //bInQuot = !bInQuot;
                         break;
+
                     case "(":
                         if (!bInQuot) intParentheses++;
                         break;
@@ -236,6 +271,7 @@ namespace Mysoft.Business.Validation.Controls
                             if (intParentheses < 0) return i;
                         }
                         break;
+
                     default:
                         break;
                 }
@@ -247,17 +283,17 @@ namespace Mysoft.Business.Validation.Controls
         {
             string strSql = sql.Substring(sql.IndexOf("SELECT ") + 6);
             strSql = "SELECT TOP 10" + strSql;
-            if(primaryKey.IsNotNullOrEmpty())
+            if (primaryKey.IsNotNullOrEmpty())
             {
                 string s = (entity.IsNotNullOrEmpty() ? entity + "." : "") + primaryKey.Replace("'", "''");
                 string strTemp = strSql.Substring(strSql.IndexOf("FROM"));
                 strTemp = s + " NOT IN (SELECT TOP 10 " + s + " " + strTemp + ")";
 
-                if(strSql.LastIndexOf("WHERE ") > 0)
+                if (strSql.LastIndexOf("WHERE ") > 0)
                 {
                     strSql = strSql.Replace("WHERE ", "WHERE " + strTemp + " AND ");
                 }
-                else if(strSql.IndexOf("ORDER BY ") > 0)
+                else if (strSql.IndexOf("ORDER BY ") > 0)
                 {
                     strSql = strSql.Replace("ORDER BY ", "WHERE " + strTemp + " ORDER BY ");
                 }

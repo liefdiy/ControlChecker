@@ -36,6 +36,12 @@ namespace SCide
             ShowPageResults(_showLevel);
         }
 
+        public void ClearResult()
+        {
+            _pageResults.Clear();
+            dataGridView.DataSource = new BindingList<Result>();
+        }
+
         private void ShowPageResults(Level level)
         {
             BindingList<Result> data = new BindingList<Result>();
@@ -67,8 +73,7 @@ namespace SCide
 
         private void clearToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
-            _pageResults.Clear();
-            dataGridView.DataSource = new BindingList<Result>();
+            ClearResult();
         }
 
         private void allToolStripButton_Click(object sender, System.EventArgs e)

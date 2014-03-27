@@ -185,6 +185,14 @@ namespace Mysoft.Business.Validation
                 CommonValidation.ExecuteSql(s);
                 return true;
             }
+            catch (SqlException sqlEx)
+            {
+                error = sqlEx.Message;
+                if(sqlEx.Number == 306)
+                {
+                    error += " 参考：cast(columnName as varchar(max))";
+                }
+            }
             catch (Exception ex)
             {
                 error = ex.Message;

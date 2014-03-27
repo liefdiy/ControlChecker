@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.gb = new System.Windows.Forms.GroupBox();
-            this.txbServer = new System.Windows.Forms.TextBox();
-            this.lbServer = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.txbDb = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txbUserId = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.txbPwd = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.txbUserId = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.txbDb = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lbServer = new System.Windows.Forms.Label();
+            this.txbServer = new System.Windows.Forms.TextBox();
             this.btnOk = new System.Windows.Forms.Button();
             this.btntest = new System.Windows.Forms.Button();
             this.gb.SuspendLayout();
@@ -58,53 +58,12 @@
             this.gb.TabIndex = 0;
             this.gb.TabStop = false;
             // 
-            // txbServer
+            // txbPwd
             // 
-            this.txbServer.Location = new System.Drawing.Point(94, 20);
-            this.txbServer.Name = "txbServer";
-            this.txbServer.Size = new System.Drawing.Size(333, 21);
-            this.txbServer.TabIndex = 0;
-            // 
-            // lbServer
-            // 
-            this.lbServer.AutoSize = true;
-            this.lbServer.Location = new System.Drawing.Point(24, 23);
-            this.lbServer.Name = "lbServer";
-            this.lbServer.Size = new System.Drawing.Size(47, 12);
-            this.lbServer.TabIndex = 1;
-            this.lbServer.Text = "Server:";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 61);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(59, 12);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "DataBase:";
-            // 
-            // txbDb
-            // 
-            this.txbDb.Location = new System.Drawing.Point(94, 58);
-            this.txbDb.Name = "txbDb";
-            this.txbDb.Size = new System.Drawing.Size(333, 21);
-            this.txbDb.TabIndex = 3;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(18, 100);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(53, 12);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "User Id:";
-            // 
-            // txbUserId
-            // 
-            this.txbUserId.Location = new System.Drawing.Point(94, 97);
-            this.txbUserId.Name = "txbUserId";
-            this.txbUserId.Size = new System.Drawing.Size(333, 21);
-            this.txbUserId.TabIndex = 5;
+            this.txbPwd.Location = new System.Drawing.Point(94, 133);
+            this.txbPwd.Name = "txbPwd";
+            this.txbPwd.Size = new System.Drawing.Size(333, 21);
+            this.txbPwd.TabIndex = 7;
             // 
             // label3
             // 
@@ -115,12 +74,53 @@
             this.label3.TabIndex = 6;
             this.label3.Text = "Password:";
             // 
-            // txbPwd
+            // txbUserId
             // 
-            this.txbPwd.Location = new System.Drawing.Point(94, 133);
-            this.txbPwd.Name = "txbPwd";
-            this.txbPwd.Size = new System.Drawing.Size(333, 21);
-            this.txbPwd.TabIndex = 7;
+            this.txbUserId.Location = new System.Drawing.Point(94, 97);
+            this.txbUserId.Name = "txbUserId";
+            this.txbUserId.Size = new System.Drawing.Size(333, 21);
+            this.txbUserId.TabIndex = 5;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(18, 100);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(53, 12);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "User Id:";
+            // 
+            // txbDb
+            // 
+            this.txbDb.Location = new System.Drawing.Point(94, 58);
+            this.txbDb.Name = "txbDb";
+            this.txbDb.Size = new System.Drawing.Size(333, 21);
+            this.txbDb.TabIndex = 3;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 61);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(59, 12);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "DataBase:";
+            // 
+            // lbServer
+            // 
+            this.lbServer.AutoSize = true;
+            this.lbServer.Location = new System.Drawing.Point(24, 23);
+            this.lbServer.Name = "lbServer";
+            this.lbServer.Size = new System.Drawing.Size(47, 12);
+            this.lbServer.TabIndex = 1;
+            this.lbServer.Text = "Server:";
+            // 
+            // txbServer
+            // 
+            this.txbServer.Location = new System.Drawing.Point(94, 20);
+            this.txbServer.Name = "txbServer";
+            this.txbServer.Size = new System.Drawing.Size(333, 21);
+            this.txbServer.TabIndex = 0;
             // 
             // btnOk
             // 
@@ -142,7 +142,7 @@
             this.btntest.UseVisualStyleBackColor = true;
             this.btntest.Click += new System.EventHandler(this.btntest_Click);
             // 
-            // Setting
+            // SettingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -152,9 +152,10 @@
             this.Controls.Add(this.gb);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
-            this.Name = "Setting";
+            this.Name = "SettingForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "数据库连接";
             this.TopMost = true;
             this.gb.ResumeLayout(false);

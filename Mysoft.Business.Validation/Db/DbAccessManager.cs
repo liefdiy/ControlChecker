@@ -1,4 +1,5 @@
-﻿using Mysoft.Map.Extensions.DAL;
+﻿using Mysoft.Business.Manager;
+using Mysoft.Map.Extensions.DAL;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,11 +10,9 @@ namespace Mysoft.Business.Validation.Db
     {
         private static bool s_status = false;
 
-        private static string s_connectstring = string.Empty;
-
         public static string Connectstring
         {
-            get { return s_connectstring; }
+            get { return AppConfigManager.ConnectionString; }
         }
 
         public static void Init(string connstring)
@@ -26,7 +25,6 @@ namespace Mysoft.Business.Validation.Db
                 {
                     //如何多次初始化，要更改连接字符串
                     Mysoft.Map.Extensions.Initializer.UnSafeInit(connstring);
-                    s_connectstring = connstring;
                     s_status = true;
                     LoadKeyWord();
                 }
@@ -34,6 +32,11 @@ namespace Mysoft.Business.Validation.Db
                 {
                 }
             }
+        }
+
+        public static void Reset()
+        {
+            LoadKeyWord();
         }
 
         private static bool IsValidConnectString(string connstring)

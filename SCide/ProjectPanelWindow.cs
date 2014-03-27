@@ -1,7 +1,9 @@
-﻿using Mysoft.Business.Manager;
+﻿using System.Drawing;
+using Mysoft.Business.Manager;
 using Mysoft.Common.Extensions;
 using SCide.Properties;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
@@ -58,29 +60,22 @@ namespace SCide
             rootNode.ImageKey = "dir";
             rootNode.SelectedImageKey = rootNode.ImageKey;
 
-            DirectoryInfo[] directorie = root.GetDirectories();
+            DirectoryInfo[] directorie = root.GetDirectories("*.*", SearchOption.TopDirectoryOnly);
+
+            FileInfo[] files = root.GetFiles(_filter, SearchOption.TopDirectoryOnly);
+            foreach (FileInfo fi in files)
+            {
+                rootNode.Nodes.Add(GetFile(fi));
+            }
+
             foreach (DirectoryInfo di in directorie)
             {
-                try
-                {
-                    FileInfo[] files = di.GetFiles(_filter);
-                    if (files.Length == 0)
-                    {
-                        TreeNode tn = GetDirectory(di);
-                        if (tn.Nodes.Count > 0)
-                        {
-                            rootNode.Nodes.Add(tn);
-                        }
-                    }
+                if (AppConfigManager.Setting.Dir.IgnoreDir.ContainsIgnoreCase(di.Name)) continue;
 
-                    foreach (FileInfo fi in files)
-                    {
-                        rootNode.Nodes.Add(GetFile(fi));
-                    }
-                }
-                catch (Exception)
+                TreeNode tn = GetDirectory(di);
+                if (tn.Nodes.Count > 0)
                 {
-                    //ignore
+                    rootNode.Nodes.Add(tn);
                 }
             }
 
@@ -123,6 +118,40 @@ namespace SCide
         private void btnExpandAll_Click(object sender, EventArgs e)
         {
             projectTreeView.ExpandAll();
+        }
+
+        private void openPath_Click(object sender, EventArgs e)
+        {
+            TreeNode node = projectTreeView.SelectedNode;
+            if(node == null) return;
+
+            string path = string.Empty;
+
+            if(node.Nodes.Count > 0)
+            {
+                DirectoryInfo dir = node.Tag as DirectoryInfo;
+                path = dir.FullName;
+                Process.Start("Explorer", string.Format("/e,{0}", path));
+            }
+            else
+            {
+                FileInfo fi = node.Tag as FileInfo;
+                path = fi.FullName;
+                Process.Start("Explorer", string.Format("/select,{0}", path));
+            }
+        }
+
+        private void projectTreeView_MouseClick(object sender, MouseEventArgs e)
+        {
+            if(e.Button == MouseButtons.Right)
+            {
+                //右键选中
+                TreeNode node = projectTreeView.GetNodeAt(new Point(e.X, e.Y));
+                if(node != null)
+                {
+                    projectTreeView.SelectedNode = node;
+                }
+            }
         }
     }
 }

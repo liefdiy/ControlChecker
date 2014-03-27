@@ -28,12 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.projectTreeView = new System.Windows.Forms.TreeView();
+            this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.openPath = new System.Windows.Forms.ToolStripMenuItem();
             this.txbFilter = new System.Windows.Forms.TextBox();
             this.lbFilter = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.lbExpand = new System.Windows.Forms.Label();
             this.lbCollapse = new System.Windows.Forms.Label();
+            this.lbExpand = new System.Windows.Forms.Label();
+            this.contextMenuStrip.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -42,13 +46,31 @@
             // projectTreeView
             // 
             this.projectTreeView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.projectTreeView.ContextMenuStrip = this.contextMenuStrip;
             this.projectTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.projectTreeView.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.projectTreeView.FullRowSelect = true;
+            this.projectTreeView.HotTracking = true;
             this.projectTreeView.Location = new System.Drawing.Point(0, 0);
             this.projectTreeView.Name = "projectTreeView";
             this.projectTreeView.Size = new System.Drawing.Size(281, 565);
             this.projectTreeView.TabIndex = 0;
             this.projectTreeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.projectTreeView_NodeMouseDoubleClick);
+            this.projectTreeView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.projectTreeView_MouseClick);
+            // 
+            // contextMenuStrip
+            // 
+            this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openPath});
+            this.contextMenuStrip.Name = "contextMenuStrip";
+            this.contextMenuStrip.Size = new System.Drawing.Size(185, 26);
+            // 
+            // openPath
+            // 
+            this.openPath.Name = "openPath";
+            this.openPath.Size = new System.Drawing.Size(184, 22);
+            this.openPath.Text = "在资源管理器中打开";
+            this.openPath.Click += new System.EventHandler(this.openPath_Click);
             // 
             // txbFilter
             // 
@@ -100,18 +122,6 @@
             this.splitContainer1.SplitterWidth = 1;
             this.splitContainer1.TabIndex = 3;
             // 
-            // lbExpand
-            // 
-            this.lbExpand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lbExpand.AutoSize = true;
-            this.lbExpand.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lbExpand.Location = new System.Drawing.Point(242, 4);
-            this.lbExpand.Name = "lbExpand";
-            this.lbExpand.Size = new System.Drawing.Size(11, 12);
-            this.lbExpand.TabIndex = 5;
-            this.lbExpand.Text = "+";
-            this.lbExpand.Click += new System.EventHandler(this.btnExpandAll_Click);
-            // 
             // lbCollapse
             // 
             this.lbCollapse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -124,6 +134,18 @@
             this.lbCollapse.Text = "-";
             this.lbCollapse.Click += new System.EventHandler(this.btnCollapse_Click);
             // 
+            // lbExpand
+            // 
+            this.lbExpand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbExpand.AutoSize = true;
+            this.lbExpand.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.lbExpand.Location = new System.Drawing.Point(242, 4);
+            this.lbExpand.Name = "lbExpand";
+            this.lbExpand.Size = new System.Drawing.Size(11, 12);
+            this.lbExpand.TabIndex = 5;
+            this.lbExpand.Text = "+";
+            this.lbExpand.Click += new System.EventHandler(this.btnExpandAll_Click);
+            // 
             // ProjectPanelWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -134,6 +156,7 @@
             this.Name = "ProjectPanelWindow";
             this.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.DockLeft;
             this.Text = "Project Explorer";
+            this.contextMenuStrip.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -150,5 +173,7 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Label lbExpand;
         private System.Windows.Forms.Label lbCollapse;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem openPath;
     }
 }
