@@ -45,14 +45,13 @@ namespace SCide
             imgs.Images.Add("file", Resources.ImageFileNew);
             projectTreeView.ImageList = imgs;
 
-            TreeNode rootNode = GetDirectory(root);
+            TreeNode rootNode = GetDirectory(root, true);
 
             projectTreeView.Nodes.Add(rootNode);
-            projectTreeView.ExpandAll();
             base.OnLoad(e);
         }
 
-        private TreeNode GetDirectory(DirectoryInfo root)
+        private TreeNode GetDirectory(DirectoryInfo root, bool expand = false)
         {
             TreeNode rootNode = new TreeNode();
             rootNode.Text = root.Name;
@@ -60,6 +59,11 @@ namespace SCide
             rootNode.Tag = root;
             rootNode.ImageKey = "dir";
             rootNode.SelectedImageKey = rootNode.ImageKey;
+
+            if (expand)
+            {
+                rootNode.Expand();
+            }
 
             DirectoryInfo[] directorie = root.GetDirectories("*.*", SearchOption.TopDirectoryOnly);
 

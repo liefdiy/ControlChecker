@@ -700,44 +700,55 @@ namespace SCide
 
         private void formatXmlToolStripButton_Click(object sender, EventArgs e)
         {
-            string temp = XmlHelper.FormatXml(ActiveDocument.Scintilla.Text);
-            if (!string.IsNullOrEmpty(temp))
+            if ((ActiveDocument != null) && File.Exists(ActiveDocument.FilePath))
             {
-                ActiveDocument.Scintilla.Text = temp;
+                string str = XmlHelper.FormatXml(ActiveDocument.Scintilla.Text);
+                if (!string.IsNullOrEmpty(str))
+                {
+                    this.ActiveDocument.Scintilla.Text = str;
+                }
             }
         }
 
         public void runcheckStripButton_Click(object sender, EventArgs e)
         {
-            PageResult pageresult = null;
-            string filepath = ActiveDocument.FilePath;
-            string xml = ActiveDocument.Scintilla.Text;
+            if ((this.ActiveDocument != null) && File.Exists(this.ActiveDocument.FilePath))
+            {
+                PageResult pageresult = null;
+                string filepath = ActiveDocument.FilePath;
+                string xml = ActiveDocument.Scintilla.Text;
 
-            this.runcheckStripButton.Enabled = false;
-            this.progressStripStatusLabel.Text = "检测中，请稍后 ...";
-            this.outputPanel.ClearResult();
+                this.runcheckStripButton.Enabled = false;
+                this.progressStripStatusLabel.Text = "检测中，请稍后 ...";
+                this.outputPanel.ClearResult();
 
-            ExecuteHandler handler = (obj, args) => { 
-                try
+                ExecuteHandler handler = (obj, args) =>
                 {
-                    TestConnection();
-                    pageresult = Run(filepath, xml);
-                    context.Post(OnPageResultShown, pageresult);
-                }
-                catch (Exception ex)
-                {
-                    FileHelper.Write("error.log", string.Format("---\t{0}\t---\r\n{1}\r\n-------------\r\n", DateTime.Now, ex.StackTrace), Encoding.UTF8, true);
-                    
-                    //弹出消息，弹出框归属MainForm窗体，否则弹出框不容易被发现
-                    context.Post(d => MessageBox.Show(this, d.ToString()), ex.Message);
-                }
-                finally
-                {
-                    context.Post(OnRunFinished, null);
-                }
-            };
+                    try
+                    {
+                        TestConnection();
+                        pageresult = Run(filepath, xml);
+                        context.Post(OnPageResultShown, pageresult);
+                    }
+                    catch (Exception ex)
+                    {
+                        FileHelper.Write("error.log",
+                                        string.Format(
+                                            "---\t{0}\t---\r\n{1}\r\n-------------\r\n",
+                                            DateTime.Now, ex.StackTrace), Encoding.UTF8,
+                                        true);
 
-            handler.BeginInvoke(sender, e, null, null);
+                        //弹出消息，弹出框归属MainForm窗体，否则弹出框不容易被发现
+                        context.Post(d => MessageBox.Show(this, d.ToString()), ex.Message);
+                    }
+                    finally
+                    {
+                        context.Post(OnRunFinished, null);
+                    }
+                };
+
+                handler.BeginInvoke(sender, e, null, null);
+            }
         }
 
         /// <summary>
@@ -899,6 +910,10 @@ namespace SCide
         public MainForm(string[] args)
             : this()
         {
+            Loading loading = new Loading();
+            loading.Show();
+            Application.DoEvents();
+
             // Store the command line args
             this._args = args;
 
@@ -933,6 +948,10 @@ namespace SCide
                 {
                     runcheckStripButton_Click(null, null);
                 }
+                else if (e.KeyCode == Keys.F6)
+                {
+                    formatXmlToolStripButton_Click(null, null);
+                }
             };
 
             this.KeyPreview = true;
@@ -950,6 +969,8 @@ namespace SCide
                 eventArgs.Cancel = true;
                 projectPanel.Hide();
             };
+
+            loading.Close();
         }
 
         #endregion Constructors

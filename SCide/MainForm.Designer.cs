@@ -1163,7 +1163,7 @@ namespace SCide
             this.formatXmlToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.formatXmlToolStripButton.Name = "formatXmlToolStripButton";
             this.formatXmlToolStripButton.Size = new System.Drawing.Size(23, 22);
-            this.formatXmlToolStripButton.Text = "格式化XML";
+            this.formatXmlToolStripButton.Text = "格式化XML(F6)";
             this.formatXmlToolStripButton.Click += new System.EventHandler(this.formatXmlToolStripButton_Click);
             // 
             // toolStripSeparator2

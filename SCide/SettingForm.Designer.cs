@@ -1,4 +1,8 @@
-﻿namespace SCide
+﻿using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace SCide
 {
     partial class SettingForm
     {
@@ -39,6 +43,8 @@
             this.txbServer = new System.Windows.Forms.TextBox();
             this.btnOk = new System.Windows.Forms.Button();
             this.btntest = new System.Windows.Forms.Button();
+            this.cbb_reg = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.gb.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -52,7 +58,7 @@
             this.gb.Controls.Add(this.label1);
             this.gb.Controls.Add(this.lbServer);
             this.gb.Controls.Add(this.txbServer);
-            this.gb.Location = new System.Drawing.Point(12, 12);
+            this.gb.Location = new System.Drawing.Point(12, 38);
             this.gb.Name = "gb";
             this.gb.Size = new System.Drawing.Size(446, 179);
             this.gb.TabIndex = 0;
@@ -124,7 +130,7 @@
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(364, 197);
+            this.btnOk.Location = new System.Drawing.Point(364, 236);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 8;
@@ -134,7 +140,7 @@
             // 
             // btntest
             // 
-            this.btntest.Location = new System.Drawing.Point(283, 197);
+            this.btntest.Location = new System.Drawing.Point(283, 236);
             this.btntest.Name = "btntest";
             this.btntest.Size = new System.Drawing.Size(75, 23);
             this.btntest.TabIndex = 9;
@@ -142,11 +148,33 @@
             this.btntest.UseVisualStyleBackColor = true;
             this.btntest.Click += new System.EventHandler(this.btntest_Click);
             // 
+            // cbb_reg
+            // 
+            this.cbb_reg.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbb_reg.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.cbb_reg.FormattingEnabled = true;
+            this.cbb_reg.Location = new System.Drawing.Point(106, 12);
+            this.cbb_reg.Name = "cbb_reg";
+            this.cbb_reg.Size = new System.Drawing.Size(333, 20);
+            this.cbb_reg.TabIndex = 10;
+            this.cbb_reg.SelectedValueChanged += new System.EventHandler(this.cbb_reg_SelectedValueChanged);
+            //
+            // label4
+            //
+            this.label4.AutoSize = true;
+            this.label4.Location = new Point(12, 15);
+            this.label4.Name = "label4";
+            this.label4.Size = new Size(0x47, 12);
+            this.label4.TabIndex = 8;
+            this.label4.Text = "选择配置项:";
+            // 
             // SettingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(471, 227);
+            this.ClientSize = new System.Drawing.Size(471, 271);
+            this.Controls.Add(this.cbb_reg);
+            base.Controls.Add(this.label4);
             this.Controls.Add(this.btntest);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.gb);
@@ -177,5 +205,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btntest;
+        private System.Windows.Forms.ComboBox cbb_reg;
+        private System.Windows.Forms.Label label4;
     }
 }

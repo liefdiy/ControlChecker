@@ -77,7 +77,10 @@ namespace Mysoft.Business.Manager
             Database = "";
             UserId = "";
             Password = "";
+            RegName = "";
         }
+
+        public string RegName { get; set; }
 
         public string Server { get; set; }
 
