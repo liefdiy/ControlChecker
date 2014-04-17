@@ -58,6 +58,7 @@
     <Compile Include="Utility\XmlReaderEx.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="libs\ICSharpCode.SharpZipLib.dll" />
     <Content Include="libs\Microsoft.Data.Schema.ScriptDom.dll" />
     <Content Include="libs\Microsoft.Data.Schema.ScriptDom.Sql.dll" />
     <Content Include="libs\Mysoft.Map.Extensions.dll" />

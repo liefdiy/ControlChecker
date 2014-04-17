@@ -1,5 +1,6 @@
 #region Using Directives
 
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Text;
 using System.Xml;
@@ -910,9 +911,13 @@ namespace SCide
         public MainForm(string[] args)
             : this()
         {
+            // loading
             Loading loading = new Loading();
             loading.Show();
             Application.DoEvents();
+
+            // check update
+            CheckUpdate();
 
             // Store the command line args
             this._args = args;
@@ -975,5 +980,62 @@ namespace SCide
 
         #endregion Constructors
 
+        #region check update
+
+        private string CheckUpdate()
+        {
+            try
+            {
+                UpdateProxy proxy = new UpdateProxy();
+                if (proxy.HasUpdate())
+                {
+                    if (MessageBox.Show("程序有更新，是否立即执行？\r\n" + proxy.UpdateEntity.comment.InnerText.Trim(), "自动更新", MessageBoxButtons.YesNo) ==
+                        DialogResult.Yes)
+                    {
+                        Download(proxy.UpdateEntity.packagepath);
+                        return proxy.UpdateEntity.packagepath;
+                    }
+                }
+            }
+            catch(System.ServiceModel.EndpointNotFoundException endpointEx)
+            {
+                
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "更新失败");
+            }
+
+            return "";
+        }
+
+        private bool Download(string url)
+        {
+            try
+            {
+                string updateExecute = Path.Combine(Application.StartupPath, "update.exe");
+                if (File.Exists(updateExecute))
+                {
+                    Process process = new Process();
+                    process.StartInfo.FileName = updateExecute;
+                    process.StartInfo.Arguments = string.Format("-d {0} -f {1}", url, Application.ExecutablePath);
+                    process.Start();
+                    Application.Exit();
+                    Environment.Exit(0);
+                }
+                else
+                {
+                    MessageBox.Show("未找到更新程序，更新失败！");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "更新失败");
+            }
+
+            return false;
+        }
+
+        #endregion check update
     }
 }

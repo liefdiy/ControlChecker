@@ -1,5 +1,4 @@
-﻿using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mysoft.Business.Controls;
 using Mysoft.Business.Manager;
 using Mysoft.Business.Validation.Db;

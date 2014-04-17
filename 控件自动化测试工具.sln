@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCide", "SCide\SCide.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScintillaNET", "ScintillaNET\ScintillaNET.csproj", "{F9B6DABD-BBC1-4638-8CE6-A5C9506BFDCB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Update", "Update\Update.csproj", "{3F81C765-97F4-4369-845D-2E8F2A801A33}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug_VS2010|Any CPU = Debug_VS2010|Any CPU
@@ -79,6 +81,14 @@ Global
 		{F9B6DABD-BBC1-4638-8CE6-A5C9506BFDCB}.Release_VS2010|Any CPU.Build.0 = Release|Any CPU
 		{F9B6DABD-BBC1-4638-8CE6-A5C9506BFDCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9B6DABD-BBC1-4638-8CE6-A5C9506BFDCB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F81C765-97F4-4369-845D-2E8F2A801A33}.Debug_VS2010|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F81C765-97F4-4369-845D-2E8F2A801A33}.Debug_VS2010|Any CPU.Build.0 = Debug|Any CPU
+		{3F81C765-97F4-4369-845D-2E8F2A801A33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F81C765-97F4-4369-845D-2E8F2A801A33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F81C765-97F4-4369-845D-2E8F2A801A33}.Release_VS2010|Any CPU.ActiveCfg = Release|Any CPU
+		{3F81C765-97F4-4369-845D-2E8F2A801A33}.Release_VS2010|Any CPU.Build.0 = Release|Any CPU
+		{3F81C765-97F4-4369-845D-2E8F2A801A33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F81C765-97F4-4369-845D-2E8F2A801A33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

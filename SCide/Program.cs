@@ -7,7 +7,6 @@ using System.Windows.Forms;
 
 #endregion Using Directives
 
-
 namespace SCide
 {
     internal static class Program
@@ -26,7 +25,6 @@ namespace SCide
         }
 
         #endregion Methods
-
 
         #region Properties
 

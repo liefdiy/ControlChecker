@@ -1,0 +1,59 @@
+﻿/*****************************************
+	通用更新程序使用说明
+******************************************/
+
+1.配置服务端更新发布服务地址，一个示例：
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+    <system.serviceModel>
+        <bindings>
+            <basicHttpBinding>
+                <binding name="UpdateCheckSoap" />
+            </basicHttpBinding>
+        </bindings>
+        <client>
+            <endpoint address="http://localhost:38764/UpdateCheck.asmx" binding="basicHttpBinding"
+                bindingConfiguration="UpdateCheckSoap" contract="UpdateCheckService.UpdateCheckSoap"
+                name="UpdateCheckSoap" />
+        </client>
+    </system.serviceModel>
+</configuration>
+
+2.服务端发布配置，服务端可支持多个应用的更新发布，配置示例：
+<?xml version="1.0" encoding="utf-8"?>
+<applist>
+  <app name="XXXX工具">
+    <version>1.0.0.0</version>
+    <updatetime>2014-04-16 10:30:00</updatetime>
+    <packagepath>http://localhost:38764/MyControlChecker_v1.0.0.0.zip</packagepath>
+    <comment>
+      <![CDATA[
+			本次更新内容：
+			1. 修复XX问题；
+			2. 修复XXX问题；
+		]]>
+    </comment>
+  </app>
+  <app name="控件配置检测工具">
+    <version>1.0.0.5</version>
+    <updatetime>2014-04-16 10:30:00</updatetime>
+    <packagepath>http://localhost:7000/MyControlChecker_v1.0.0.0.zip</packagepath>
+    <comment>
+<![CDATA[
+本次更新内容：
+1. 修复XX问题；
+2. 修复XXX问题；
+]]>
+    </comment>
+  </app>
+</applist>
+
+3.调用方需要给update.exe传两个参数 -d [下载文件地址] -f [下载完成后执行的应用程序名称]，-f参数可选，调用示例：
+Process process = new Process();
+process.StartInfo.FileName = Path.Combine(Application.StartupPath, "update.exe");
+process.StartInfo.Arguments = string.Format("-d {0} -f {1}", url, Application.ExecutablePath);
+process.Start();
+
+-d 下载的zip文件将直接解压到当前文件夹，-f 执行应用程序。
+
+4.程序仅支持zip的解压缩。
