@@ -51,7 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\StringExtension.cs" />
-    <Compile Include="Utility\ActiveDirectoryHelper.cs" />
+    <Compile Include="Utility\CopyHelper.cs" />
     <Compile Include="Utility\EncryptionHelper.cs" />
     <Compile Include="Utility\FileHelper.cs" />
     <Compile Include="Utility\OSHelper.cs" />

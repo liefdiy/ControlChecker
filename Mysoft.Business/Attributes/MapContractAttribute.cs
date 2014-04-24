@@ -30,11 +30,6 @@ namespace ControlCheck.Business.Attributes
         public EnumValueType EnumValueType { get; set; }
 
         /// <summary>
-        /// 
-        /// </summary>
-        public string Format { get; set; }
-
-        /// <summary>
         /// 验证失败时的提示
         /// </summary>
         public string InvalidMessage { get; set; }

@@ -214,5 +214,25 @@ namespace Mysoft.Business.Controls
 
         [XmlAnyAttribute]
         public Collection<XmlAttribute> OtherAttributes { get; set; }
+
+        [MapContract(Describe = "小数位")]
+        [XmlAttribute(AttributeName = "acc")]
+        public string Acc { get; set; }
+
+        [MapContract(Describe = "标题")]
+        [XmlAttribute(AttributeName = "dt")]
+        public string Dt { get; set; }
+
+        [MapContract(Describe = "标题")]
+        [XmlAttribute(AttributeName = "是否显示千分号")]
+        public string Grp { get; set; }
+
+        [MapContract(Describe = "最大值")]
+        [XmlAttribute(AttributeName = "max")]
+        public string Max { get; set; }
+
+        [MapContract(Describe = "最小值")]
+        [XmlAttribute(AttributeName = "min")]
+        public string Min { get; set; }
     }
 }

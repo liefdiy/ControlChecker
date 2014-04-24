@@ -62,6 +62,7 @@
     <Compile Include="Controls\MapPage.cs" />
     <Compile Include="Contracts\UserCaseContract.cs" />
     <Compile Include="Contracts\ValidateResultContract.cs" />
+    <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Manager\AppConfigManager.cs" />
     <Compile Include="Manager\StatisticsManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
