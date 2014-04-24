@@ -1,4 +1,6 @@
-﻿namespace Mysoft.Common.Utility
+﻿using System.DirectoryServices;
+
+namespace Mysoft.Common.Utility
 {
     using Microsoft.Win32;
     using System;
@@ -76,9 +78,8 @@
             {
                 str = obj2["AddressWidth"].ToString();
             }
-            return str.Equals("64");
+            return !string.IsNullOrEmpty(str) && str.Equals("64");
         }
-
     }
 }
 

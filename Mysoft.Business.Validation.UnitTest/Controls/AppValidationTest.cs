@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Security.Principal;
+using System.Timers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mysoft.Business.Controls;
 using Mysoft.Business.Manager;
 using Mysoft.Business.Validation.Db;
@@ -37,6 +39,7 @@ namespace Mysoft.Business.Validation.UnitTest.Controls
             //form.Tabs.Add(tab);
 
             //var formXml = XmlHelper.XmlSerialize(form);
+            System.Threading.Thread.Sleep(100000);
 
             DbAccessManager.Init("Server=wh-pc066;database=dotnet_erp302sp1_scxxw;user id=sa;password=95938");
             MapPage page = GetPage();

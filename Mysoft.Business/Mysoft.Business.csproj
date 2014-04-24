@@ -32,7 +32,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
@@ -61,6 +63,7 @@
     <Compile Include="Contracts\UserCaseContract.cs" />
     <Compile Include="Contracts\ValidateResultContract.cs" />
     <Compile Include="Manager\AppConfigManager.cs" />
+    <Compile Include="Manager\StatisticsManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

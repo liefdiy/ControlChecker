@@ -87,5 +87,19 @@ namespace Mysoft.Common.Extensions
             DateTime dt = new DateTime();
             return DateTime.TryParseExact(me, format, null, DateTimeStyles.None, out dt);
         }
+
+        public static bool ToBoolean(this string me)
+        {
+            bool result = false;
+            bool.TryParse(me, out result);
+            return result;
+        }
+
+        public static int ToInt(this string me)
+        {
+            int result = 0;
+            int.TryParse(me, out result);
+            return result;
+        }
     }
 }

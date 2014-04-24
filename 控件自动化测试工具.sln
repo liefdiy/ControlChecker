@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScintillaNET", "ScintillaNE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Update", "Update\Update.csproj", "{3F81C765-97F4-4369-845D-2E8F2A801A33}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mysoft.Common.UnitTest", "Mysoft.Common.UnitTest\Mysoft.Common.UnitTest.csproj", "{11F40A2E-732B-49B0-ACF4-8C96FA247BEE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug_VS2010|Any CPU = Debug_VS2010|Any CPU
@@ -89,6 +91,14 @@ Global
 		{3F81C765-97F4-4369-845D-2E8F2A801A33}.Release_VS2010|Any CPU.Build.0 = Release|Any CPU
 		{3F81C765-97F4-4369-845D-2E8F2A801A33}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F81C765-97F4-4369-845D-2E8F2A801A33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11F40A2E-732B-49B0-ACF4-8C96FA247BEE}.Debug_VS2010|Any CPU.ActiveCfg = Debug|Any CPU
+		{11F40A2E-732B-49B0-ACF4-8C96FA247BEE}.Debug_VS2010|Any CPU.Build.0 = Debug|Any CPU
+		{11F40A2E-732B-49B0-ACF4-8C96FA247BEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11F40A2E-732B-49B0-ACF4-8C96FA247BEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11F40A2E-732B-49B0-ACF4-8C96FA247BEE}.Release_VS2010|Any CPU.ActiveCfg = Release|Any CPU
+		{11F40A2E-732B-49B0-ACF4-8C96FA247BEE}.Release_VS2010|Any CPU.Build.0 = Release|Any CPU
+		{11F40A2E-732B-49B0-ACF4-8C96FA247BEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11F40A2E-732B-49B0-ACF4-8C96FA247BEE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

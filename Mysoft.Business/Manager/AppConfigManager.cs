@@ -58,6 +58,7 @@ namespace Mysoft.Business.Manager
             Dir = new DirSetting();
             WebSite = new WebSiteSetting();
             App = new AppSetting();
+            User = new AdUser();
         }
 
         public DbSetting Db { get; set; }
@@ -67,6 +68,15 @@ namespace Mysoft.Business.Manager
         public WebSiteSetting WebSite { get; set; }
 
         public AppSetting App { get; set; }
+
+        public AdUser User { get; set; }
+    }
+
+    public class AdUser
+    {
+        public string UserName { get; set; }
+        
+        public string Password { get; set; }
     }
 
     public class DbSetting
@@ -79,6 +89,8 @@ namespace Mysoft.Business.Manager
             Password = "";
             RegName = "";
         }
+
+        public bool CanAccess { get; set; }
 
         public string RegName { get; set; }
 

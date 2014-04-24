@@ -3,6 +3,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Text;
+using System.Net;
 using System.Xml;
 using Mysoft.Business.Controls;
 using Mysoft.Business.Manager;
@@ -291,8 +292,9 @@ namespace SCide
             }
 
             DocumentForm doc = new DocumentForm();
-            Encoding encoding;
+            Encoding encoding = Encoding.Default;
             doc.Scintilla.Text = FileHelper.Read(filePath, out encoding);
+            doc.Scintilla.Encoding = encoding;
             doc.Scintilla.UndoRedo.EmptyUndoBuffer();
             doc.Scintilla.Modified = false;
             doc.Text = Path.GetFileName(filePath);
@@ -715,6 +717,8 @@ namespace SCide
         {
             if ((this.ActiveDocument != null) && File.Exists(this.ActiveDocument.FilePath))
             {
+                if (!runcheckStripButton.Enabled) return;
+
                 PageResult pageresult = null;
                 string filepath = ActiveDocument.FilePath;
                 string xml = ActiveDocument.Scintilla.Text;
@@ -725,26 +729,27 @@ namespace SCide
 
                 ExecuteHandler handler = (obj, args) =>
                 {
+                    string remark = "";
                     try
                     {
-                        TestConnection();
+                        AppConfigManager.Setting.Db.CanAccess = TestConnection();
                         pageresult = Run(filepath, xml);
                         context.Post(OnPageResultShown, pageresult);
+                        remark = new FileInfo(filepath).Name;
+                        remark += ",result count:" + pageresult.Results.Count; 
                     }
                     catch (Exception ex)
                     {
-                        FileHelper.Write("error.log",
-                                        string.Format(
-                                            "---\t{0}\t---\r\n{1}\r\n-------------\r\n",
-                                            DateTime.Now, ex.StackTrace), Encoding.UTF8,
-                                        true);
-
+                        remark += "\r\n" + ex.Message;
+                        FileHelper.Write("error.log", string.Format( "---\t{0}\t---\r\n{1}\r\n-------------\r\n", DateTime.Now, ex.StackTrace), Encoding.UTF8, true);
                         //弹出消息，弹出框归属MainForm窗体，否则弹出框不容易被发现
                         context.Post(d => MessageBox.Show(this, d.ToString()), ex.Message);
                     }
                     finally
                     {
                         context.Post(OnRunFinished, null);
+                        //统计验证次数
+                        StatisticsManager.IncreaseCounter(OperationOption.Check, Identity, remark);
                     }
                 };
 
@@ -764,10 +769,13 @@ namespace SCide
             if (page == null) return null;
 
             page.PageXml = filepath;
-
+            
             using (ConnectionScope scope = new ConnectionScope(TransactionMode.Inherits, AppConfigManager.ConnectionString))
             {
-                DbAccessManager.Reset();
+                if (AppConfigManager.Setting.Db.CanAccess)
+                {
+                    DbAccessManager.Reset();
+                }
                 return AppValidationManager.ValidatePage(page);
             }
         }
@@ -871,13 +879,14 @@ namespace SCide
             lineNumbersToolStripMenuItem.Checked = isshow;
         }
 
-        private void TestConnection()
+        private bool TestConnection()
         {
             //探测数据库连接
             if (!setting.CanAccessDb(AppConfigManager.ConnectionString))
             {
                 setting.ShowDialog();
             }
+            return setting.CanAccessDb(AppConfigManager.ConnectionString);
         }
 
         #endregion Custom Methods
@@ -918,6 +927,9 @@ namespace SCide
 
             // check update
             CheckUpdate();
+
+            // run background task
+            RunTasks();
 
             // Store the command line args
             this._args = args;
@@ -982,14 +994,14 @@ namespace SCide
 
         #region check update
 
-        private string CheckUpdate()
+        private string CheckUpdate(bool notice = true)
         {
             try
             {
                 UpdateProxy proxy = new UpdateProxy();
                 if (proxy.HasUpdate())
                 {
-                    if (MessageBox.Show("程序有更新，是否立即执行？\r\n" + proxy.UpdateEntity.comment.InnerText.Trim(), "自动更新", MessageBoxButtons.YesNo) ==
+                    if (!notice || MessageBox.Show("程序有更新，是否立即执行？\r\n" + proxy.UpdateEntity.comment.InnerText.Trim(), "自动更新", MessageBoxButtons.YesNo) ==
                         DialogResult.Yes)
                     {
                         Download(proxy.UpdateEntity.packagepath);
@@ -1037,5 +1049,65 @@ namespace SCide
         }
 
         #endregion check update
+
+        #region background task
+
+        private System.Threading.Timer timer = null;
+
+        private void RunTasks()
+        {
+            timer = new System.Threading.Timer(obj => CheckUpdate(false), null, GetAutoUpdateTimeSpan(), TimeSpan.FromDays(1));
+        }
+
+        private TimeSpan GetAutoUpdateTimeSpan()
+        {
+            DateTime now = DateTime.Now;
+            DateTime dawn = new DateTime(now.Year, now.Month, now.Day + 1, 1, 0, 0);
+            return dawn - now;
+        }
+
+        #endregion background task
+
+        #region Identity
+
+        private ICredentials _identity;
+
+        public ICredentials Identity
+        {
+            get
+            {
+                if (_identity == null)
+                {
+                    _identity = GetIdentity();
+                }
+                return _identity;
+            }
+            set { _identity = value; }
+        }
+
+
+        private ICredentials GetIdentity()
+        {
+            ICredentials identity;
+
+            //如果无权限访问则使用用户域账户
+            if (!StatisticsManager.CurrentIdentityCanAccess())
+            {
+                if (string.IsNullOrEmpty(AppConfigManager.Setting.User.UserName) || string.IsNullOrEmpty(AppConfigManager.Setting.User.Password))
+                {
+                    LoginForm login = new LoginForm();
+                    login.ShowDialog();
+                }
+                identity = new NetworkCredential(AppConfigManager.Setting.User.UserName, EncryptionHelper.AesHelper.Decrypt(AppConfigManager.Setting.User.Password));
+            }
+            else
+            {
+                identity = CredentialCache.DefaultCredentials;
+            }
+
+            return identity;
+        }
+
+        #endregion Identity
     }
 }
