@@ -19,6 +19,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Update", "Update\Update.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mysoft.Common.UnitTest", "Mysoft.Common.UnitTest\Mysoft.Common.UnitTest.csproj", "{11F40A2E-732B-49B0-ACF4-8C96FA247BEE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyControlCreator", "MyControlCreator\MyControlCreator.csproj", "{E5244985-6434-4EBC-A8B9-70CF181C6295}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyControlCreator.Tests", "MyControlCreator.Tests\MyControlCreator.Tests.csproj", "{F113884B-523D-4EEC-A840-2C7297F51E37}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug_VS2010|Any CPU = Debug_VS2010|Any CPU
@@ -99,6 +103,22 @@ Global
 		{11F40A2E-732B-49B0-ACF4-8C96FA247BEE}.Release_VS2010|Any CPU.Build.0 = Release|Any CPU
 		{11F40A2E-732B-49B0-ACF4-8C96FA247BEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11F40A2E-732B-49B0-ACF4-8C96FA247BEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5244985-6434-4EBC-A8B9-70CF181C6295}.Debug_VS2010|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5244985-6434-4EBC-A8B9-70CF181C6295}.Debug_VS2010|Any CPU.Build.0 = Debug|Any CPU
+		{E5244985-6434-4EBC-A8B9-70CF181C6295}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5244985-6434-4EBC-A8B9-70CF181C6295}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5244985-6434-4EBC-A8B9-70CF181C6295}.Release_VS2010|Any CPU.ActiveCfg = Release|Any CPU
+		{E5244985-6434-4EBC-A8B9-70CF181C6295}.Release_VS2010|Any CPU.Build.0 = Release|Any CPU
+		{E5244985-6434-4EBC-A8B9-70CF181C6295}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5244985-6434-4EBC-A8B9-70CF181C6295}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F113884B-523D-4EEC-A840-2C7297F51E37}.Debug_VS2010|Any CPU.ActiveCfg = Debug|Any CPU
+		{F113884B-523D-4EEC-A840-2C7297F51E37}.Debug_VS2010|Any CPU.Build.0 = Debug|Any CPU
+		{F113884B-523D-4EEC-A840-2C7297F51E37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F113884B-523D-4EEC-A840-2C7297F51E37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F113884B-523D-4EEC-A840-2C7297F51E37}.Release_VS2010|Any CPU.ActiveCfg = Release|Any CPU
+		{F113884B-523D-4EEC-A840-2C7297F51E37}.Release_VS2010|Any CPU.Build.0 = Release|Any CPU
+		{F113884B-523D-4EEC-A840-2C7297F51E37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F113884B-523D-4EEC-A840-2C7297F51E37}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

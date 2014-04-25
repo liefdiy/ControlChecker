@@ -1,0 +1,28 @@
+1.新建一个类AppXXXControl，继承自AppBaseControl，设计这个类视图
+
+2.Form1.cs添加Label按钮，按钮的MouseDown事件为label1_MouseDown：
+private void label1_MouseDown(object sender, MouseEventArgs e)
+{
+    Control ctrl = sender as Control;
+    if(e.Button == MouseButtons.Left)
+    {
+        ctrl.DoDragDrop(ctrl, DragDropEffects.Move | DragDropEffects.Copy);
+    }
+}
+
+3.Label按钮的Tag设置为AppXXXControl
+
+
+
+a.反射添加属性，添加一个Table，若不是对象或者集合，则每行展示两个成员，且
+bool	checkbox
+string	textbox
+int		textbox
+enum	SelectOptionsUc
+
+b.若是class，则Table中新增一行，合并两列，创建一个GroupBox，回到a
+
+c.若是list，则...
+
+但是涉及到类型不同时，要展示的属性不一样，以上还是行不通。可以考虑在基类中用一个PreLoad方法，
+返回bool值标识是否需要反射自动创建控件，否则在PreLoad方法中手动创建控件。
