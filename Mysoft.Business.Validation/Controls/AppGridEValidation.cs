@@ -6,6 +6,9 @@ using System.Text.RegularExpressions;
 
 namespace Mysoft.Business.Validation.Controls
 {
+    /// <summary>
+    /// 该验证器主要验证SQL规范，不严格区分AppGrid和AppGridE，两个控件校验规则一样。
+    /// </summary>
     public class AppGridEValidation : AppValidationBase
     {
         public override void Validate(AppControl control)
@@ -28,12 +31,12 @@ namespace Mysoft.Business.Validation.Controls
                 List<bool> _sumtype = new List<bool>();
                 string _strSumTemp = "";
 
-                if(grid.Summary != null && grid.Summary.AppGridCells.Count > 0)
+                if (grid.Summary != null && grid.Summary.AppGridCells.Count > 0)
                 {
                     for (int i = 0; i < grid.Summary.AppGridCells.Count; i++)
                     {
                         var scell = grid.Summary.AppGridCells[i];
-                        if(scell.SumTotalField.IsNotNullOrEmpty())
+                        if (scell.SumTotalField.IsNotNullOrEmpty())
                         {
                             _strSumTemp += "," + scell.SumTotalField + " AS _s" + i;
                         }
@@ -65,7 +68,7 @@ namespace Mysoft.Business.Validation.Controls
 
                     //是否分页allowpaging, pageSize == 0
                     //allowpaing
-                    if(ds.KeyName.IsNotNullOrEmpty())
+                    if (ds.KeyName.IsNotNullOrEmpty())
                     {
                         //取记录数 if showPageCount
                         string strSQLTemp = Regex.Replace(strSQL, @"SELECT\s+([\w|\W]+)\s+FROM", "SELECT COUNT(*)" + _strSumTemp + " FROM");
@@ -77,15 +80,15 @@ namespace Mysoft.Business.Validation.Controls
                                                 GetType()));
                             return;
                         }
-                        
+
                         if (ds.PageMode.EqualIgnoreCase("2"))
                         {
-                            _strSQL = GetPageSql(strSQL, ds.Entity, ds.KeyName);
+                            _strSQL = GetPageSql(strSQL, ds.Entity, ds.KeyName, ds.PageMode);
                             _strSQL = strSql1 + _strSQL + strSql2;
                         }
                         else
                         {
-                            _strSQL = GetPageSql(strSQL, ds.Entity, ds.KeyName);
+                            _strSQL = GetPageSql(strSQL, ds.Entity, ds.KeyName, ds.PageMode);
                         }
                     }
                     else
@@ -240,7 +243,7 @@ namespace Mysoft.Business.Validation.Controls
             int intParentheses = 0; //括号层数
             int intCount = s.Length - 1;
             int i = 0;
-            for (; i < intCount; i++)
+            for (; i <= intCount; i++)
             {
                 string t = s.Substring(i, 1);
                 switch (t)
@@ -279,15 +282,116 @@ namespace Mysoft.Business.Validation.Controls
             return i;
         }
 
-        private string GetPageSql(string sql, string entity, string primaryKey)
+        private string GetPageSql(string sql, string entity, string primaryKey, string pagemode)
         {
-            string strSql = sql.Substring(sql.IndexOf("SELECT ") + 6);
-            strSql = "SELECT TOP 10" + strSql;
-            if (primaryKey.IsNotNullOrEmpty())
+            int index = sql.IndexOf("SELECT ");
+            if (index < 0) return sql;
+            string strSql = sql.Substring(index + 6);
+
+            //检测翻页的第一页
+            CommonValidation.ExecuteSql("SELECT TOP 10 " + strSql);
+            index = strSql.LastIndexOf("ORDER BY");
+
+            #region pageMode == 1
+
+            if (pagemode == "1")
             {
+                var dbversion = CommonValidation.GetDbVersion();
+                //2005以上版本
+                if (dbversion != MssqlVersion.SQL2000)
+                {
+                    strSql = "WITH _t AS (SELECT ROW_NUMBER() OVER(" + strSql.Substring(index) + ") AS _RowNumber,"
+                        + strSql.Substring(0, index) + ")"
+                        + " SELECT * FROM _t WHERE _RowNumber BETWEEN 0 and 3 ORDER BY _RowNumber";
+
+                    return strSql;
+
+                    //if (primaryKey.IsNotNullOrEmpty())
+                    //{
+                    //    string s = (entity.IsNotNullOrEmpty() ? entity + "." : "") + primaryKey.Replace("'", "''");
+                    //    index = strSql.IndexOf("FROM");
+                    //    if (index < 0) return sql;
+
+                    //    string strTemp = strSql.Substring(index);
+                    //    strTemp = s + " NOT IN (SELECT TOP 10 " + s + " " + strTemp + ")";
+
+                    //    if (strSql.LastIndexOf("WHERE ") > 0)
+                    //    {
+                    //        strSql = strSql.Replace("WHERE ", "WHERE " + strTemp + " AND ");
+                    //    }
+                    //    else if (strSql.IndexOf("ORDER BY ") > 0)
+                    //    {
+                    //        strSql = strSql.Replace("ORDER BY ", "WHERE " + strTemp + " ORDER BY ");
+                    //    }
+                    //    else
+                    //    {
+                    //        strSql = " WHERE " + strTemp;
+                    //    }
+                    //}
+                    //return strSql;
+                }
+                else
+                {
+                    string strOrderBy = "";
+                    //lastindexof order by
+                    if(index == 0)
+                    {
+                        strOrderBy = (entity.IsNotNullOrEmpty() ? entity + "." : "") + primaryKey.Replace("'", "''");
+                        strSql += " order by " + strOrderBy;
+                    }
+                    else
+                    {
+                        strOrderBy = strSql.Substring(index + 8).Trim();
+                    }
+
+                    //生成反响排序字符串
+                    List<string> arrList = SplitOrderString(strOrderBy);
+                    string[] arrTemp = new string[arrList.Count];
+                    string[] arrTemp2 = new string[arrList.Count];
+
+                    Regex r1 = new Regex(@"\s+DESC\s*$", RegexOptions.IgnoreCase);
+                    Regex r2 = new Regex(@"\s+ASC\s*$", RegexOptions.IgnoreCase);
+
+                    for (int i = arrList.Count - 1; i >= 0; i--)
+                    {
+                        if (r1.Match(arrList[i]).Success)
+                        {
+                            strSql = r1.Replace(arrList[i], " AS orderstr" + i) + "," + strSql;
+                            arrTemp[i] = "orderstr" + i;
+                            arrTemp2[i] = "orderstr" + i + " DESC ";
+                        }
+                        else if(r2.Match(arrList[i]).Success)
+                        {
+                            strSql = r2.Replace(arrList[i], " AS orderstr" + i) + "," + strSql;
+                            arrTemp[i] = "orderstr" + i + " DESC ";
+                            arrTemp2[i] = "orderstr" + i;
+                        }
+                        else
+                        {
+                            strSql = arrList[i] + " AS orderstr" + i + "," + strSql;
+                            arrTemp[i] = "orderstr" + i + " DESC ";
+                            arrTemp2[i] = "orderstr" + i;
+                        }
+                    }
+
+                    strSql = "SELECT * FROM (select top 3 * from (select top 10 " + strSql;
+                    strSql += ") a order by " + string.Join(",", arrTemp) + ") b ORDER BY " + string.Join(",", arrTemp2);
+                    return strSql;
+                }
+            }
+
+            #endregion pageMode == 1
+
+            #region pageMode != 1
+
+            else
+            {
+                strSql = "SELECT TOP 5 " + strSql;
+
                 string s = (entity.IsNotNullOrEmpty() ? entity + "." : "") + primaryKey.Replace("'", "''");
-                string strTemp = strSql.Substring(strSql.IndexOf("FROM"));
-                strTemp = s + " NOT IN (SELECT TOP 10 " + s + " " + strTemp + ")";
+
+                string strTemp = s + " NOT IN (SELECT TOP 10 " + s + " " +
+                                 Regex.Replace(strSql, ".*?FROM\b", "FROM", RegexOptions.Singleline) + ")";
 
                 if (strSql.LastIndexOf("WHERE ") > 0)
                 {
@@ -301,8 +405,11 @@ namespace Mysoft.Business.Validation.Controls
                 {
                     strSql = " WHERE " + strTemp;
                 }
+
+                return strSql;
             }
-            return strSql;
+
+            #endregion pageMode != 1
         }
     }
 }

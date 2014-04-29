@@ -39,8 +39,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.lb_appGrid = new System.Windows.Forms.Label();
             this.btnsave = new System.Windows.Forms.Button();
-            this.pnEditor = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
+            this.pnEditor = new System.Windows.Forms.Panel();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -226,15 +226,7 @@
             this.btnsave.TabIndex = 7;
             this.btnsave.Text = "保存";
             this.btnsave.UseVisualStyleBackColor = true;
-            // 
-            // pnEditor
-            // 
-            this.pnEditor.AutoScroll = true;
-            this.pnEditor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnEditor.Location = new System.Drawing.Point(0, 0);
-            this.pnEditor.Name = "pnEditor";
-            this.pnEditor.Size = new System.Drawing.Size(576, 577);
-            this.pnEditor.TabIndex = 0;
+            this.btnsave.Click += new System.EventHandler(this.btnsave_Click);
             // 
             // button1
             // 
@@ -245,6 +237,15 @@
             this.button1.Text = "button1";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.label1_Click);
+            // 
+            // pnEditor
+            // 
+            this.pnEditor.AutoScroll = true;
+            this.pnEditor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnEditor.Location = new System.Drawing.Point(0, 0);
+            this.pnEditor.Name = "pnEditor";
+            this.pnEditor.Size = new System.Drawing.Size(576, 577);
+            this.pnEditor.TabIndex = 0;
             // 
             // FrmMain
             // 

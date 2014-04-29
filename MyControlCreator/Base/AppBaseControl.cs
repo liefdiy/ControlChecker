@@ -31,7 +31,7 @@ namespace MyControlCreator.Base
 
         #endregion Property
 
-        public AppBaseControl()
+        protected AppBaseControl()
         {
             InitializeComponent();
         }
@@ -44,24 +44,6 @@ namespace MyControlCreator.Base
         protected virtual void OnDragDrop()
         {
 
-        }
-
-        /// <summary>
-        /// 获取AppControl对象
-        /// </summary>
-        /// <returns></returns>
-        protected virtual AppControl GetControl()
-        {
-            return Control;
-        }
-
-        /// <summary>
-        /// 绑定AppControl对象
-        /// </summary>
-        /// <param name="control"></param>
-        protected virtual void Bind(AppControl control)
-        {
-            Control = control;
         }
 
         #endregion 扩展操作

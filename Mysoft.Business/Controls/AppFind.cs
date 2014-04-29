@@ -165,7 +165,7 @@ namespace Mysoft.Business.Controls
         /// <summary>
         /// 宽度
         /// </summary>
-        [XmlElement(ElementName = "titlewidth")]
+        [XmlAttribute(AttributeName = "titlewidth")]
         public string TitleWidth { get; set; }
     }
 

@@ -293,8 +293,15 @@ namespace SCide
 
             DocumentForm doc = new DocumentForm();
             Encoding encoding = Encoding.Default;
-            doc.Scintilla.Text = FileHelper.Read(filePath, out encoding);
+            //以下代码执行顺序必须调整，SCide判断编码有点不准
+            //doc.Scintilla.Text = FileHelper.Read(filePath, out encoding);
+            //doc.Scintilla.Encoding = encoding;
+
+            //调整为：
+            string content = FileHelper.Read(filePath, out encoding);
             doc.Scintilla.Encoding = encoding;
+            doc.Scintilla.Text = content;
+
             doc.Scintilla.UndoRedo.EmptyUndoBuffer();
             doc.Scintilla.Modified = false;
             doc.Text = Path.GetFileName(filePath);

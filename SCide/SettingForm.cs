@@ -29,6 +29,7 @@ namespace SCide
             txbUserId.Text = AppConfigManager.Setting.Db.UserId;
             txbPwd.Text = AppConfigManager.Setting.Db.Password;
             txbServer.Text = AppConfigManager.Setting.Db.Server;
+            cbb_reg_SelectedValueChanged(null, null);
             base.OnLoad(e);
         }
 

@@ -1,8 +1,9 @@
 ﻿using MyControlCreator.Base;
+using Mysoft.Business.Controls;
 
 namespace MyControlCreator
 {
-    public class AppViewListControl : AppBaseControl
+    public class AppViewListControl : AppBaseControl, IAppControl
     {
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.ComboBox comboBox2;
@@ -123,6 +124,16 @@ namespace MyControlCreator
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
 
+        }
+
+        public AppControl GetControl()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void BindControl(AppControl control)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

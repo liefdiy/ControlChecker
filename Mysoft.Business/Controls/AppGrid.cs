@@ -131,6 +131,7 @@ namespace Mysoft.Business.Controls
             Align = "";
             Name = "";
             DataType = "varchar";
+            Sortable = "true";
             OtherAttributes = new Collection<XmlAttribute>();
             //CellType = AppGridCellType.Text.ToString();   //这个不能给初始值，appGridE和appGrid靠这个区分
         }

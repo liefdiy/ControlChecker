@@ -68,6 +68,7 @@
     <Compile Include="AppFormControl.Designer.cs">
       <DependentUpon>AppFormControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Base\IAppControl.cs" />
     <Compile Include="FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>

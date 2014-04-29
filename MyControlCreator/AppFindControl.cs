@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace MyControlCreator
 {
-    public class AppFindControl : AppBaseControl
+    public class AppFindControl : AppBaseControl, IAppControl
     {
         #region Design
 
@@ -1263,13 +1263,11 @@ namespace MyControlCreator
 
         #region 联动
 
-        protected override void Bind(AppControl control)
+        protected void Bind(AppControl control)
         {
             chbIsshowCheckbox.Checked = control.Query.IsShowCheckbox.ToBoolean();
             chbCheckboxDefault.Checked = control.Query.IsShowCheckboxDefault.ToBoolean();
             chbQueryInResult.Checked = control.Query.IsShowQueryInResult.ToBoolean();
-
-            base.Bind(control);
         }
 
         /// <summary>
@@ -1611,6 +1609,11 @@ namespace MyControlCreator
             }
             else
             {
+                txb_max_s.Clear();
+                txb_acc_s.Clear();
+                txb_dt_s.Clear();
+                txb_min_s.Clear();
+
                 txb_max_s.Enabled = false;
                 txb_acc_s.Enabled = false;
                 txb_dt_s.Enabled = false;
@@ -1641,5 +1644,25 @@ namespace MyControlCreator
 
         #endregion 选择不同控件类型
 
+        /// <summary>
+        /// 获取控件实体
+        /// </summary>
+        /// <returns></returns>
+        public AppControl GetControl()
+        {
+            AppControl control = new AppControl();
+            control.Query = new AppFindQuery();
+            control.Query.Standard = new AppFindQueryStandard();
+            control.Query.Standard.TitleWidth = txb_title_s.Text.Trim();
+            control.Query.Standard.Items = standard;
+            control.Query.Advanced = new AppFindQueryAdvanced();
+            control.Query.Advanced.Items = advanced;
+            return control;
+        }
+
+        public void BindControl(AppControl control)
+        {
+            if(control.Query == null) return;
+        }
     }
 }

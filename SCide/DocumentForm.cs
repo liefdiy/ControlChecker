@@ -111,7 +111,7 @@ namespace SCide
                 File.SetAttributes(filePath, FileAttributes.Normal);
             }
             using (FileStream fs = File.Create(filePath))
-            using (BinaryWriter bw = new BinaryWriter(fs))
+            using (BinaryWriter bw = new BinaryWriter(fs, Scintilla.Encoding))
                 bw.Write(scintilla.RawText, 0, scintilla.RawText.Length - 1); // Omit trailing NULL
 
             scintilla.Modified = false;

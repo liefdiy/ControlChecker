@@ -1,8 +1,11 @@
-﻿using MyControlCreator.Base;
+﻿using System.Diagnostics;
+using MyControlCreator.Base;
 using System;
 using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
+using Mysoft.Business.Controls;
+using Mysoft.Common.Utility;
 
 namespace MyControlCreator
 {
@@ -80,6 +83,16 @@ namespace MyControlCreator
         private void label1_Click(object sender, EventArgs e)
         {
             splitContainer1_Panel2_DragDrop(sender, null);
+        }
+
+        private void btnsave_Click(object sender, EventArgs e)
+        {
+            foreach (var control in pnEditor.Controls)
+            {
+                var appCtrl = control as AppBaseControl;
+                //AppControl entity = appCtrl.GetControl();
+                //Debug.WriteLine(XmlHelper.XmlSerialize(entity));
+            }
         }
     }
 }
