@@ -1,4 +1,5 @@
-﻿using Mysoft.Business.Controls;
+﻿using System;
+using Mysoft.Business.Controls;
 using Mysoft.Business.Validation.Entity;
 using Mysoft.Common.Extensions;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace Mysoft.Business.Validation.Controls
 
             if (grid.Row != null && grid.Row.AppGridCells.Count > 0)
             {
-                List<bool> _sumtype = new List<bool>();
+                //List<bool> _sumtype = new List<bool>();
                 string _strSumTemp = "";
 
                 if (grid.Summary != null && grid.Summary.AppGridCells.Count > 0)
@@ -76,7 +77,7 @@ namespace Mysoft.Business.Validation.Controls
                         if (!ValidateSql(strSQLTemp, out error))
                         {
                             Results.Add(new Result(string.Format("检查数据列{0}", cell.Field),
-                                                string.Format("{0}字段当showPageCount == true时会出错：{1}", cell.OrderBy, error), Level.Error,
+                                                string.Format("{0}字段当showPageCount == true时会出错：{1}", cell.OrderBy, error), Level.Warn,
                                                 GetType()));
                             return;
                         }
@@ -285,7 +286,6 @@ namespace Mysoft.Business.Validation.Controls
         private string GetPageSql(string sql, string entity, string primaryKey, string pagemode)
         {
             int index = sql.IndexOf("SELECT ");
-            if (index < 0) return sql;
             string strSql = sql.Substring(index + 6);
 
             //检测翻页的第一页

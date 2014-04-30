@@ -11,13 +11,6 @@ namespace SCide
     {
         public UpdateEntity UpdateEntity { get; private set; }
 
-        private event EventHandler _OnDownloadFinished;
-        public event EventHandler OnDownloadFinished 
-        { 
-            add { _OnDownloadFinished += value; }
-            remove { _OnDownloadFinished -= value; }
-        }
-
         public bool HasUpdate()
         {
             string filepath = Application.ExecutablePath;

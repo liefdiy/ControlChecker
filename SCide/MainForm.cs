@@ -1016,7 +1016,7 @@ namespace SCide
                     }
                 }
             }
-            catch(System.ServiceModel.EndpointNotFoundException endpointEx)
+            catch(System.ServiceModel.EndpointNotFoundException)
             {
                 
             }
@@ -1069,7 +1069,7 @@ namespace SCide
         private TimeSpan GetAutoUpdateTimeSpan()
         {
             DateTime now = DateTime.Now;
-            DateTime dawn = new DateTime(now.Year, now.Month, now.Day + 1, 1, 0, 0);
+            DateTime dawn = DateTime.Today.AddDays(1).Add(TimeSpan.FromHours(1)); //new DateTime(now.Year, now.Month, now.Day + 1, 1, 0, 0);
             return dawn - now;
         }
 

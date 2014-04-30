@@ -21,7 +21,7 @@ namespace Mysoft.Business.Validation.Controls
                 ValidateDataSource(control.DataSource);
             }
 
-            ValidateColumns(grid, control.DataSource);
+            ValidateColumns(grid, control.DataSource, control.State.IsSqlPassed);
         }
 
         /// <summary>
@@ -29,8 +29,9 @@ namespace Mysoft.Business.Validation.Controls
         /// </summary>
         /// <param name="grid"></param>
         /// <param name="ds"></param>
+        /// <param name="isSqlPassed"></param>
         /// <returns></returns>
-        private void ValidateColumns(AppGrid grid, DataSource ds)
+        private void ValidateColumns(AppGrid grid, DataSource ds, bool isSqlPassed)
         {
             if (ds.Type.EqualIgnoreCase("sp") || ds.Type.EqualIgnoreCase("StoredProcedure")) return; //存储过程不处理
             if (string.IsNullOrEmpty(ds.Sql)) return;
@@ -46,7 +47,7 @@ namespace Mysoft.Business.Validation.Controls
                 if (grid.Row == null || grid.Row.AppGridCells == null) return;
 
                 //如果SQL语法没问题则校验绑定字段是否存在
-                if (ds.IsSqlPassed)
+                if (isSqlPassed)
                 {
                     foreach (var appGridCell in grid.Row.AppGridCells)
                     {

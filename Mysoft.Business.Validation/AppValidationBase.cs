@@ -1,6 +1,4 @@
-﻿using System.Data;
-
-namespace Mysoft.Business.Validation
+﻿namespace Mysoft.Business.Validation
 {
     using Mysoft.Business.Controls;
     using Mysoft.Business.Validation.Db;
@@ -27,6 +25,12 @@ namespace Mysoft.Business.Validation
         }
 
         public abstract void Validate(AppControl control);
+
+        public virtual IEnumerable ValidateControl(AppControl control)
+        {
+            Validate(control);
+            return Results;
+        }
 
         /// <summary>
         /// 验证SDK中定义过的属性
@@ -85,7 +89,6 @@ namespace Mysoft.Business.Validation
             }
             return list;
         }
-
 
         /// <summary>
         /// 获取SQL中查询出来的全部列名，列类型
@@ -188,7 +191,7 @@ namespace Mysoft.Business.Validation
             catch (SqlException sqlEx)
             {
                 error = sqlEx.Message;
-                if(sqlEx.Number == 306)
+                if (sqlEx.Number == 306)
                 {
                     error += " 参考：cast(columnName as varchar(max))";
                 }

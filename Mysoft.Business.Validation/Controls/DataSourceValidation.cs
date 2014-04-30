@@ -21,7 +21,7 @@
                 AppGrid grid = control.Control as AppGrid;
                 if (((grid == null) || ((grid.Row == null) || (grid.Row.AppGridCells.Count <= 0))) || string.IsNullOrEmpty(grid.Row.AppGridCells[0].CellType))
                 {
-                    base.Results.AddRange(ValidateSql(control.DataSource));
+                    base.Results.AddRange(ValidateSql(control));
                 }
             }
         }
@@ -57,9 +57,18 @@
             return false;
         }
 
-        private List<Result> ValidateSql(DataSource ds)
+        private List<Result> ValidateSql(AppControl control)
         {
+            DataSource ds = control.DataSource;
             List<Result> list = new List<Result>();
+
+            if (ds.Sql.IndexOf("SELECT ") < 0)
+            {
+                Results.Add(new Result("SQL检测", "未检测到SELECT关键字，检查是否大写或者是否少空格", Level.Error, GetType()));
+                control.State.IsCeased = true;
+                return list;
+            }
+
             if (!Regex.IsMatch(ds.Sql, "(select|from|where)", RegexOptions.IgnoreCase) && !(ds.Type.EqualIgnoreCase("sp") || ds.Type.EqualIgnoreCase("StoredProcedure")))
             {
                 list.Add(new Result("DataSource的Type配置错误", "ERP3.0后SQL若配置为存储过程，则type必须为SP或StoredProcedure", Level.Error, base.GetType()));
@@ -95,7 +104,7 @@
                         list.Add(new Result("SQL中的Select字段检查", "无别名", Level.Error, base.GetType()));
                     }
 
-                    ds.IsSqlPassed = !CommonValidation.IsIncorrectSql(ds.Sql);
+                    control.State.IsSqlPassed = !CommonValidation.IsIncorrectSql(ds.Sql);
                 }
             }
             catch (SqlException sqlException)

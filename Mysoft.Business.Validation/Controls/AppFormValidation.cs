@@ -53,7 +53,7 @@ namespace Mysoft.Business.Validation.Controls
                             }
                         }
 
-                        if (control.DataSource.IsSqlPassed)
+                        if (control.State.IsSqlPassed)
                         {
                             if (!string.IsNullOrEmpty(item.Field) && !fields.Contains(item.Field.ToLower()))
                             {

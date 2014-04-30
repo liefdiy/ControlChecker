@@ -85,12 +85,15 @@
                 IAppValidation validation = Activator.CreateInstance(type) as IAppValidation;
                 if (validation != null)
                 {
-                    validation.Validate(control);
-                    List<Result> list = validation.GetResults() as List<Result>;
+                    List<Result> list = validation.ValidateControl(control) as List<Result>;
+                    //List<Result> list = validation.GetResults() as List<Result>;
                     if (list != null)
                     {
                         properties.AddRange(list);
                     }
+
+                    if (control.State.IsCeased)
+                        break;
                 }
             }
             return properties;

@@ -14,7 +14,7 @@ namespace Mysoft.Business.Validation.Controls
             if (control.DataSource != null && control.DataSource.Sql.IsNotNull())
             {
                 //SQL验证都没通过就不用往下了
-                if(!control.DataSource.IsSqlPassed) return;
+                if (!control.State.IsSqlPassed) return;
 
                 var fields = GetFields(control.DataSource.Sql);
                 bool textfound = false;

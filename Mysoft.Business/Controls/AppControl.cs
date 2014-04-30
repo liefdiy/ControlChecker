@@ -209,6 +209,19 @@ namespace Mysoft.Business.Controls
 
     #endregion 控件类型
 
+    public class State
+    {
+        /// <summary>
+        /// SQL校验是否通过
+        /// </summary>
+        public bool IsSqlPassed { get; set; }
+        
+        /// <summary>
+        /// 校验是否停止
+        /// </summary>
+        public bool IsCeased { get; set; }
+    }
+
     /// <summary>
     /// 控件类
     /// </summary>
@@ -219,7 +232,12 @@ namespace Mysoft.Business.Controls
         {
             Id = "";
             Describe = "";
+            State = new State();
         }
+
+        [MapContract(PassValid = true)]
+        [XmlIgnore]
+        public State State { get; set; }
 
         [XmlIgnore]
         public string Verson { get; set; }
@@ -339,10 +357,6 @@ namespace Mysoft.Business.Controls
             Type = "";
             DependencySql = new List<string>();
         }
-
-        [MapContract(PassValid = true)]
-        [XmlIgnore]
-        public bool IsSqlPassed { get; set; }
 
         [MapContract(Describe = "3.0开始支持“SP”或“StoredProcedure”")]
         [XmlAttribute(AttributeName = "type")]

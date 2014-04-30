@@ -1,13 +1,15 @@
-﻿using System;
-using Mysoft.Business.Controls;
+﻿using Mysoft.Business.Controls;
 using System.Collections;
 
 namespace Mysoft.Business.Validation
 {
     public interface IAppValidation
     {
-        void Validate(AppControl control);
-
-        IEnumerable GetResults();
+        /// <summary>
+        /// 执行控件校验
+        /// </summary>
+        /// <param name="control"></param>
+        /// <returns></returns>
+        IEnumerable ValidateControl(AppControl control);
     }
 }
