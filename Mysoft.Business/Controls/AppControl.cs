@@ -355,6 +355,7 @@ namespace Mysoft.Business.Controls
             KeyName = "";
             SqlNode = new TextNode() { Text = "" };
             Type = "";
+            PageMode = "1";
             DependencySql = new List<string>();
         }
 
@@ -379,7 +380,7 @@ namespace Mysoft.Business.Controls
         public TextNode SqlNode { get; set; }
 
         /// <summary>
-        /// 分页模式，默认为0，值为1时必须无重复列
+        /// 分页模式，默认为1
         /// </summary>
         [MapContract(Describe = "分页模式，默认为0，值为1时必须无重复列", Type = FieldType.Number)]
         [XmlAttribute(AttributeName = "pagemode")]
