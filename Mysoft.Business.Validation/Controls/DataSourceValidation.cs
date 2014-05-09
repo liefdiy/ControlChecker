@@ -97,7 +97,7 @@
                 }
 
                 //标识SQL语法是否验证通过，分页的SQL可能就是错的，就不执行语法检测了
-                if (pagemode == 0)
+                if (pagemode != 2)
                 {
                     if (NoAliasSqlCustom(sql))
                     {
